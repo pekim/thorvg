@@ -24,7 +24,7 @@ func libraryFilepath() (string, error) {
 }
 
 var tvg_engine_init func(threads int) Result
-var tvg_swcanvas_create func(op int) Canvas
+var tvg_swcanvas_create func(option EngineOption) Canvas
 
 func Init() error {
 	filepath, err := libraryFilepath()

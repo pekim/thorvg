@@ -21,7 +21,7 @@ const (
 )
 
 /*
-Engine_Option is an enumeration to specify rendering engine behavior.
+EngineOption is an enumeration to specify rendering engine behavior.
 
 The availability or behavior of @c ENGINE_OPTION_SMART_RENDER may vary depending on platform or backend support.
 It attempts to optimize rendering performance by updating only the regions  of the canvas that have
@@ -34,10 +34,10 @@ both modes in your specific use case to determine the optimal setting.
 
 @since 1.0
 */
-type Engine_Option enum
+type EngineOption enum
 
 const (
-	ENGINE_OPTION_NONE         Engine_Option = 0      /**< No engine options are enabled. This may be used to explicitly disable all optional behaviors. */
-	ENGINE_OPTION_DEFAULT      Engine_Option = 1 << 0 /**< Uses the default rendering mode. */
-	ENGINE_OPTION_SMART_RENDER Engine_Option = 1 << 1 /**< Enables automatic partial (smart) rendering optimizations. */
+	ENGINE_OPTION_NONE         EngineOption = 0      /**< No engine options are enabled. This may be used to explicitly disable all optional behaviors. */
+	ENGINE_OPTION_DEFAULT      EngineOption = 1 << 0 /**< Uses the default rendering mode. */
+	ENGINE_OPTION_SMART_RENDER EngineOption = 1 << 1 /**< Enables automatic partial (smart) rendering optimizations. */
 )
