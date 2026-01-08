@@ -46,12 +46,12 @@ func EngineTerm() Result {
  *
  * @since 0.15
  */
-func Version() (Result, int, int, int, string) {
+func Version() (Result, int, int, int, string, string) {
 	var major uint32
 	var minor uint32
 	var micro uint32
 	var version *byte
 	result := tvg_engine_version(&major, &minor, &micro, &version)
 
-	return result, int(major), int(minor), int(micro), GoString(version)
+	return result, int(major), int(minor), int(micro), GoString(version), libthorvgCommit
 }

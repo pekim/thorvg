@@ -1,3 +1,4 @@
 package internal
 
 const sharedObjectHash = "79b630faf8ad0d15273e96a4735675ccb404154e371493df48636b3836b0b417"
+const libthorvgCommit = "0a680b13d1753afdb85b498f26a03e605efe7c2e"
