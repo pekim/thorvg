@@ -1,0 +1,3 @@
+package internal
+
+const sharedObjectHash = "a90cbe8634e1bfd5b6445307f1ea0ca30a746d1fc010a7710e5a65d5b535399d"

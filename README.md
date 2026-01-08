@@ -1,15 +1,12 @@
 # thorvg
 
-## building thorvg
+## updating thorvg
 
-```sh
-git clone https://github.com/thorvg/thorvg.git
-cd thorvg
-meson setup build -Dbindings=capi -Dengines=sw,gl
-ninja -C build
-cp build/src/libthorvg-1.so.1.0.0 $THIS_REPO_DIR/internal/lib/
-cp src/bindings/capi/thorvg_capi.h $THIS_REPO_DIR/internal/lib/
-```
+The shell script `build.sh` can be used to update the thorvg
+shared object and header files.
+
+Update the value of the `THORVG_COMMIT` variable in the script if required.
+Then run the script `./build.sh`.
 
 ## pre-commit hook
 
