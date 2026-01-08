@@ -33,3 +33,25 @@ Cleans up resources and stops any internal threads initialized by tvg_engine_ini
 func EngineTerm() Result {
 	return tvg_engine_term()
 }
+
+/**
+ * @brief Retrieves the version of the TVG engine.
+ *
+ * @param[out] major A major version number.
+ * @param[out] minor A minor version number.
+ * @param[out] micro A micro version number.
+ * @param[out] version The version of the engine in the format major.minor.micro, or a @p nullptr in case of an internal error.
+ *
+ * @retval TVG_RESULT_SUCCESS.
+ *
+ * @since 0.15
+ */
+func Version() (Result, int, int, int, string) {
+	var major uint32
+	var minor uint32
+	var micro uint32
+	var version *byte
+	result := tvg_engine_version(&major, &minor, &micro, &version)
+
+	return result, int(major), int(minor), int(micro), GoString(version)
+}

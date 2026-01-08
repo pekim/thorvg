@@ -23,13 +23,15 @@ func libraryFilepath() (string, error) {
 	return filepath, nil
 }
 
-// Engine API                                                           */
+// Engine API
 var tvg_engine_init func(threads int) Result
 var tvg_engine_term func() Result
+var tvg_engine_version func(major *uint32, minor *uint32, micro *uint32, version **byte) Result
 
+// Canvas API
 var tvg_swcanvas_create func(option EngineOption) Canvas
 
-func Init() error {
+func initLibThorvg() error {
 	filepath, err := libraryFilepath()
 	if err != nil {
 		return err
@@ -37,13 +39,15 @@ func Init() error {
 
 	lib, err := purego.Dlopen(filepath, purego.RTLD_NOW|purego.RTLD_GLOBAL)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	// Engine API                                                           */
+	// Engine API
 	purego.RegisterLibFunc(&tvg_engine_init, lib, "tvg_engine_init")
 	purego.RegisterLibFunc(&tvg_engine_term, lib, "tvg_engine_term")
+	purego.RegisterLibFunc(&tvg_engine_version, lib, "tvg_engine_version")
 
+	// Canvas API
 	purego.RegisterLibFunc(&tvg_swcanvas_create, lib, "tvg_swcanvas_create")
 
 	return nil

@@ -31,7 +31,7 @@ cp thorvg/src/bindings/capi/thorvg_capi.h internal/lib/thorvg_capi.h
 # generate a Go file with a hash value of the library
 HASH=$(sha256sum $LIBRARY_FILE | cut -d " " -f 1)
 echo $HASH
-cat << EOF > internal/library_hash.go
+cat << EOF > internal/lib-thorvg-hash.go
 package internal
 
 const sharedObjectHash = "$HASH"
