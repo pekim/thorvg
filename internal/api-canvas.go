@@ -67,13 +67,62 @@ The buffer of a desirable size should be allocated and owned by the caller.
 
 @see Tvg_Colorspace
 */
-func (canvas *Canvas) SwCanvasSetTarget(stride uint, w uint, h uint, cs ColorSpace) Result {
+func (canvas *Canvas) SwCanvasSetTarget(stride uint, width uint, height uint, cs ColorSpace) Result {
 	if canvas.buffer != nil {
 		free(canvas.buffer)
 	}
-	canvas.bufferSize = int(4 * w * h)
+	canvas.bufferSize = int(4 * width * height)
 	canvas.buffer = malloc(canvas.bufferSize)
 
-	result := tvg_swcanvas_set_target(canvas.canvas, canvas.buffer, uint32(stride), uint32(w), uint32(h), cs)
+	result := tvg_swcanvas_set_target(canvas.canvas, canvas.buffer, uint32(stride), uint32(width), uint32(height), cs)
+	return result
+}
+
+/*
+GlCanvasCreate creates an OpenGL rasterizer Canvas object.
+
+@return A new Tvg_Canvas object.
+
+@since 1.0.0
+*/
+func GlCanvasCreate() Canvas {
+	return Canvas{
+		canvas: tvg_glcanvas_create(),
+	}
+}
+
+/*
+GlCanvasSetTarget sets the drawing target for rasterization.
+
+This function specifies the drawing target where the rasterization will occur. It can target
+a specific framebuffer object (FBO) or the main surface.
+
+@param[in] display The platform-specific display handle (EGLDisplay for EGL). Set @c nullptr for other systems.
+@param[in] surface The platform-specific surface handle (EGLSurface for EGL, HDC for WGL). Set @c nullptr for other systems.
+@param[in] context The OpenGL context to be used for rendering on this canvas.
+@param[in] id The GL target ID, usually indicating the FBO ID. A value of @c 0 specifies the main surface.
+@param[in] w The width (in pixels) of the raster image.
+@param[in] h The height (in pixels) of the raster image.
+@param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c GL_RGBA8.
+
+@note If @p display and @p surface are not provided, the ThorVG GL engine assumes that
+the appropriate OpenGL context is already current and will not attempt to bind a new one.
+
+@retval TVG_RESULT_INSUFFICIENT_CONDITION If the canvas is currently rendering.
+
+Ensure that @ref tvg_canvas_sync() has been called before setting a new target.
+
+@retval TVG_RESULT_NOT_SUPPORTED In case the gl engine is not supported.
+
+@see tvg_canvas_sync()
+
+@since 1.0
+*/
+func (canvas *Canvas) GlCanvasSetTarget(
+	display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int,
+	width uint, height uint, colorSpace ColorSpace,
+) Result {
+	result := tvg_glcanvas_set_target(canvas.canvas, display, surface, context, int32(id),
+		uint32(width), uint32(height), colorSpace)
 	return result
 }
