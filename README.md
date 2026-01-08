@@ -1,5 +1,16 @@
 # thorvg
 
+## building thorvg
+
+```sh
+git clone https://github.com/thorvg/thorvg.git
+cd thorvg
+meson setup build -Dbindings=capi -Dengines=sw,gl
+ninja -C build
+cp build/src/libthorvg-1.so.1.0.0 $THIS_REPO_DIR/internal/lib/
+cp src/bindings/capi/thorvg_capi.h $THIS_REPO_DIR/internal/lib/
+```
+
 ## pre-commit hook
 
 - install `goimports` if not already installed
