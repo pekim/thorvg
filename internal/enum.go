@@ -1,6 +1,10 @@
 package internal
 
-type enum int
+// enum is a type used for all enum types.
+//
+// A C enum on 64 bit architectures is typically (but not guaranteed
+// to be) 32 bits.
+type enum uint32
 
 /*
 Result is an enumeration specifying the result from the APIs.
