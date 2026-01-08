@@ -1,0 +1,18 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^.*\.gir$
+      - id: end-of-file-fixer
+        exclude: ^.*\.gir$
+      - id: check-yaml
+  - repo: https://github.com/tekwizely/pre-commit-golang
+    rev: v1.0.0-rc.4
+    hooks:
+      - id: go-fmt
+      - id: go-imports
+        exclude: "lib"
+      - id: go-mod-tidy
+      - id: go-test-mod
+      - id: golangci-lint-mod
