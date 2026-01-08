@@ -24,6 +24,36 @@ const (
 	RESULT_UNKNOWN                Result = 255  // The value returned in all other cases.
 )
 
+type ResultError struct {
+	result Result
+}
+
+func (err ResultError) Error() string {
+	return map[Result]string{
+		RESULT_SUCCESS:                "RESULT_SUCCESS : The value returned in case of a correct request execution.",
+		RESULT_INVALID_ARGUMENT:       "RESULT_INVALID_ARGUMENT : The value returned in the event of a problem with the arguments given to the API - e.g. empty paths or null pointers.",
+		RESULT_INSUFFICIENT_CONDITION: "RESULT_INSUFFICIENT_CONDITION : The value returned in case the request cannot be processed - e.g. asking for properties of an object, which does not exist.",
+		RESULT_FAILED_ALLOCATION:      "RESULT_FAILED_ALLOCATION : The value returned in case of unsuccessful memory allocation.",
+		RESULT_MEMORY_CORRUPTION:      "RESULT_MEMORY_CORRUPTION : The value returned in the event of bad memory handling - e.g. failing in pointer releasing or casting",
+		RESULT_NOT_SUPPORTED:          "RESULT_NOT_SUPPORTED : The value returned in case of choosing unsupported engine features(options).",
+		RESULT_UNKNOWN:                "RESULT_UNKNOWN : The value returned in all other cases.",
+	}[err.result]
+}
+
+func (err ResultError) Result() Result {
+	return err.result
+}
+
+func (result Result) error() error {
+	if result == RESULT_SUCCESS {
+		return nil
+	}
+
+	return ResultError{
+		result: result,
+	}
+}
+
 /*
 ColorSpace is an enumeration specifying the methods of combining the 8-bit color channels into 32-bit color.
 */

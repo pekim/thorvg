@@ -15,8 +15,8 @@ The number of threads is fixed on the first call to tvg_engine_init() and cannot
 
 @see tvg_engine_term()
 */
-func EngineInit(threads int) Result {
-	return tvg_engine_init(threads)
+func EngineInit(threads int) error {
+	return tvg_engine_init(threads).error()
 }
 
 /*
@@ -30,8 +30,8 @@ Cleans up resources and stops any internal threads initialized by tvg_engine_ini
 
 @see tvg_engine_init()
 */
-func EngineTerm() Result {
-	return tvg_engine_term()
+func EngineTerm() error {
+	return tvg_engine_term().error()
 }
 
 /**
@@ -46,12 +46,12 @@ func EngineTerm() Result {
  *
  * @since 0.15
  */
-func Version() (Result, int, int, int, string, string) {
+func Version() (int, int, int, string, string, error) {
 	var major uint32
 	var minor uint32
 	var micro uint32
 	var version *byte
 	result := tvg_engine_version(&major, &minor, &micro, &version)
 
-	return result, int(major), int(minor), int(micro), GoString(version), libthorvgCommit
+	return int(major), int(minor), int(micro), GoString(version), libthorvgCommit, result.error()
 }

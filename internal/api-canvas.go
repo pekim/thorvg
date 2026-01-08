@@ -67,7 +67,7 @@ The buffer of a desirable size should be allocated and owned by the caller.
 
 @see Tvg_Colorspace
 */
-func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs ColorSpace) Result {
+func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs ColorSpace) error {
 	if canvas.buffer != nil {
 		free(canvas.buffer)
 	}
@@ -75,7 +75,7 @@ func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs Color
 	canvas.buffer = malloc(canvas.bufferSize)
 
 	result := tvg_swcanvas_set_target(canvas.canvas, canvas.buffer, uint32(stride), uint32(width), uint32(height), cs)
-	return result
+	return result.error()
 }
 
 /*
@@ -121,10 +121,10 @@ Ensure that @ref tvg_canvas_sync() has been called before setting a new target.
 func (canvas *Canvas) GlSetTarget(
 	display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int,
 	width uint, height uint, colorSpace ColorSpace,
-) Result {
+) error {
 	result := tvg_glcanvas_set_target(canvas.canvas, display, surface, context, int32(id),
 		uint32(width), uint32(height), colorSpace)
-	return result
+	return result.error()
 }
 
 /*
@@ -134,11 +134,11 @@ Destroy clears the canvas internal data, releases all paints stored by the canva
 
 @retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer to the Tvg_Canvas object is passed.
 */
-func (canvas *Canvas) Destroy() Result {
+func (canvas *Canvas) Destroy() error {
 	if canvas.buffer != nil {
 		free(canvas.buffer)
 		canvas.buffer = nil
 	}
 
-	return tvg_canvas_destroy(canvas.canvas)
+	return tvg_canvas_destroy(canvas.canvas).error()
 }

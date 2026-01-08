@@ -8,11 +8,12 @@ import (
 
 func TestEngine(t *testing.T) {
 	assert.NoError(t, Init())
-	assert.Equal(t, RESULT_SUCCESS, EngineInit(2))
+	err := EngineInit(2)
+	assert.NoError(t, err)
 	// EngineTerm is not tested, as it appears to not work reliably in tests.
 
-	result, major, minor, micro, version, commit := Version()
-	assert.Equal(t, RESULT_SUCCESS, result)
+	major, minor, micro, version, commit, err := Version()
+	assert.NoError(t, err)
 	assert.Equal(t, 1, major)
 	assert.Equal(t, 0, minor)
 	assert.Equal(t, 0, micro)
