@@ -23,7 +23,10 @@ func libraryFilepath() (string, error) {
 	return filepath, nil
 }
 
+// Engine API                                                           */
 var tvg_engine_init func(threads int) Result
+var tvg_engine_term func() Result
+
 var tvg_swcanvas_create func(option EngineOption) Canvas
 
 func Init() error {
@@ -37,7 +40,10 @@ func Init() error {
 		panic(err)
 	}
 
+	// Engine API                                                           */
 	purego.RegisterLibFunc(&tvg_engine_init, lib, "tvg_engine_init")
+	purego.RegisterLibFunc(&tvg_engine_term, lib, "tvg_engine_term")
+
 	purego.RegisterLibFunc(&tvg_swcanvas_create, lib, "tvg_swcanvas_create")
 
 	return nil
