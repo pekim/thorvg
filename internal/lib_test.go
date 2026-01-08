@@ -10,7 +10,7 @@ func TestInit(t *testing.T) {
 	assert.NoError(t, Init())
 
 	result := tvg_engine_init(4)
-	assert.Equal(t, TVG_RESULT_SUCCESS, result)
+	assert.Equal(t, RESULT_SUCCESS, result)
 	canvas := tvg_swcanvas_create(1)
 	assert.NotZero(t, canvas)
 }

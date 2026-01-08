@@ -23,8 +23,8 @@ func libraryFilepath() (string, error) {
 	return filepath, nil
 }
 
-var tvg_engine_init func(threads int) Tvg_Result
-var tvg_swcanvas_create func(op int) Tvg_Canvas
+var tvg_engine_init func(threads int) Result
+var tvg_swcanvas_create func(op int) Canvas
 
 func Init() error {
 	filepath, err := libraryFilepath()
