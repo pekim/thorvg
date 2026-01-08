@@ -184,3 +184,17 @@ const (
 	FILL_RULE_NON_ZERO FillRule = iota // A line from the point to a location outside the shape is drawn. The intersections of the line with the path segment of the shape are counted. Starting from zero, if the path segment of the shape crosses the line clockwise, one is added, otherwise one is subtracted. If the resulting sum is non zero, the point is inside the shape.
 	FILL_RULE_EVEN_ODD                 // A line from the point to a location outside the shape is drawn and its intersections with the path segments of the shape are counted. If the number of intersections is an odd number, the point is inside the shape.
 )
+
+/*
+TextWrap is an enumeration specifying how text should be wrapped and truncated.
+*/
+type TextWrap enum
+
+const (
+	TEXT_WRAP_NONE        TextWrap = iota // Do not wrap text. Text is rendered on a single line and may overflow the bounding area.
+	TEXT_WRAP_CHARACTER                   // Wrap at the character level. If a word cannot fit, it is broken into individual characters to fit the line.
+	TEXT_WRAP_WORD                        // Wrap at the word level. Words that do not fit are moved to the next line.
+	TEXT_WRAP_SMART                       // Smart choose wrapping method: word wrap first, falling back to character wrap if a word does not fit.
+	TEXT_WRAP_ELLIPSIS                    // Truncate overflowing text and append an ellipsis ("...") at the end. Typically used for single-line labels.
+	TEXT_WRAP_HYPHENATION                 // Reserved. No Support.
+)
