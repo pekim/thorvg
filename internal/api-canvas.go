@@ -67,7 +67,7 @@ The buffer of a desirable size should be allocated and owned by the caller.
 
 @see Tvg_Colorspace
 */
-func (canvas *Canvas) SwCanvasSetTarget(stride uint, width uint, height uint, cs ColorSpace) Result {
+func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs ColorSpace) Result {
 	if canvas.buffer != nil {
 		free(canvas.buffer)
 	}
@@ -92,7 +92,7 @@ func GlCanvasCreate() Canvas {
 }
 
 /*
-GlCanvasSetTarget sets the drawing target for rasterization.
+GlSetTarget sets the drawing target for rasterization.
 
 This function specifies the drawing target where the rasterization will occur. It can target
 a specific framebuffer object (FBO) or the main surface.
@@ -118,11 +118,27 @@ Ensure that @ref tvg_canvas_sync() has been called before setting a new target.
 
 @since 1.0
 */
-func (canvas *Canvas) GlCanvasSetTarget(
+func (canvas *Canvas) GlSetTarget(
 	display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int,
 	width uint, height uint, colorSpace ColorSpace,
 ) Result {
 	result := tvg_glcanvas_set_target(canvas.canvas, display, surface, context, int32(id),
 		uint32(width), uint32(height), colorSpace)
 	return result
+}
+
+/*
+Destroy clears the canvas internal data, releases all paints stored by the canvas and destroys the canvas object itself.
+
+@param[in] canvas The Tvg_Canvas object to be destroyed.
+
+@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer to the Tvg_Canvas object is passed.
+*/
+func (canvas *Canvas) Destroy() Result {
+	if canvas.buffer != nil {
+		free(canvas.buffer)
+		canvas.buffer = nil
+	}
+
+	return tvg_canvas_destroy(canvas.canvas)
 }

@@ -34,6 +34,7 @@ var tvg_swcanvas_create func(option EngineOption) uintptr
 var tvg_swcanvas_set_target func(canvas uintptr, buffer *byte, stride uint32, w uint32, h uint32, cs ColorSpace) Result
 var tvg_glcanvas_create func() uintptr
 var tvg_glcanvas_set_target func(canvas uintptr, display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int32, w uint32, h uint32, cs ColorSpace) Result
+var tvg_canvas_destroy func(canvas uintptr) Result
 
 func initLibThorvg() error {
 	filepath, err := libraryFilepath()
@@ -56,6 +57,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_swcanvas_set_target, lib, "tvg_swcanvas_set_target")
 	purego.RegisterLibFunc(&tvg_glcanvas_create, lib, "tvg_glcanvas_create")
 	purego.RegisterLibFunc(&tvg_glcanvas_set_target, lib, "tvg_glcanvas_set_target")
+	purego.RegisterLibFunc(&tvg_canvas_destroy, lib, "tvg_canvas_destroy")
 
 	return nil
 }
