@@ -28,6 +28,10 @@ popd
 cp thorvg/build/src/libthorvg-1.so.1.0.0 $LIBRARY_FILE
 cp thorvg/src/bindings/capi/thorvg_capi.h internal/lib/thorvg_capi.h
 
+# strip symbols from the library, reducing the size
+# from ~11M to ~1.2M
+strip $LIBRARY_FILE
+
 # generate a Go file with a hash value of the library
 HASH=$(sha256sum $LIBRARY_FILE | cut -d " " -f 1)
 echo $HASH

@@ -1,3 +1,3 @@
 package internal
 
-const sharedObjectHash = "a90cbe8634e1bfd5b6445307f1ea0ca30a746d1fc010a7710e5a65d5b535399d"
+const sharedObjectHash = "79b630faf8ad0d15273e96a4735675ccb404154e371493df48636b3836b0b417"
