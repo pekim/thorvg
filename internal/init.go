@@ -1,6 +1,13 @@
 package internal
 
+var initialised = false
+
 func Init() error {
+	if initialised {
+		return nil
+	}
+	defer func() { initialised = true }()
+
 	var err error
 
 	err = initLibc()
