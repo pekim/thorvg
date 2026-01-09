@@ -7,7 +7,6 @@ import (
 )
 
 func TestSwCanvas(t *testing.T) {
-	assert.NoError(t, Init())
 	assert.NoError(t, EngineInit(2))
 
 	canvas := SwCanvasCreate(ENGINE_OPTION_DEFAULT)

@@ -7,7 +7,6 @@ import (
 )
 
 func TestEngine(t *testing.T) {
-	assert.NoError(t, Init())
 	err := EngineInit(2)
 	assert.NoError(t, err)
 	// EngineTerm is not tested, as it appears to not work reliably in tests.

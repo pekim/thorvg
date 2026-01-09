@@ -2,21 +2,16 @@ package thorvg
 
 var initialised = false
 
-func Init() error {
+func initLibraries() error {
 	if initialised {
 		return nil
 	}
 	defer func() { initialised = true }()
 
-	var err error
-
-	err = initLibc()
-	if err != nil {
+	if err := initLibc(); err != nil {
 		return err
 	}
-
-	err = initLibThorvg()
-	if err != nil {
+	if err := initLibThorvg(); err != nil {
 		return err
 	}
 

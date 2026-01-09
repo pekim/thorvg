@@ -16,6 +16,10 @@ The number of threads is fixed on the first call to tvg_engine_init() and cannot
 @see tvg_engine_term()
 */
 func EngineInit(threads int) error {
+	if err := initLibraries(); err != nil {
+		return err
+	}
+
 	return tvg_engine_init(threads).error()
 }
 
