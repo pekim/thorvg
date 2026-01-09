@@ -1,6 +1,10 @@
 #! /usr/bin/env bash
 set -eo pipefail
 
+# change to project's root dir, regardless of the dir where the script is run from
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd $SCRIPT_DIR/..
+
 THORVG_COMMIT=0a680b13d1753afdb85b498f26a03e605efe7c2e
 THORVG_DIR=internal/thorvg-src
 LIBRARY_DIR=internal/lib
