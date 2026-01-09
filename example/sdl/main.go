@@ -59,7 +59,9 @@ Outer:
 				break Outer
 
 			case sdl.EventKeyDown:
-				if event.Key().Scancode == sdl.ScancodeEscape {
+				mod := event.Key().Mod &^ sdl.KeymodNum
+				if (mod == sdl.KeymodNone && event.Key().Scancode == sdl.ScancodeEscape) ||
+					((mod == sdl.KeymodLCtrl || mod == sdl.KeymodRCtrl) && event.Key().Scancode == sdl.ScancodeQ) {
 					break Outer
 				}
 
