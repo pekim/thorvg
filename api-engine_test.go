@@ -7,9 +7,8 @@ import (
 )
 
 func TestEngine(t *testing.T) {
-	err := EngineInit(2)
-	assert.NoError(t, err)
-	// EngineTerm is not tested, as it appears to not work reliably in tests.
+	assert.NoError(t, EngineInit(2))
+	defer func() { assert.NoError(t, EngineTerm()) }()
 
 	major, minor, micro, version, commit, err := Version()
 	assert.NoError(t, err)
