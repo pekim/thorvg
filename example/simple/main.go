@@ -7,6 +7,7 @@ import (
 	"os"
 
 	tvg "github.com/pekim/thorvg"
+	"github.com/pekim/thorvg/swizzle"
 )
 
 func main() {
@@ -20,14 +21,17 @@ func main() {
 
 	rect := tvg.ShapeNew()
 	rect.AppendRect(50, 50, 200, 200, 20, 20, true) //nolint:errcheck
-	rect.SetFillColor(100, 100, 100, 255)           //nolint:errcheck
+	rect.SetFillColor(255, 0, 0, 255)               //nolint:errcheck
 	canvas.Push(rect)                               //nolint:errcheck
 
 	canvas.Draw(true) //nolint:errcheck
 	canvas.Sync()     //nolint:errcheck
 
+	buffer := canvas.Buffer()
+	swizzle.BGRA(buffer)
+
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	img.Pix = canvas.Buffer()
+	img.Pix = buffer
 
 	file, err := os.Create("example/simple/simple.png")
 	if err != nil {
