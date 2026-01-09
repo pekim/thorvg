@@ -1,4 +1,4 @@
-package internal
+package thorvg
 
 // enum is a type used for all enum types.
 //

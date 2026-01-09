@@ -1,4 +1,4 @@
-package internal
+package thorvg
 
 /*
 EngineInit initializes the ThorVG engine.
@@ -53,5 +53,5 @@ func Version() (int, int, int, string, string, error) {
 	var version *byte
 	result := tvg_engine_version(&major, &minor, &micro, &version)
 
-	return int(major), int(minor), int(micro), GoString(version), libthorvgCommit, result.error()
+	return int(major), int(minor), int(micro), goString(version), libthorvgCommit, result.error()
 }

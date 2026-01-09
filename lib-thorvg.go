@@ -1,4 +1,4 @@
-package internal
+package thorvg
 
 import (
 	_ "embed"
@@ -10,7 +10,7 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-//go:embed lib/libthorvg-1.so.1.0.0
+//go:embed internal/lib/libthorvg-1.so.1.0.0
 var sharedObject []byte
 
 func libraryFilepath() (string, error) {

@@ -41,8 +41,8 @@ strip $LIBRARY_FILE
 # generate a Go file with a hash value of the library
 HASH=$(sha256sum $LIBRARY_FILE | cut -d " " -f 1)
 echo $HASH
-cat << EOF > internal/lib-thorvg-constant.go
-package internal
+cat << EOF > lib-thorvg-constant.go
+package thorvg
 
 const sharedObjectHash = "$HASH"
 const libthorvgCommit = "$THORVG_COMMIT"

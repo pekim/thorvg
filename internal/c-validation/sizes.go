@@ -6,10 +6,10 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/pekim/thorvg/internal"
+	"github.com/pekim/thorvg"
 )
 
-var enum internal.Result
+var enum thorvg.Result
 
 var sizes = []struct {
 	name string
@@ -17,9 +17,9 @@ var sizes = []struct {
 	go_  uintptr
 }{
 	// structs
-	{"ColorStop", C.sizeof_Tvg_Color_Stop, unsafe.Sizeof(internal.ColorStop{})},
-	{"Point", C.sizeof_Tvg_Point, unsafe.Sizeof(internal.Point{})},
-	{"Matrix", C.sizeof_Tvg_Matrix, unsafe.Sizeof(internal.Matrix{})},
+	{"ColorStop", C.sizeof_Tvg_Color_Stop, unsafe.Sizeof(thorvg.ColorStop{})},
+	{"Point", C.sizeof_Tvg_Point, unsafe.Sizeof(thorvg.Point{})},
+	{"Matrix", C.sizeof_Tvg_Matrix, unsafe.Sizeof(thorvg.Matrix{})},
 
 	// enum type
 	{"enum", C.sizeof_Tvg_Result, unsafe.Sizeof(enum)},

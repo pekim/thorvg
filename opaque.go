@@ -1,4 +1,4 @@
-package internal
+package thorvg
 
 // Pointers to opaque structs.
 

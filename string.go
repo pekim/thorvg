@@ -1,22 +1,22 @@
-package internal
+package thorvg
 
 import (
 	"math"
 	"unsafe"
 )
 
-func CString(s string) (uintptr, func()) {
-	cStr := malloc(len(s) + 1)
-	cStrSlice := unsafe.Slice(cStr, len(s)+1)
-	copy(cStrSlice, []byte(s))
-	cStrSlice[len(s)] = 0
-	return uintptr(unsafe.Pointer(cStr)), func() { free(cStr) }
-}
+// func cString(s string) (uintptr, func()) {
+// 	cStr := malloc(len(s) + 1)
+// 	cStrSlice := unsafe.Slice(cStr, len(s)+1)
+// 	copy(cStrSlice, []byte(s))
+// 	cStrSlice[len(s)] = 0
+// 	return uintptr(unsafe.Pointer(cStr)), func() { free(cStr) }
+// }
 
-// GoString returns a Go string for a null terminated C string.
+// goString returns a Go string for a null terminated C string.
 //
 // The Go string is a copy of the C bytes.
-func GoString(cStr *byte) string {
+func goString(cStr *byte) string {
 	if cStr == nil {
 		return ""
 	}
