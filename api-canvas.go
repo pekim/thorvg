@@ -19,6 +19,8 @@ type Canvas struct {
 /*
 Buffer returns the buffer target of a software canvas.
 
+The buffer remains the canvas's target, so its contents should not be altered.
+
 If the canvas is not a software canvas, nil will be returned.
 If the canvas is a software canvas but has never has a target set, nil will be returned.
 */
