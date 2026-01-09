@@ -2,15 +2,17 @@
 set -eo pipefail
 
 THORVG_COMMIT=0a680b13d1753afdb85b498f26a03e605efe7c2e
-LIBRARY_FILE=internal/lib/libthorvg-1.so.1.0.0
+THORVG_DIR=internal/thorvg-src
+LIBRARY_DIR=internal/lib
+LIBRARY_FILE=$LIBRARY_DIR/libthorvg-1.so.1.0.0
 
 # clone if not already cloned
-if [ ! -e thorvg ]; then
-	git clone https://github.com/thorvg/thorvg.git
+if [ ! -e $THORVG_DIR ]; then
+	git clone https://github.com/thorvg/thorvg.git $THORVG_DIR
 fi
 
 # ensure desired commit is checked out
-pushd thorvg
+pushd $THORVG_DIR
 HEAD=$(git rev-parse HEAD)
 if [ "$HEAD" != "$THORVG_COMMIT" ]; then
   git pull
@@ -19,14 +21,14 @@ fi
 popd
 
 # build thorvg with C bindings
-pushd thorvg
+pushd $THORVG_DIR
 meson setup build -Dbindings=capi -Dengines=sw,gl
 ninja -C build
 popd
 
 # copy library and C header
-cp thorvg/build/src/libthorvg-1.so.1.0.0 $LIBRARY_FILE
-cp thorvg/src/bindings/capi/thorvg_capi.h internal/lib/thorvg_capi.h
+cp $THORVG_DIR/build/src/libthorvg-1.so.1.0.0 $LIBRARY_DIR
+cp $THORVG_DIR/src/bindings/capi/thorvg_capi.h $LIBRARY_DIR
 
 # strip symbols from the library, reducing the size
 # from ~11M to ~1.2M
