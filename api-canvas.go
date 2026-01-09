@@ -1,6 +1,9 @@
 package thorvg
 
-import "unsafe"
+import (
+	"runtime"
+	"unsafe"
+)
 
 /*
 Canvas is a structure responsible for managing and drawing graphical elements.
@@ -8,9 +11,9 @@ Canvas is a structure responsible for managing and drawing graphical elements.
 It sets up the target buffer, which can be drawn on the screen. It stores the Paint objects (Shape, Scene, Picture).
 */
 type Canvas struct {
-	canvas     uintptr
-	buffer     *byte // only used for a software canvas
-	bufferSize int
+	canvas       uintptr
+	buffer       []byte // only used for a software canvas
+	bufferPinner runtime.Pinner
 }
 
 /*
@@ -20,11 +23,7 @@ If the canvas is not a software canvas, nil will be returned.
 If the canvas is a software canvas but has never has a target set, nil will be returned.
 */
 func (canvas Canvas) Buffer() []byte {
-	if canvas.buffer == nil {
-		return nil
-	}
-
-	return unsafe.Slice(canvas.buffer, canvas.bufferSize)
+	return canvas.buffer
 }
 
 /*
@@ -68,13 +67,11 @@ The buffer of a desirable size should be allocated and owned by the caller.
 @see Tvg_Colorspace
 */
 func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs ColorSpace) error {
-	if canvas.buffer != nil {
-		free(canvas.buffer)
-	}
-	canvas.bufferSize = int(4 * width * height)
-	canvas.buffer = malloc(canvas.bufferSize)
+	canvas.bufferPinner.Unpin()
+	canvas.buffer = make([]byte, 4*width*height)
+	canvas.bufferPinner.Pin(&canvas.buffer)
 
-	result := tvg_swcanvas_set_target(canvas.canvas, canvas.buffer, uint32(stride), uint32(width), uint32(height), cs)
+	result := tvg_swcanvas_set_target(canvas.canvas, &canvas.buffer[0], uint32(stride), uint32(width), uint32(height), cs)
 	return result.error()
 }
 
@@ -135,11 +132,8 @@ Destroy clears the canvas internal data, releases all paints stored by the canva
 @retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer to the Tvg_Canvas object is passed.
 */
 func (canvas *Canvas) Destroy() error {
-	if canvas.buffer != nil {
-		free(canvas.buffer)
-		canvas.buffer = nil
-	}
-
+	canvas.bufferPinner.Unpin()
+	canvas.buffer = nil
 	return tvg_canvas_destroy(canvas.canvas).error()
 }
 
