@@ -19,12 +19,12 @@ Buffer returns the buffer target of a software canvas.
 If the canvas is not a software canvas, nil will be returned.
 If the canvas is a software canvas but has never has a target set, nil will be returned.
 */
-func (canvas Canvas) Buffer() []uint32 {
+func (canvas Canvas) Buffer() []byte {
 	if canvas.buffer == nil {
 		return nil
 	}
 
-	return unsafe.Slice((*uint32)(unsafe.Pointer(canvas.buffer)), canvas.bufferSize/4)
+	return unsafe.Slice(canvas.buffer, canvas.bufferSize)
 }
 
 /*
@@ -52,16 +52,16 @@ func SwCanvasCreate(option EngineOption) Canvas {
 For optimisation reasons TVG does not allocate memory for the output buffer on its own.
 The buffer of a desirable size should be allocated and owned by the caller.
 
-@param[in] canvas The Tvg_Canvas object managing the @p buffer.
-@param[in] buffer A pointer to the allocated memory block of the size @p stride x @p h.
-@param[in] stride The stride of the raster image - in most cases same value as @p w.
-@param[in] w The width of the raster image.
-@param[in] h The height of the raster image.
-@param[in] cs The colorspace value defining the way the 32-bits colors should be read/written.
+	@param[in] canvas The Tvg_Canvas object managing the @p buffer.
+	@param[in] buffer A pointer to the allocated memory block of the size @p stride x @p h.
+	@param[in] stride The stride of the raster image - in most cases same value as @p w.
+	@param[in] w The width of the raster image.
+	@param[in] h The height of the raster image.
+	@param[in] cs The colorspace value defining the way the 32-bits colors should be read/written.
 
-@retval TVG_RESULT_INVALID_ARGUMENTS An invalid canvas or buffer pointer passed or one of the @p stride, @p w or @p h being zero.
-@retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
-@retval TVG_RESULT_NOT_SUPPORTED The software engine is not supported.
+	@retval TVG_RESULT_INVALID_ARGUMENTS An invalid canvas or buffer pointer passed or one of the @p stride, @p w or @p h being zero.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
+	@retval TVG_RESULT_NOT_SUPPORTED The software engine is not supported.
 
 @warning Do not access @p buffer during tvg_canvas_draw() - tvg_canvas_sync(). It should not be accessed while the engine is writing on it.
 
@@ -97,13 +97,13 @@ GlSetTarget sets the drawing target for rasterization.
 This function specifies the drawing target where the rasterization will occur. It can target
 a specific framebuffer object (FBO) or the main surface.
 
-@param[in] display The platform-specific display handle (EGLDisplay for EGL). Set @c nullptr for other systems.
-@param[in] surface The platform-specific surface handle (EGLSurface for EGL, HDC for WGL). Set @c nullptr for other systems.
-@param[in] context The OpenGL context to be used for rendering on this canvas.
-@param[in] id The GL target ID, usually indicating the FBO ID. A value of @c 0 specifies the main surface.
-@param[in] w The width (in pixels) of the raster image.
-@param[in] h The height (in pixels) of the raster image.
-@param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c GL_RGBA8.
+	@param[in] display The platform-specific display handle (EGLDisplay for EGL). Set @c nullptr for other systems.
+	@param[in] surface The platform-specific surface handle (EGLSurface for EGL, HDC for WGL). Set @c nullptr for other systems.
+	@param[in] context The OpenGL context to be used for rendering on this canvas.
+	@param[in] id The GL target ID, usually indicating the FBO ID. A value of @c 0 specifies the main surface.
+	@param[in] w The width (in pixels) of the raster image.
+	@param[in] h The height (in pixels) of the raster image.
+	@param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c GL_RGBA8.
 
 @note If @p display and @p surface are not provided, the ThorVG GL engine assumes that
 the appropriate OpenGL context is already current and will not attempt to bind a new one.
@@ -141,4 +141,69 @@ func (canvas *Canvas) Destroy() error {
 	}
 
 	return tvg_canvas_destroy(canvas.canvas).error()
+}
+
+/*
+Push inserts a drawing element into the canvas using a Tvg_Paint object.
+
+	@param[in] canvas The Tvg_Canvas object managing the @p paint.
+	@param[in] paint The Tvg_Paint object to be drawn.
+
+Only the paints pushed into the canvas will be drawing targets.
+They are retained by the canvas until you call tvg_canvas_remove()
+
+	@return Tvg_Result return values:
+	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION An internal error.
+
+@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
+@see tvg_canvas_push_at()
+@see tvg_canvas_remove()
+*/
+func (canvas Canvas) Push(paint Paint) error {
+	return tvg_canvas_push(canvas.canvas, paint.paint()).error()
+}
+
+/*
+Draw requests the canvas to render the Paint objects.
+
+	@param[in] canvas The Tvg_Canvas object containing elements to be drawn.
+	@param[in] clear If @c true, clears the target buffer to zero before drawing.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION The canvas is not properly prepared.
+					This may occur if the canvas target has not been set or if the update is called during drawing.
+					without calling tvg_canvas_sync() in between.
+
+@note Clearing the buffer is unnecessary if the canvas will be fully covered
+
+	with opaque content. Skipping the clear can improve performance.
+
+@note Drawing may be performed asynchronously if the thread count is greater than zero.
+
+	To ensure the drawing process is complete, call sync() afterwards.
+
+@note If the canvas has not been updated prior to tvg_canvas_draw(), it may implicitly perform tvg_canvas_update()
+
+@see tvg_canvas_sync()
+@see tvg_canvas_update()
+*/
+func (canvas Canvas) Draw(clear_ bool) error {
+	return tvg_canvas_draw(canvas.canvas, clear_).error()
+}
+
+/*
+Sync guarantees that drawing task is finished.
+
+@param[in] canvas The Tvg_Canvas object containing elements which were drawn.
+
+The Canvas rendering can be performed asynchronously. To make sure that rendering is finished,
+the tvg_canvas_sync() must be called after the tvg_canvas_draw() regardless of threading.
+
+@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
+
+@see tvg_canvas_draw()
+*/
+func (canvas Canvas) Sync() error {
+	return tvg_canvas_sync(canvas.canvas).error()
 }

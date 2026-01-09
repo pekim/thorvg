@@ -35,6 +35,14 @@ var tvg_swcanvas_set_target func(canvas uintptr, buffer *byte, stride uint32, w 
 var tvg_glcanvas_create func() uintptr
 var tvg_glcanvas_set_target func(canvas uintptr, display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int32, w uint32, h uint32, cs ColorSpace) Result
 var tvg_canvas_destroy func(canvas uintptr) Result
+var tvg_canvas_push func(canvas uintptr, paint uintptr) Result
+var tvg_canvas_draw func(canvas uintptr, clear_ bool) Result
+var tvg_canvas_sync func(canvas uintptr) Result
+
+// Shape API
+var tvg_shape_new func() uintptr
+var tvg_shape_append_rect func(paint uintptr, x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) Result
+var tvg_shape_set_fill_color func(paint uintptr, r uint8, g uint8, b uint8, a uint8) Result
 
 func initLibThorvg() error {
 	filepath, err := libraryFilepath()
@@ -58,6 +66,14 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_glcanvas_create, lib, "tvg_glcanvas_create")
 	purego.RegisterLibFunc(&tvg_glcanvas_set_target, lib, "tvg_glcanvas_set_target")
 	purego.RegisterLibFunc(&tvg_canvas_destroy, lib, "tvg_canvas_destroy")
+	purego.RegisterLibFunc(&tvg_canvas_push, lib, "tvg_canvas_push")
+	purego.RegisterLibFunc(&tvg_canvas_draw, lib, "tvg_canvas_draw")
+	purego.RegisterLibFunc(&tvg_canvas_sync, lib, "tvg_canvas_sync")
+
+	// Shape API
+	purego.RegisterLibFunc(&tvg_shape_new, lib, "tvg_shape_new")
+	purego.RegisterLibFunc(&tvg_shape_append_rect, lib, "tvg_shape_append_rect")
+	purego.RegisterLibFunc(&tvg_shape_set_fill_color, lib, "tvg_shape_set_fill_color")
 
 	return nil
 }

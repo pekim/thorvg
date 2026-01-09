@@ -2,12 +2,7 @@ package thorvg
 
 // Pointers to opaque structs.
 
-/*
-Paint is a structure representing a graphical element.
-
-@warning The TvgPaint objects cannot be shared between Canvases.
-*/
-type Paint uintptr
+// TODO kill this file
 
 /*
 Gradient is a structure representing a gradient fill of a Paint object.

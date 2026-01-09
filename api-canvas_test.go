@@ -15,7 +15,7 @@ func TestSwCanvas(t *testing.T) {
 
 	err := canvas.SwSetTarget(16, 16, 16, COLORSPACE_ARGB8888)
 	assert.NoError(t, err)
-	assert.Equal(t, 16*16, len(canvas.Buffer()))
+	assert.Equal(t, 4*16*16, len(canvas.Buffer()))
 
 	err = canvas.Destroy()
 	assert.NoError(t, err)
