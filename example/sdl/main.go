@@ -52,7 +52,7 @@ func main() {
 Outer:
 	for {
 		var event sdl.Event
-		for sdl.PollEvent(&event) {
+		for sdl.WaitEvent(&event) {
 			switch event.Type() {
 
 			case sdl.EventQuit:
