@@ -1,7 +1,6 @@
 package thorvg
 
 import (
-	_ "embed"
 	"errors"
 	"fmt"
 	"os"
@@ -10,9 +9,6 @@ import (
 
 	"github.com/ebitengine/purego"
 )
-
-//go:embed internal/lib/libthorvg-1.so.1.0.0
-var sharedObject []byte
 
 func libraryFilepath() (string, error) {
 	filepath := filepath.Join(os.TempDir(), fmt.Sprintf("libthorvg-%s.so", sharedObjectHash))
