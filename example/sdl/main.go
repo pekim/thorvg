@@ -6,6 +6,7 @@ import (
 	"github.com/jupiterrider/purego-sdl3/sdl"
 
 	tvg "github.com/pekim/thorvg"
+	"github.com/pekim/thorvg/example/draw"
 )
 
 func main() {
@@ -69,49 +70,10 @@ Outer:
 				resized()
 
 			case sdl.EventWindowExposed:
-				// background
-				{
-					rect := tvg.ShapeNew()
-					err = rect.AppendRect(0, 0, float32(windowWidth), float32(windowHeight), 0, 0, true)
-					if err != nil {
-						panic(err)
-					}
-					err = rect.SetFillColor(255, 255, 255, 255)
-					if err != nil {
-						panic(err)
-					}
-					err = canvas.Push(rect)
-					if err != nil {
-						panic(err)
-					}
-				}
-
-				// foreground
-				{
-					rect := tvg.ShapeNew()
-					err = rect.AppendRect(50, 50, 200, 200, 20, 20, true)
-					if err != nil {
-						panic(err)
-					}
-					err = rect.SetFillColor(255, 0, 0, 100)
-					if err != nil {
-						panic(err)
-					}
-					err = canvas.Push(rect)
-					if err != nil {
-						panic(err)
-					}
-				}
-
-				err = canvas.Draw(true)
+				err := draw.SimpleShapes(canvas, float32(windowWidth), float32(windowHeight))
 				if err != nil {
 					panic(err)
 				}
-				err = canvas.Sync()
-				if err != nil {
-					panic(err)
-				}
-
 				sdl.RenderPresent(renderer)
 			}
 		}
