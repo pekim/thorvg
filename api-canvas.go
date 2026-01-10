@@ -127,6 +127,49 @@ func (canvas *Canvas) GlSetTarget(
 }
 
 /*
+WgCanvasCreate creates a WebGPU rasterizer Canvas object.
+
+@return A new Tvg_Canvas object.
+
+@since 1.0.0
+*/
+func WgCanvasCreate() Canvas {
+	return Canvas{
+		canvas: tvg_wgcanvas_create(),
+	}
+}
+
+/*
+WgSetTarget sets the drawing target for the rasterization.
+
+	@param[in] device WGPUDevice, a desired handle for the wgpu device. If it is @c nullptr, ThorVG will assign an appropriate device internally.
+	@param[in] instance WGPUInstance, context for all other wgpu objects.
+	@param[in] target Either WGPUSurface or WGPUTexture, serving as handles to a presentable surface or texture.
+	@param[in] w The width of the target.
+	@param[in] h The height of the target.
+	@param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c WGPUTextureFormat_RGBA8Unorm.
+	@param[in] type @c 0: surface, @c 1: texture are used as pesentable target.
+
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
+	@retval TVG_RESULT_NOT_SUPPORTED In case the wg engine is not supported.
+
+@since 1.0
+*/
+func (canvas *Canvas) WgSetTarget(
+	device unsafe.Pointer, instance unsafe.Pointer, target unsafe.Pointer,
+	width uint32, height uint32, colorSpace ColorSpace, typ int,
+) error {
+	result := tvg_wgcanvas_set_target(canvas.canvas, device, instance, target,
+		uint32(width), uint32(height), colorSpace, int32(typ))
+	return result.error()
+}
+
+// TVG_API Tvg_Result tvg_wgcanvas_set_target(
+// Tvg_Canvas canvas,
+//  void* device, void* instance, void* target,
+//  uint32_t w, uint32_t h, Tvg_Colorspace cs, int type);
+
+/*
 Destroy clears the canvas internal data, releases all paints stored by the canvas and destroys the canvas object itself.
 
 @param[in] canvas The Tvg_Canvas object to be destroyed.
@@ -152,12 +195,84 @@ They are retained by the canvas until you call tvg_canvas_remove()
 	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION An internal error.
 
-@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
-@see tvg_canvas_push_at()
-@see tvg_canvas_remove()
+	@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
+	@see tvg_canvas_push_at()
+	@see tvg_canvas_remove()
 */
 func (canvas Canvas) Push(paint Paint) error {
 	return tvg_canvas_push(canvas.canvas, paint.paint()).error()
+}
+
+/*
+PushAt adds a paint object to the root scene.
+
+This function appends a paint object to root scene of the canvas. If the optional @p at
+is provided, the new paint object will be inserted immediately before the specified
+paint object in the root scene. If @p at is @c nullptr, the paint object will be added
+to the end of the root scene.
+
+	@param[in] canvas The Tvg_Canvas object managing the @p paint.
+	@param[in] target A pointer to the Paint object to be added into the root scene.
+										This parameter must not be @c nullptr.
+	@param[in] at A pointer to an existing Paint object in the root scene before which
+								the new paint object will be added. If @c nullptr, the new
+								paint object is added to the end of the root scene. The default is @c nullptr.
+
+	@note The ownership of the @p paint object is transferred to the canvas upon addition.
+	@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
+
+	@see tvg_canvas_push()
+	@see tvg_canvas_remove()
+	@see tvg_canvas_remove()
+	@since 1.0
+*/
+func (canvas Canvas) PushAt(target Paint, paint Paint) error {
+	var cTarget uintptr
+	if target != nil {
+		cTarget = target.paint()
+	}
+	return tvg_canvas_push_at(canvas.canvas, cTarget, paint.paint()).error()
+}
+
+/*
+Remove removes a paint object from the root scene.
+
+This function removes a specified paint object from the root scene. If no paint
+object is specified (i.e., the default @c nullptr is used), the function
+performs to clear all paints from the scene.
+
+	@param[in] canvas A Tvg_Canvas object to remove the @p paint.
+	@param[in] paint A pointer to the Paint object to be removed from the root scene.
+									If @c nullptr, remove all the paints from the root scene.
+
+	@see tvg_canvas_push()
+	@see tvg_canvas_push_at()
+	@since 1.0
+*/
+func (canvas Canvas) Remove(paint Paint) error {
+	return tvg_canvas_remove(canvas.canvas, paint.paint()).error()
+}
+
+/*
+Update requests the canvas to update modified paint objects in preparation for rendering.
+
+This function triggers an internal update for all paint instances that have been modified
+since the last update. It ensures that the canvas state is ready for accurate rendering.
+
+@param[in] canvas The Tvg_Canvas object to be updated.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION The canvas is not properly prepared.
+					This may occur if the canvas target has not been set or if the update is called during drawing.
+					Call tvg_canvas_sync() before trying.
+
+	@note Only paint objects that have been changed will be processed.
+	@note If the canvas is configured with multiple threads, the update may be performed asynchronously.
+
+@see tvg_canvas_sync()
+*/
+func (canvas Canvas) Update(Paint) error {
+	return tvg_canvas_update(canvas.canvas).error()
 }
 
 /*
@@ -202,4 +317,38 @@ the tvg_canvas_sync() must be called after the tvg_canvas_draw() regardless of t
 */
 func (canvas Canvas) Sync() error {
 	return tvg_canvas_sync(canvas.canvas).error()
+}
+
+/*
+*
+SetViewport Sets the drawing region of the canvas.
+
+This function defines a rectangular area of the canvas to be used for drawing operations.
+The specified viewport clips rendering output to the boundaries of that rectangle.
+
+Please note that changing the viewport is only allowed at the beginning of the rendering sequence—that is, after calling tvg_canvas_sync().
+
+	@param[in] canvas The Tvg_Canvas object containing elements which were drawn.
+	@param[in] x The x-coordinate of the upper-left corner of the rectangle.
+	@param[in] y The y-coordinate of the upper-left corner of the rectangle.
+	@param[in] w The width of the rectangle.
+	@param[in] h The height of the rectangle.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the canvas is not in a synced state.
+
+	@see tvg_canvas_sync()
+	@see tvg_swcanvas_set_target()
+	@see tvg_glcanvas_set_target()
+	@see tvg_wgcanvas_set_target()
+
+@warning Changing the viewport is not allowed after calling tvg_canvas_push(),
+
+	tvg_canvas_remove(), tvg_canvas_update(), or tvg_canvas_draw().
+
+@note When the target is reset, the viewport will also be reset to match the target size.
+@since 0.15
+*/
+func (canvas Canvas) SetViewport(x int, y int, width int, height int) error {
+	return tvg_canvas_set_viewport(canvas.canvas, int32(x), int32(y), int32(width), int32(height)).error()
 }

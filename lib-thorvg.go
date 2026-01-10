@@ -44,10 +44,16 @@ var tvg_swcanvas_create func(option EngineOption) uintptr
 var tvg_swcanvas_set_target func(canvas uintptr, buffer *byte, stride uint32, w uint32, h uint32, cs ColorSpace) Result
 var tvg_glcanvas_create func() uintptr
 var tvg_glcanvas_set_target func(canvas uintptr, display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int32, w uint32, h uint32, cs ColorSpace) Result
+var tvg_wgcanvas_create func() uintptr
+var tvg_wgcanvas_set_target func(canvas uintptr, device unsafe.Pointer, instance unsafe.Pointer, target unsafe.Pointer, w uint32, h uint32, cs ColorSpace, typ int32) Result
 var tvg_canvas_destroy func(canvas uintptr) Result
 var tvg_canvas_push func(canvas uintptr, paint uintptr) Result
+var tvg_canvas_push_at func(canvas uintptr, target uintptr, paint uintptr) Result
+var tvg_canvas_remove func(canvas uintptr, paint uintptr) Result
+var tvg_canvas_update func(canvas uintptr) Result
 var tvg_canvas_draw func(canvas uintptr, clear_ bool) Result
 var tvg_canvas_sync func(canvas uintptr) Result
+var tvg_canvas_set_viewport func(canvas uintptr, x int32, y int32, w int32, h int32) Result
 
 // Shape API
 var tvg_shape_new func() uintptr
@@ -75,10 +81,16 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_swcanvas_set_target, lib, "tvg_swcanvas_set_target")
 	purego.RegisterLibFunc(&tvg_glcanvas_create, lib, "tvg_glcanvas_create")
 	purego.RegisterLibFunc(&tvg_glcanvas_set_target, lib, "tvg_glcanvas_set_target")
+	purego.RegisterLibFunc(&tvg_wgcanvas_create, lib, "tvg_wgcanvas_create")
+	purego.RegisterLibFunc(&tvg_wgcanvas_set_target, lib, "tvg_wgcanvas_set_target")
 	purego.RegisterLibFunc(&tvg_canvas_destroy, lib, "tvg_canvas_destroy")
 	purego.RegisterLibFunc(&tvg_canvas_push, lib, "tvg_canvas_push")
+	purego.RegisterLibFunc(&tvg_canvas_push_at, lib, "tvg_canvas_push_at")
+	purego.RegisterLibFunc(&tvg_canvas_remove, lib, "tvg_canvas_remove")
+	purego.RegisterLibFunc(&tvg_canvas_update, lib, "tvg_canvas_update")
 	purego.RegisterLibFunc(&tvg_canvas_draw, lib, "tvg_canvas_draw")
 	purego.RegisterLibFunc(&tvg_canvas_sync, lib, "tvg_canvas_sync")
+	purego.RegisterLibFunc(&tvg_canvas_set_viewport, lib, "tvg_canvas_set_viewport")
 
 	// Shape API
 	purego.RegisterLibFunc(&tvg_shape_new, lib, "tvg_shape_new")
