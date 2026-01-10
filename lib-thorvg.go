@@ -58,7 +58,17 @@ var tvg_canvas_set_viewport func(canvas uintptr, x int32, y int32, w int32, h in
 // Shape API
 var tvg_shape_new func() uintptr
 var tvg_shape_append_rect func(paint uintptr, x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) Result
+var tvg_shape_append_circle func(paint uintptr, cx float32, cy float32, rx float32, ry float32, cw bool) Result
 var tvg_shape_set_fill_color func(paint uintptr, r uint8, g uint8, b uint8, a uint8) Result
+var tvg_shape_set_gradient func(paint uintptr, grad uintptr) Result
+var tvg_shape_get_gradient func(paint uintptr, grad *uintptr) Result
+
+// Gradient API
+var tvg_radial_gradient_new func() uintptr
+var tvg_radial_gradient_set func(grad uintptr, cx float32, cy float32, r float32, fx float32, fy float32, fr float32) Result
+var tvg_radial_gradient_get func(grad uintptr, cx *float32, cy *float32, r *float32, fx *float32, fy *float32, fr *float32) Result
+var tvg_gradient_set_color_stops func(grad uintptr, color_stop *ColorStop, cnt uint32) Result
+var tvg_gradient_get_color_stops func(grad uintptr, color_stop **ColorStop, cnt *uint32) Result
 
 func initLibThorvg() error {
 	filepath, err := libraryFilepath()
@@ -95,7 +105,17 @@ func initLibThorvg() error {
 	// Shape API
 	purego.RegisterLibFunc(&tvg_shape_new, lib, "tvg_shape_new")
 	purego.RegisterLibFunc(&tvg_shape_append_rect, lib, "tvg_shape_append_rect")
+	purego.RegisterLibFunc(&tvg_shape_append_circle, lib, "tvg_shape_append_circle")
 	purego.RegisterLibFunc(&tvg_shape_set_fill_color, lib, "tvg_shape_set_fill_color")
+	purego.RegisterLibFunc(&tvg_shape_set_gradient, lib, "tvg_shape_set_gradient")
+	purego.RegisterLibFunc(&tvg_shape_get_gradient, lib, "tvg_shape_get_gradient")
+
+	// Gradient API
+	purego.RegisterLibFunc(&tvg_radial_gradient_new, lib, "tvg_radial_gradient_new")
+	purego.RegisterLibFunc(&tvg_radial_gradient_set, lib, "tvg_radial_gradient_set")
+	purego.RegisterLibFunc(&tvg_radial_gradient_get, lib, "tvg_radial_gradient_get")
+	purego.RegisterLibFunc(&tvg_gradient_set_color_stops, lib, "tvg_gradient_set_color_stops")
+	purego.RegisterLibFunc(&tvg_gradient_get_color_stops, lib, "tvg_gradient_get_color_stops")
 
 	return nil
 }

@@ -5,11 +5,6 @@ package thorvg
 // TODO kill this file
 
 /*
-Gradient is a structure representing a gradient fill of a Paint object.
-*/
-type Gradient uintptr
-
-/*
 Saver is a structure representing an object that enables to save a Paint object into a file.
 */
 type Saver uintptr
