@@ -88,7 +88,14 @@ var tvg_font_load func(path string) Result
 var tvg_font_load_data func(name string, data *byte, size uint32, mimetype string, copy_ bool) Result
 var tvg_font_unload func(path string) Result
 
+var libThorvgInitialised = false
+
 func initLibThorvg() error {
+	if libThorvgInitialised {
+		return nil
+	}
+	defer func() { libThorvgInitialised = true }()
+
 	filepath, err := libraryFilepath()
 	if err != nil {
 		return err
