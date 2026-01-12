@@ -1,7 +1,7 @@
 package thorvg
 
 type Text struct {
-	paint_ uintptr
+	paintCommon
 }
 
 func (text Text) paint() uintptr {
@@ -22,7 +22,9 @@ To properly destroy the Text object, use @ref tvg_paint_rel().
 */
 func TextNew() Text {
 	return Text{
-		paint_: tvg_text_new(),
+		paintCommon: paintCommon{
+			paint_: tvg_text_new(),
+		},
 	}
 }
 
@@ -330,4 +332,19 @@ This function is used to release resources associated with a font file that has 
 */
 func FontUnload(path string) error {
 	return tvg_font_unload(path).error()
+}
+
+/*
+Duplicate duplicates a Text.
+
+Creates a new object and sets its all properties as in the original object.
+
+	@param[in] paint The Tvg_Paint object to be copied.
+
+	@return A copied Tvg_Paint object if succeed, @c nullptr otherwise.
+*/
+func (text Text) Duplicate() Text {
+	return Text{
+		paintCommon: text.duplicate(),
+	}
 }

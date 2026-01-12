@@ -1,11 +1,7 @@
 package thorvg
 
 type Shape struct {
-	paint_ uintptr
-}
-
-func (shape Shape) paint() uintptr {
-	return shape.paint_
+	paintCommon
 }
 
 /*
@@ -20,7 +16,9 @@ To properly destroy the Shape object, use @ref tvg_paint_rel().
 */
 func ShapeNew() Shape {
 	return Shape{
-		paint_: tvg_shape_new(),
+		paintCommon: paintCommon{
+			paint_: tvg_shape_new(),
+		},
 	}
 }
 
@@ -130,4 +128,19 @@ func (shape Shape) GetGradient() (Gradient, error) {
 	var gradient uintptr
 	result := tvg_shape_get_gradient(shape.paint_, &gradient)
 	return Gradient{gradient: gradient}, result.error()
+}
+
+/*
+Duplicate duplicates a Shape.
+
+Creates a new object and sets its all properties as in the original object.
+
+	@param[in] paint The Tvg_Paint object to be copied.
+
+	@return A copied Tvg_Paint object if succeed, @c nullptr otherwise.
+*/
+func (shape Shape) Duplicate() Shape {
+	return Shape{
+		paintCommon: shape.duplicate(),
+	}
 }

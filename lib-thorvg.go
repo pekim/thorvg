@@ -55,6 +55,32 @@ var tvg_canvas_draw func(canvas uintptr, clear_ bool) Result
 var tvg_canvas_sync func(canvas uintptr) Result
 var tvg_canvas_set_viewport func(canvas uintptr, x int32, y int32, w int32, h int32) Result
 
+// Paint API
+var tvg_paint_rel func(paint uintptr) Result
+var tvg_paint_ref func(paint uintptr) uint16
+var tvg_paint_unref func(paint uintptr, free bool) uint16
+var tvg_paint_get_ref func(paint uintptr) uint16
+var tvg_paint_set_visible func(paint uintptr, visible bool) Result
+var tvg_paint_get_visible func(paint uintptr) bool
+var tvg_paint_scale func(paint uintptr, factor float32) Result
+var tvg_paint_rotate func(paint uintptr, degree float32) Result
+var tvg_paint_translate func(paint uintptr, x float32, y float32) Result
+var tvg_paint_set_transform func(paint uintptr, m *Matrix) Result
+var tvg_paint_get_transform func(paint uintptr, m *Matrix) Result
+var tvg_paint_set_opacity func(paint uintptr, opacity uint8) Result
+var tvg_paint_get_opacity func(paint uintptr, opacity *uint8) Result
+var tvg_paint_duplicate func(paint uintptr) uintptr
+var tvg_paint_intersects func(paint uintptr, x int32, y int32, w int32, h int32) bool
+var tvg_paint_get_aabb func(paint uintptr, x *float32, y *float32, w *float32, h *float32) Result
+var tvg_paint_get_obb func(paint uintptr, pt4 *Point) Result
+var tvg_paint_set_mask_method func(paint uintptr, target uintptr, method MaskMethod) Result
+var tvg_paint_get_mask_method func(paint uintptr, target uintptr, method *MaskMethod) Result
+var tvg_paint_set_clip func(paint uintptr, clipper uintptr) Result
+var tvg_paint_get_clip func(paint uintptr) uintptr
+var tvg_paint_get_parent func(paint uintptr) uintptr
+var tvg_paint_get_type func(paint uintptr, typ *Type) Result
+var tvg_paint_set_blend_method func(paint uintptr, method BlendMethod) Result
+
 // Shape API
 var tvg_shape_new func() uintptr
 var tvg_shape_append_rect func(paint uintptr, x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) Result
@@ -126,6 +152,32 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_canvas_draw, lib, "tvg_canvas_draw")
 	purego.RegisterLibFunc(&tvg_canvas_sync, lib, "tvg_canvas_sync")
 	purego.RegisterLibFunc(&tvg_canvas_set_viewport, lib, "tvg_canvas_set_viewport")
+
+	// Paint API
+	purego.RegisterLibFunc(&tvg_paint_rel, lib, "tvg_paint_rel")
+	purego.RegisterLibFunc(&tvg_paint_ref, lib, "tvg_paint_ref")
+	purego.RegisterLibFunc(&tvg_paint_unref, lib, "tvg_paint_unref")
+	purego.RegisterLibFunc(&tvg_paint_get_ref, lib, "tvg_paint_get_ref")
+	purego.RegisterLibFunc(&tvg_paint_set_visible, lib, "tvg_paint_set_visible")
+	purego.RegisterLibFunc(&tvg_paint_get_visible, lib, "tvg_paint_get_visible")
+	purego.RegisterLibFunc(&tvg_paint_scale, lib, "tvg_paint_scale")
+	purego.RegisterLibFunc(&tvg_paint_rotate, lib, "tvg_paint_rotate")
+	purego.RegisterLibFunc(&tvg_paint_translate, lib, "tvg_paint_translate")
+	purego.RegisterLibFunc(&tvg_paint_set_transform, lib, "tvg_paint_set_transform")
+	purego.RegisterLibFunc(&tvg_paint_get_transform, lib, "tvg_paint_get_transform")
+	purego.RegisterLibFunc(&tvg_paint_set_opacity, lib, "tvg_paint_set_opacity")
+	purego.RegisterLibFunc(&tvg_paint_get_opacity, lib, "tvg_paint_get_opacity")
+	purego.RegisterLibFunc(&tvg_paint_duplicate, lib, "tvg_paint_duplicate")
+	purego.RegisterLibFunc(&tvg_paint_intersects, lib, "tvg_paint_intersects")
+	purego.RegisterLibFunc(&tvg_paint_get_aabb, lib, "tvg_paint_get_aabb")
+	purego.RegisterLibFunc(&tvg_paint_get_obb, lib, "tvg_paint_get_obb")
+	purego.RegisterLibFunc(&tvg_paint_set_mask_method, lib, "tvg_paint_set_mask_method")
+	purego.RegisterLibFunc(&tvg_paint_get_mask_method, lib, "tvg_paint_get_mask_method")
+	purego.RegisterLibFunc(&tvg_paint_set_clip, lib, "tvg_paint_set_clip")
+	purego.RegisterLibFunc(&tvg_paint_get_clip, lib, "tvg_paint_get_clip")
+	purego.RegisterLibFunc(&tvg_paint_get_parent, lib, "tvg_paint_get_parent")
+	purego.RegisterLibFunc(&tvg_paint_get_type, lib, "tvg_paint_get_type")
+	purego.RegisterLibFunc(&tvg_paint_set_blend_method, lib, "tvg_paint_set_blend_method")
 
 	// Shape API
 	purego.RegisterLibFunc(&tvg_shape_new, lib, "tvg_shape_new")
