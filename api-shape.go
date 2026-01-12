@@ -111,7 +111,7 @@ The parts of the shape defined as inner are filled.
 @see tvg_shape_set_fill_rule()
 */
 func (shape Shape) SetGradient(gradient Gradient) error {
-	return tvg_shape_set_gradient(shape.paint_, gradient.gradient).error()
+	return tvg_shape_set_gradient(shape.paint_, gradient.gradient()).error()
 }
 
 /*
@@ -124,10 +124,15 @@ func (shape Shape) SetGradient(gradient Gradient) error {
  *
  * @retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
  */
-func (shape Shape) GetGradient() (Gradient, error) {
+func (shape Shape) GetGradient() (Gradient, bool, error) {
 	var gradient uintptr
 	result := tvg_shape_get_gradient(shape.paint_, &gradient)
-	return Gradient{gradient: gradient}, result.error()
+	if result != RESULT_SUCCESS || gradient == 0 {
+		return nil, false, result.error()
+	}
+
+	grad, ok := newGradient(gradient)
+	return grad, ok, result.error()
 }
 
 /*

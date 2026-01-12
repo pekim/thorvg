@@ -91,10 +91,20 @@ var tvg_shape_get_gradient func(paint uintptr, grad *uintptr) Result
 
 // Gradient API
 var tvg_radial_gradient_new func() uintptr
+var tvg_linear_gradient_new func() uintptr
+var tvg_linear_gradient_set func(grad uintptr, x1 float32, y1 float32, x2 float32, y2 float32) Result
+var tvg_linear_gradient_get func(grad uintptr, x1 *float32, y1 *float32, x2 *float32, y2 *float32) Result
 var tvg_radial_gradient_set func(grad uintptr, cx float32, cy float32, r float32, fx float32, fy float32, fr float32) Result
 var tvg_radial_gradient_get func(grad uintptr, cx *float32, cy *float32, r *float32, fx *float32, fy *float32, fr *float32) Result
 var tvg_gradient_set_color_stops func(grad uintptr, color_stop *ColorStop, cnt uint32) Result
 var tvg_gradient_get_color_stops func(grad uintptr, color_stop **ColorStop, cnt *uint32) Result
+var tvg_gradient_set_spread func(grad uintptr, spread StrokeFill) Result
+var tvg_gradient_get_spread func(grad uintptr, spread *StrokeFill) Result
+var tvg_gradient_set_transform func(grad uintptr, m *Matrix) Result
+var tvg_gradient_get_transform func(grad uintptr, m *Matrix) Result
+var tvg_gradient_get_type func(grad uintptr, typ *Type) Result
+var tvg_gradient_duplicate func(grad uintptr) uintptr
+var tvg_gradient_del func(grad uintptr) Result
 
 // Text API
 var tvg_text_new func() uintptr
@@ -189,10 +199,20 @@ func initLibThorvg() error {
 
 	// Gradient API
 	purego.RegisterLibFunc(&tvg_radial_gradient_new, lib, "tvg_radial_gradient_new")
+	purego.RegisterLibFunc(&tvg_linear_gradient_new, lib, "tvg_linear_gradient_new")
+	purego.RegisterLibFunc(&tvg_linear_gradient_set, lib, "tvg_linear_gradient_set")
+	purego.RegisterLibFunc(&tvg_linear_gradient_get, lib, "tvg_linear_gradient_get")
 	purego.RegisterLibFunc(&tvg_radial_gradient_set, lib, "tvg_radial_gradient_set")
 	purego.RegisterLibFunc(&tvg_radial_gradient_get, lib, "tvg_radial_gradient_get")
 	purego.RegisterLibFunc(&tvg_gradient_set_color_stops, lib, "tvg_gradient_set_color_stops")
 	purego.RegisterLibFunc(&tvg_gradient_get_color_stops, lib, "tvg_gradient_get_color_stops")
+	purego.RegisterLibFunc(&tvg_gradient_set_spread, lib, "tvg_gradient_set_spread")
+	purego.RegisterLibFunc(&tvg_gradient_get_spread, lib, "tvg_gradient_get_spread")
+	purego.RegisterLibFunc(&tvg_gradient_set_transform, lib, "tvg_gradient_set_transform")
+	purego.RegisterLibFunc(&tvg_gradient_get_transform, lib, "tvg_gradient_get_transform")
+	purego.RegisterLibFunc(&tvg_gradient_get_type, lib, "tvg_gradient_get_type")
+	purego.RegisterLibFunc(&tvg_gradient_duplicate, lib, "tvg_gradient_duplicate")
+	purego.RegisterLibFunc(&tvg_gradient_del, lib, "tvg_gradient_del")
 
 	// Text API
 	purego.RegisterLibFunc(&tvg_text_new, lib, "tvg_text_new")

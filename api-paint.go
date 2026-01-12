@@ -1,7 +1,5 @@
 package thorvg
 
-import "fmt"
-
 /*
 Paint is a structure representing a graphical element.
 
@@ -463,7 +461,7 @@ func (paint paintCommon) SetBlendMethod(method BlendMethod) error {
 	return tvg_paint_set_blend_method(paint.paint_, method).error()
 }
 
-func newPaint(paint uintptr) (any, bool) {
+func newPaint(paint uintptr) (Paint, bool) {
 	var typ Type
 	result := tvg_paint_get_type(paint, &typ)
 	if result != RESULT_SUCCESS {
@@ -471,9 +469,6 @@ func newPaint(paint uintptr) (any, bool) {
 	}
 
 	switch typ {
-	case TYPE_UNDEF:
-		return nil, false
-
 	case TYPE_TEXT:
 		return Text{paintCommon: paintCommon{paint_: paint}}, true
 
@@ -487,16 +482,6 @@ func newPaint(paint uintptr) (any, bool) {
 	case TYPE_PICTURE:
 		// TODO
 		panic("not implemented yet")
-
-	case TYPE_LINEAR_GRAD:
-		// TODO
-		fmt.Println("TODO return a LinearGradient")
-		return Gradient{gradient: paint}, true
-
-	case TYPE_RADIAL_GRAD:
-		// TODO
-		fmt.Println("TODO return a RadialGradient")
-		return Gradient{gradient: paint}, true
 
 	default:
 		return nil, false
