@@ -50,9 +50,9 @@ func main() {
 	// if err := text.WrapMode(tvg.TEXT_WRAP_WORD); err != nil {
 	// 	panic(err)
 	// }
-	// if err := text.Layout(float32(width), float32(height)); err != nil {
-	// 	panic(err)
-	// }
+	if err := text.Translate(20, 20); err != nil {
+		panic(err)
+	}
 	// if err := text.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."); err != nil {
 	if err := text.SetText("Lorem ipsum dolor sit amet, consectetur..."); err != nil {
 		panic(err)
