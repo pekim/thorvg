@@ -148,6 +148,12 @@ var tvg_font_load func(path string) Result
 var tvg_font_load_data func(name string, data *byte, size uint32, mimetype string, copy_ bool) Result
 var tvg_font_unload func(path string) Result
 
+// Accessor API
+var tvg_accessor_new func() uintptr
+var tvg_accessor_del func(accessor uintptr) Result
+var tvg_accessor_set func(accessor uintptr, paint uintptr, func_ uintptr, data uintptr) Result
+var tvg_accessor_generate_id func(name string) uint32
+
 var libThorvgInitialised = false
 
 func initLibThorvg() error {
@@ -280,6 +286,12 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_font_load, lib, "tvg_font_load")
 	purego.RegisterLibFunc(&tvg_font_load_data, lib, "tvg_font_load_data")
 	purego.RegisterLibFunc(&tvg_font_unload, lib, "tvg_font_unload")
+
+	// Accessor API
+	purego.RegisterLibFunc(&tvg_accessor_new, lib, "tvg_accessor_new")
+	purego.RegisterLibFunc(&tvg_accessor_del, lib, "tvg_accessor_del")
+	purego.RegisterLibFunc(&tvg_accessor_set, lib, "tvg_accessor_set")
+	purego.RegisterLibFunc(&tvg_accessor_generate_id, lib, "tvg_accessor_generate_id")
 
 	return nil
 }
