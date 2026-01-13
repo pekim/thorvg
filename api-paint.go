@@ -476,8 +476,7 @@ func newPaint(paint uintptr) (Paint, bool) {
 		return Shape{paintCommon: paintCommon{paint_: paint}}, true
 
 	case TYPE_SCENE:
-		// TODO
-		panic("not implemented yet")
+		return Scene{paintCommon: paintCommon{paint_: paint}}, true
 
 	case TYPE_PICTURE:
 		return Picture{paintCommon: paintCommon{paint_: paint}}, true

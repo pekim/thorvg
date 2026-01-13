@@ -118,6 +118,18 @@ var tvg_picture_set_origin func(picture uintptr, x float32, y float32) Result
 var tvg_picture_get_origin func(picture uintptr, x *float32, y *float32) Result
 var tvg_picture_get_paint func(picture uintptr, id uint32) uintptr
 
+// Scene API
+var tvg_scene_new func() uintptr
+var tvg_scene_push func(scene uintptr, paint uintptr) Result
+var tvg_scene_push_at func(scene uintptr, target uintptr, at uintptr) Result
+var tvg_scene_remove func(scene uintptr, paint uintptr) Result
+var tvg_scene_reset_effects func(scene uintptr) Result
+var tvg_scene_push_effect_gaussian_blur func(scene uintptr, sigma float64, direction int32, border int32, quality int32) Result
+var tvg_scene_push_effect_drop_shadow func(scene uintptr, r int32, g int32, b int32, a int32, angle float64, distance float64, sigma float64, quality int32) Result
+var tvg_scene_push_effect_fill func(scene uintptr, r int32, g int32, b int32, a int32) Result
+var tvg_scene_push_effect_tint func(scene uintptr, black_r int32, black_g int32, black_b int32, white_r int32, white_g int32, white_b int32, intensity float64) Result
+var tvg_scene_push_effect_tritone func(scene uintptr, shadow_r int32, shadow_g int32, shadow_b int32, midtone_r int32, midtone_g int32, midtone_b int32, highlight_r int32, highlight_g int32, highlight_b int32, blend int32) Result
+
 // Text API
 var tvg_text_new func() uintptr
 var tvg_text_set_font func(text uintptr, name string) Result
@@ -237,6 +249,18 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_picture_set_origin, lib, "tvg_picture_set_origin")
 	purego.RegisterLibFunc(&tvg_picture_get_origin, lib, "tvg_picture_get_origin")
 	purego.RegisterLibFunc(&tvg_picture_get_paint, lib, "tvg_picture_get_paint")
+
+	// Scene API
+	purego.RegisterLibFunc(&tvg_scene_new, lib, "tvg_scene_new")
+	purego.RegisterLibFunc(&tvg_scene_push, lib, "tvg_scene_push")
+	purego.RegisterLibFunc(&tvg_scene_push_at, lib, "tvg_scene_push_at")
+	purego.RegisterLibFunc(&tvg_scene_remove, lib, "tvg_scene_remove")
+	purego.RegisterLibFunc(&tvg_scene_reset_effects, lib, "tvg_scene_reset_effects")
+	purego.RegisterLibFunc(&tvg_scene_push_effect_gaussian_blur, lib, "tvg_scene_push_effect_gaussian_blur")
+	purego.RegisterLibFunc(&tvg_scene_push_effect_drop_shadow, lib, "tvg_scene_push_effect_drop_shadow")
+	purego.RegisterLibFunc(&tvg_scene_push_effect_fill, lib, "tvg_scene_push_effect_fill")
+	purego.RegisterLibFunc(&tvg_scene_push_effect_tint, lib, "tvg_scene_push_effect_tint")
+	purego.RegisterLibFunc(&tvg_scene_push_effect_tritone, lib, "tvg_scene_push_effect_tritone")
 
 	// Text API
 	purego.RegisterLibFunc(&tvg_text_new, lib, "tvg_text_new")
