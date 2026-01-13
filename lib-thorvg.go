@@ -106,6 +106,18 @@ var tvg_gradient_get_type func(grad uintptr, typ *Type) Result
 var tvg_gradient_duplicate func(grad uintptr) uintptr
 var tvg_gradient_del func(grad uintptr) Result
 
+// Picture API
+var tvg_picture_new func() uintptr
+var tvg_picture_load func(picture uintptr, path string) Result
+var tvg_picture_load_raw func(picture uintptr, data *uint32, w uint32, h uint32, cs ColorSpace, copy_ bool) Result
+var tvg_picture_load_data func(picture uintptr, data *byte, size uint32, mimetype string, rpath string, copy_ bool) Result
+var tvg_picture_set_asset_resolver func(picture uintptr, resolver uintptr, data uintptr) Result
+var tvg_picture_set_size func(picture uintptr, w float32, h float32) Result
+var tvg_picture_get_size func(picture uintptr, w *float32, h *float32) Result
+var tvg_picture_set_origin func(picture uintptr, x float32, y float32) Result
+var tvg_picture_get_origin func(picture uintptr, x *float32, y *float32) Result
+var tvg_picture_get_paint func(picture uintptr, id uint32) uintptr
+
 // Text API
 var tvg_text_new func() uintptr
 var tvg_text_set_font func(text uintptr, name string) Result
@@ -213,6 +225,18 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_gradient_get_type, lib, "tvg_gradient_get_type")
 	purego.RegisterLibFunc(&tvg_gradient_duplicate, lib, "tvg_gradient_duplicate")
 	purego.RegisterLibFunc(&tvg_gradient_del, lib, "tvg_gradient_del")
+
+	// Picture API
+	purego.RegisterLibFunc(&tvg_picture_new, lib, "tvg_picture_new")
+	purego.RegisterLibFunc(&tvg_picture_load, lib, "tvg_picture_load")
+	purego.RegisterLibFunc(&tvg_picture_load_raw, lib, "tvg_picture_load_raw")
+	purego.RegisterLibFunc(&tvg_picture_load_data, lib, "tvg_picture_load_data")
+	purego.RegisterLibFunc(&tvg_picture_set_asset_resolver, lib, "tvg_picture_set_asset_resolver")
+	purego.RegisterLibFunc(&tvg_picture_set_size, lib, "tvg_picture_set_size")
+	purego.RegisterLibFunc(&tvg_picture_get_size, lib, "tvg_picture_get_size")
+	purego.RegisterLibFunc(&tvg_picture_set_origin, lib, "tvg_picture_set_origin")
+	purego.RegisterLibFunc(&tvg_picture_get_origin, lib, "tvg_picture_get_origin")
+	purego.RegisterLibFunc(&tvg_picture_get_paint, lib, "tvg_picture_get_paint")
 
 	// Text API
 	purego.RegisterLibFunc(&tvg_text_new, lib, "tvg_text_new")

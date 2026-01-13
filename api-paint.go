@@ -480,8 +480,7 @@ func newPaint(paint uintptr) (Paint, bool) {
 		panic("not implemented yet")
 
 	case TYPE_PICTURE:
-		// TODO
-		panic("not implemented yet")
+		return Picture{paintCommon: paintCommon{paint_: paint}}, true
 
 	default:
 		return nil, false
