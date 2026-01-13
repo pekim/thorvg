@@ -13,7 +13,7 @@ type Picture struct {
 type PictureAssetResolver func(paint Paint, src string) bool
 
 /*
-@brief Creates a new Picture object.
+PictureNew creates a new Picture object.
 
 This function allocates and returns a new Picture instance.
 To properly destroy the Picture object, use @ref tvg_paint_rel().

@@ -3,7 +3,7 @@ package thorvg
 /*
 Paint is a structure representing a graphical element.
 
-@warning The TvgPaint objects cannot be shared between Canvases.
+	@warning The TvgPaint objects cannot be shared between Canvases.
 */
 type Paint interface {
 	paint() uintptr
@@ -94,8 +94,8 @@ This is useful for selectively excluding paint objects during rendering.
 
 	@param[in] paint The Tvg_Paint object to set the visibility status.
 	@param[in] on A boolean flag indicating visibility. The default is @c true.
-								@c true, the object will be rendered by the engine.
-								@c false, the object will be excluded from the drawing process.
+							@c true, the object will be rendered by the engine.
+							@c false, the object will be excluded from the drawing process.
 
 	@note An invisible object is not considered inactive—it may still participate
 				in internal update processing if its prope

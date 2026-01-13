@@ -79,7 +79,7 @@ or heavy object movements), the overhead of tracking changes and managing update
 resulting in decreased performance compared to the default rendering mode. Thus, it is recommended to benchmark
 both modes in your specific use case to determine the optimal setting.
 
-@since 1.0
+	@since 1.0
 */
 type EngineOption enum
 
@@ -92,7 +92,7 @@ const (
 /*
 MaskMethod is an enumeration indicating the method used in the masking of two objects - the target and the source.
 
-@ingroup ThorVGCapi_Paint
+	@ingroup ThorVGCapi_Paint
 */
 type MaskMethod enum
 
@@ -113,9 +113,9 @@ const (
 /*
 BlendMethod is an enumeration indicates the method used for blending paint. Please refer to the respective formulas for each method.
 
-@ingroup ThorVGCapi_Paint
+	@ingroup ThorVGCapi_Paint
 
-@since 0.15
+	@since 0.15
 */
 type BlendMethod enum
 
@@ -145,12 +145,12 @@ Type is an enumeration indicating the ThorVG object type value.
 
 ThorVG's drawing objects can return object type values, allowing you to identify the specific type of each object.
 
-@ingroup ThorVGCapi_Paint
+	@ingroup ThorVGCapi_Paint
 
-@see tvg_paint_get_type()
-@see tvg_gradient_get_type()
+	@see tvg_paint_get_type()
+	@see tvg_gradient_get_type()
 
-@since 1.0
+	@since 1.0
 */
 type Type enum
 

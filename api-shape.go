@@ -10,9 +10,9 @@ ShapeNew creates a new Shape object.
 This function allocates and returns a new Shape instance.
 To properly destroy the Shape object, use @ref tvg_paint_rel().
 
-@return A pointer to the newly created Shape object.
+	@return A pointer to the newly created Shape object.
 
-@see tvg_paint_rel()
+	@see tvg_paint_rel()
 */
 func ShapeNew() Shape {
 	return Shape{
@@ -46,7 +46,7 @@ than @p w/2 the current point is set to (@p x + @p w/2, @p y)
 
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 
-@note For @p rx and @p ry greater than or equal to the half of @p w and the half of @p h, respectively, the shape become an ellipse.
+	@note For @p rx and @p ry greater than or equal to the half of @p w and the half of @p h, respectively, the shape become an ellipse.
 */
 func (shape Shape) AppendRect(x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) error {
 	return tvg_shape_append_rect(shape.paint_, x, y, w, h, rx, ry, cw).error()
@@ -68,7 +68,7 @@ The value of the current point is set to (@p cx, @p cy - @p ry).
 	@param[in] ry The y-axis radius of the ellipse.
 	@param[in] cw Specifies the path direction: @c true for clockwise, @c false for counterclockwise.
 
-@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 */
 func (shape Shape) AppendCircle(cx float32, cy float32, rx float32, ry float32, cw bool) error {
 	return tvg_shape_append_circle(shape.paint_, cx, cy, rx, ry, cw).error()
@@ -89,8 +89,8 @@ The parts of the shape defined as inner are colored.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 
-@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-@see tvg_shape_set_fill_rule()
+	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
+	@see tvg_shape_set_fill_rule()
 */
 func (shape Shape) SetFillColor(r uint8, g uint8, b uint8, a uint8) error {
 	return tvg_shape_set_fill_color(shape.paint_, r, g, b, a).error()
@@ -107,23 +107,23 @@ The parts of the shape defined as inner are filled.
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 	@retval TVG_RESULT_MEMORY_CORRUPTION An invalid Tvg_Gradient pointer.
 
-@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-@see tvg_shape_set_fill_rule()
+	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
+	@see tvg_shape_set_fill_rule()
 */
 func (shape Shape) SetGradient(gradient Gradient) error {
 	return tvg_shape_set_gradient(shape.paint_, gradient.gradient()).error()
 }
 
 /*
- * @brief Gets the gradient fill of the shape.
- *
- * The function does not allocate any data.
- *
- * @param[in] paint A Tvg_Paint pointer to the shape object.
- * @param[out] grad The gradient fill.
- *
- * @retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
- */
+GetGradient gets the gradient fill of the shape.
+
+The function does not allocate any data.
+
+	@param[in] paint A Tvg_Paint pointer to the shape object.
+	@param[out] grad The gradient fill.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
+*/
 func (shape Shape) GetGradient() (Gradient, bool, error) {
 	var gradient uintptr
 	result := tvg_shape_get_gradient(shape.paint_, &gradient)

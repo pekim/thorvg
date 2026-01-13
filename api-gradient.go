@@ -29,7 +29,8 @@ type RadialGradient struct {
 
 /*
 LinearGradientNew creates a new linear gradient object.
-@return A new linear gradient object.
+
+	@return A new linear gradient object.
 */
 func LinearGradientNew() LinearGradient {
 	return LinearGradient{
@@ -39,7 +40,8 @@ func LinearGradientNew() LinearGradient {
 
 /*
 RadialGradientNew Creates a new radial gradient object.
-@return A new radial gradient object.
+
+	@return A new radial gradient object.
 */
 func RadialGradientNew() RadialGradient {
 	return RadialGradient{
@@ -269,7 +271,7 @@ func (gradient RadialGradient) Duplicate() RadialGradient {
 }
 
 /*
-@brief Deletes the given gradient object.
+Del deletes the given gradient object.
 
 	@param[in] grad The gradient object to be deleted.
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Gradient pointer.

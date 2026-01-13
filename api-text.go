@@ -16,9 +16,9 @@ To properly destroy the Text object, use @ref tvg_paint_rel().
 
 	@return A pointer to the newly created Text object.
 
-@see tvg_paint_rel()
+	@see tvg_paint_rel()
 
-@since 0.15
+	@since 0.15
 */
 func TextNew() Text {
 	return Text{
@@ -46,7 +46,7 @@ This function specifies the name of the font to be used when rendering text.
 	@see tvg_text_set_size()
 	@see tvg_font_load()
 
-@since 1.0
+	@since 1.0
 */
 func (text Text) SetFont(name string) error {
 	return tvg_text_set_font(text.paint(), name).error()
@@ -59,18 +59,18 @@ This function sets the font size used during text rendering.
 The size is specified in point units, and supports floating-point precision
 for smooth scaling and animation effects.
 
-@param[in] text A Tvg_Paint pointer to the text object.
-@param[in] size The font size in points. Must be greater than 0.0.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] size The font size in points. Must be greater than 0.0.
 
-@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
-@retval TVG_RESULT_INVALID_ARGUMENT if the @p size is less than or equal to 0.
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+	@retval TVG_RESULT_INVALID_ARGUMENT if the @p size is less than or equal to 0.
 
-@note Use this function in combination with @ref font() to fully define text appearance.
-@note Fractional sizes (e.g., 12.5) are supported for sub-pixel rendering and animations.
+	@note Use this function in combination with @ref font() to fully define text appearance.
+	@note Fractional sizes (e.g., 12.5) are supported for sub-pixel rendering and animations.
 
-@see tvg_text_set_font()
+	@see tvg_text_set_font()
 
-@since 1.0
+	@since 1.0
 */
 func (text Text) SetSize(size float32) error {
 	return tvg_text_set_size(text.paint_, size).error()
@@ -82,10 +82,10 @@ SetText assigns the given unicode text to be rendered.
 This function sets the unicode text that will be displayed by the rendering system.
 The text is set according to the specified UTF encoding method, which defaults to UTF-8.
 
-@param[in] text A Tvg_Paint pointer to the text object.
-@param[in] utf8 The multi-byte text encoded with utf8 string to be rendered.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] utf8 The multi-byte text encoded with utf8 string to be rendered.
 
-@since 1.0
+	@since 1.0
 */
 func (text Text) SetText(utf8 string) error {
 	return tvg_text_set_text(text.paint_, utf8).error()
@@ -102,9 +102,9 @@ the text box is pinned to the paint position.
 	@param[in] x Horizontal alignment/anchor in [0..1]: 0=left/start, 0.5=center, 1=right/end. (Default is 0)
 	@param[in] y Vertical alignment/anchor in [0..1]: 0=top, 0.5=middle, 1=bottom. (Default is 0)
 
-@since 1.0
+	@since 1.0
 
-@see tvg_text_layout()
+	@see tvg_text_layout()
 */
 func (text Text) Align(x float32, y float32) error {
 	return tvg_text_align(text.paint_, x, y).error()
@@ -160,14 +160,14 @@ Both values are relative to the font's default metrics:
 
 	@param[in] text A Tvg_Paint pointer to the text object.
 	@param[in] letter The scale factor for letter spacing.
-										Values > 1.0 increase spacing, values < 1.0 decrease it.
-										Must be greater than or equal to 0.0. (default: 1.0)
+											Values > 1.0 increase spacing, values < 1.0 decrease it.
+											Must be greater than or equal to 0.0. (default: 1.0)
 
 	@param[in] line The scale factor for line spacing.
-									Values > 1.0 increase line spacing, values < 1.0 decrease it.
-									Must be greater than or equal to 0.0. (default: 1.0)
+										Values > 1.0 increase line spacing, values < 1.0 decrease it.
+										Must be greater than or equal to 0.0. (default: 1.0)
 
-@since 1.0
+	  @since 1.0
 */
 func (text Text) Spacing(letter float32, line float32) error {
 	return tvg_text_spacing(text.paint_, letter, line).error()
@@ -297,11 +297,11 @@ Instead, ThorVG will reuse the previously loaded font data.
 	@retval TVG_RESULT_NOT_SUPPORTED When trying to load a file with an unknown extension.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION When trying to unload the font data that has not been previously loaded.
 
-@warning: It's the user responsibility to release the @p data memory.
+	@warning: It's the user responsibility to release the @p data memory.
 
-@note To unload the font data loaded using this API, pass the proper @p name and @c nullptr as @p data.
+	@note To unload the font data loaded using this API, pass the proper @p name and @c nullptr as @p data.
 
-@since 0.15
+	@since 0.15
 */
 func FontLoadData(name string, data []byte, mimetype string) error {
 	return tvg_font_load_data(name, &data[0], uint32(len(data)), mimetype, true).error()
@@ -325,10 +325,10 @@ This function is used to release resources associated with a font file that has 
 
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION The loader is not initialized.
 
-@note If the font data is currently in use, it will not be immediately unloaded.
-@see tvg_font_load()
+	@note If the font data is currently in use, it will not be immediately unloaded.
+	@see tvg_font_load()
 
-@since 0.15
+	@since 0.15
 */
 func FontUnload(path string) error {
 	return tvg_font_unload(path).error()
