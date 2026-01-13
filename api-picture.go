@@ -144,18 +144,18 @@ or substituting assets, such as loading from an external source or a virtual fil
 
 	@see Tvg_Picture_Asset_Resolver
 */
-func (picture Picture) SetAssetResolver(resolver PictureAssetResolver, data uintptr) error {
-	puregoResolver := purego.NewCallback(func(cPaint uintptr, src string, _data uintptr) bool {
+func (picture Picture) SetAssetResolver(resolver PictureAssetResolver) error {
+	puregoResolver := purego.NewCallback(func(cPaint uintptr, src *byte, _data uintptr) bool {
 		paint, ok := newPaint(cPaint)
 		if !ok {
 			// This should never occur, so provide a non-specific Paint type.
 			paint = paintCommon{paint_: cPaint}
 		}
 
-		return resolver(paint, src)
+		return resolver(paint, goString(src))
 	})
 
-	return tvg_picture_set_asset_resolver(picture.paint_, puregoResolver, data).error()
+	return tvg_picture_set_asset_resolver(picture.paint_, puregoResolver, 0).error()
 }
 
 // TVG_API Tvg_Result tvg_picture_set_asset_resolver(Tvg_Paint picture, Tvg_Picture_Asset_Resolver resolver, void* data);
