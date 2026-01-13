@@ -19,10 +19,6 @@ func main() {
 		panic(err)
 	}
 
-	if err := tvg.FontLoadData("DejaVuSans", data.DejaVuSans, ""); err != nil {
-		panic(err)
-	}
-
 	canvas := tvg.SwCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
 	if err := canvas.SwSetTarget(uint(width), uint(width), uint(height), tvg.COLORSPACE_ARGB8888); err != nil {
 		panic(err)
@@ -40,28 +36,28 @@ func main() {
 		panic(err)
 	}
 
-	// draw text
-	text := tvg.TextNew()
-	if err := text.SetFont("DejaVuSans"); err != nil {
+	// load and resize image
+	picture := tvg.PictureNew()
+	// if err := picture.LoadDataText(string(data.Gopher), "svg", ""); err != nil {
+	if err := picture.LoadData(data.Gopher, "svg", ""); err != nil {
 		panic(err)
 	}
-	if err := text.SetColor(0, 0, 0); err != nil {
+	w, h, err := picture.GetSize()
+	if err != nil {
 		panic(err)
 	}
-	if err := text.SetSize(18); err != nil {
+	var size float32 = 400
+	w = w / h * size
+	h = size
+	if err := picture.SetSize(w, h); err != nil {
 		panic(err)
 	}
-	// if err := text.WrapMode(tvg.TEXT_WRAP_WORD); err != nil {
-	// 	panic(err)
-	// }
-	if err := text.Translate(20, 20); err != nil {
+
+	// draw image, centred
+	if err := picture.Translate((float32(width)-w)/2, (float32(height)-h)/2); err != nil {
 		panic(err)
 	}
-	// if err := text.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."); err != nil {
-	if err := text.SetText("Lorem ipsum dolor sit amet, consectetur..."); err != nil {
-		panic(err)
-	}
-	if err := canvas.Push(text); err != nil {
+	if err := canvas.Push(picture); err != nil {
 		panic(err)
 	}
 
@@ -79,7 +75,7 @@ func main() {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	img.Pix = buffer
 
-	file, err := os.Create("example/text/text.png")
+	file, err := os.Create("example/picture/picture.png")
 	if err != nil {
 		log.Fatalf("error creating file: %v", err)
 	}
