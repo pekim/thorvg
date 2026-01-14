@@ -1,9 +1,5 @@
 package thorvg
 
-import (
-	"unsafe"
-)
-
 /*
 Gradient is a structure representing a gradient fill of a Paint object.
 */
@@ -174,7 +170,7 @@ func (gradient gradientCommon) GetColorStops() ([]ColorStop, error) {
 	var cCount uint32
 	result := tvg_gradient_get_color_stops(gradient.gradient_, &cColorStops, &cCount)
 	colorStops := make([]ColorStop, cCount)
-	copy(colorStops, unsafe.Slice(cColorStops, cCount))
+	copy(colorStops, slice(cColorStops, cCount))
 	return colorStops, result.error()
 }
 

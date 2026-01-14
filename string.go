@@ -31,7 +31,7 @@ func goString(cStr *byte) string {
 		}
 	}
 
-	goBytes := make([]byte, length)
-	copy(goBytes, str)
-	return string(goBytes)
+	// goBytes := make([]byte, length)
+	// copy(goBytes, str)
+	return string(slice(cStr, length))
 }
