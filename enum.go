@@ -1,6 +1,6 @@
 package thorvg
 
-// enum is a type used for all enum types.
+// enum is a type used for almost all enum types.
 //
 // A C enum on 64 bit architectures is typically (but not guaranteed
 // to be) 32 bits.
@@ -167,7 +167,7 @@ const (
 /*
 PathCommand is an enumeration specifying the values of the path commands accepted by ThorVG.
 */
-type PathCommand enum
+type PathCommand uint8
 
 const (
 	PATH_COMMAND_CLOSE    PathCommand = iota // Ends the current sub-path and connects it with its initial point - corresponds to Z command in the svg path commands.

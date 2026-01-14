@@ -6,10 +6,21 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/pekim/thorvg"
+	tvg "github.com/pekim/thorvg"
 )
 
-var enum thorvg.Result
+var result C.Tvg_Result
+var colorspace C.Tvg_Colorspace
+var engineOption C.Tvg_Engine_Option
+var maskMethod C.Tvg_Mask_Method
+var blendMethod C.Tvg_Blend_Method
+var type_ C.Tvg_Type
+var pathCommand C.Tvg_Path_Command
+var strokeCap C.Tvg_Stroke_Cap
+var strokeJoin C.Tvg_Stroke_Join
+var strokeFill C.Tvg_Stroke_Fill
+var fillRule C.Tvg_Fill_Rule
+var textWrap C.Tvg_Text_Wrap
 
 var sizes = []struct {
 	name string
@@ -17,10 +28,21 @@ var sizes = []struct {
 	go_  uintptr
 }{
 	// structs
-	{"ColorStop", C.sizeof_Tvg_Color_Stop, unsafe.Sizeof(thorvg.ColorStop{})},
-	{"Point", C.sizeof_Tvg_Point, unsafe.Sizeof(thorvg.Point{})},
-	{"Matrix", C.sizeof_Tvg_Matrix, unsafe.Sizeof(thorvg.Matrix{})},
+	{"ColorStop", C.sizeof_Tvg_Color_Stop, unsafe.Sizeof(tvg.ColorStop{})},
+	{"Point", C.sizeof_Tvg_Point, unsafe.Sizeof(tvg.Point{})},
+	{"Matrix", C.sizeof_Tvg_Matrix, unsafe.Sizeof(tvg.Matrix{})},
 
-	// enum type
-	{"enum", C.sizeof_Tvg_Result, unsafe.Sizeof(enum)},
+	// enum types
+	{"Result", int(unsafe.Sizeof(result)), unsafe.Sizeof(tvg.RESULT_SUCCESS)},
+	{"ColorSpace", int(unsafe.Sizeof(colorspace)), unsafe.Sizeof(tvg.COLORSPACE_ABGR8888)},
+	{"EngineOption", int(unsafe.Sizeof(engineOption)), unsafe.Sizeof(tvg.ENGINE_OPTION_NONE)},
+	{"MaskMethod", int(unsafe.Sizeof(maskMethod)), unsafe.Sizeof(tvg.MASK_METHOD_NONE)},
+	{"BlendMethod", int(unsafe.Sizeof(blendMethod)), unsafe.Sizeof(tvg.BLEND_METHOD_NORMAL)},
+	{"Type", int(unsafe.Sizeof(type_)), unsafe.Sizeof(tvg.TYPE_UNDEF)},
+	{"PathCommand", int(unsafe.Sizeof(pathCommand)), unsafe.Sizeof(tvg.PATH_COMMAND_CLOSE)},
+	{"StrokeCap", int(unsafe.Sizeof(strokeCap)), unsafe.Sizeof(tvg.STROKE_CAP_BUTT)},
+	{"StrokeJoin", int(unsafe.Sizeof(strokeJoin)), unsafe.Sizeof(tvg.STROKE_JOIN_MITER)},
+	{"StrokeFill", int(unsafe.Sizeof(strokeFill)), unsafe.Sizeof(tvg.STROKE_FILL_PAD)},
+	{"FillRule", int(unsafe.Sizeof(fillRule)), unsafe.Sizeof(tvg.FILL_RULE_NON_ZERO)},
+	{"TextWrap", int(unsafe.Sizeof(textWrap)), unsafe.Sizeof(tvg.TEXT_WRAP_NONE)},
 }

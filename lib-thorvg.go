@@ -82,10 +82,37 @@ var tvg_paint_get_type func(paint uintptr, typ *Type) Result
 var tvg_paint_set_blend_method func(paint uintptr, method BlendMethod) Result
 
 // Shape API
+
 var tvg_shape_new func() uintptr
+var tvg_shape_reset func(paint uintptr) Result
+var tvg_shape_move_to func(paint uintptr, x float32, y float32) Result
+var tvg_shape_line_to func(paint uintptr, x float32, y float32) Result
+var tvg_shape_cubic_to func(paint uintptr, cx1 float32, cy1 float32, cx2 float32, cy2 float32, x float32, y float32) Result
+var tvg_shape_close func(paint uintptr) Result
 var tvg_shape_append_rect func(paint uintptr, x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) Result
 var tvg_shape_append_circle func(paint uintptr, cx float32, cy float32, rx float32, ry float32, cw bool) Result
+var tvg_shape_append_path func(paint uintptr, cmds *PathCommand, cmdCnt uint32, pts *Point, ptsCnt uint32) Result
+var tvg_shape_get_path func(paint uintptr, cmds **PathCommand, cmdsCnt *uint32, pts **Point, ptsCnt *uint32) Result
+var tvg_shape_set_stroke_width func(paint uintptr, width float32) Result
+var tvg_shape_get_stroke_width func(paint uintptr, width *float32) Result
+var tvg_shape_set_stroke_color func(paint uintptr, r uint8, g uint8, b uint8, a uint8) Result
+var tvg_shape_get_stroke_color func(paint uintptr, r *uint8, g *uint8, b *uint8, a *uint8) Result
+var tvg_shape_set_stroke_gradient func(paint uintptr, grad uintptr) Result
+var tvg_shape_get_stroke_gradient func(paint uintptr, grad *uintptr) Result
+var tvg_shape_set_stroke_dash func(paint uintptr, dashPattern *float32, cnt uint32, offset float32) Result
+var tvg_shape_get_stroke_dash func(paint uintptr, dashPattern **float32, cnt *uint32, offset *float32) Result
+var tvg_shape_set_stroke_cap func(paint uintptr, strokeCap StrokeCap) Result
+var tvg_shape_get_stroke_cap func(paint uintptr, strokeCap *StrokeCap) Result
+var tvg_shape_set_stroke_join func(paint uintptr, join StrokeJoin) Result
+var tvg_shape_get_stroke_join func(paint uintptr, join *StrokeJoin) Result
+var tvg_shape_set_stroke_miterlimit func(paint uintptr, miterlimit float32) Result
+var tvg_shape_get_stroke_miterlimit func(paint uintptr, miterlimit *float32) Result
+var tvg_shape_set_trimpath func(paint uintptr, begin float32, end float32, simultaneous bool) Result
 var tvg_shape_set_fill_color func(paint uintptr, r uint8, g uint8, b uint8, a uint8) Result
+var tvg_shape_get_fill_color func(paint uintptr, r *uint8, g *uint8, b *uint8, a *uint8) Result
+var tvg_shape_set_fill_rule func(paint uintptr, rule FillRule) Result
+var tvg_shape_get_fill_rule func(paint uintptr, rule *FillRule) Result
+var tvg_shape_set_paint_order func(paint uintptr, strokeFirst bool) Result
 var tvg_shape_set_gradient func(paint uintptr, grad uintptr) Result
 var tvg_shape_get_gradient func(paint uintptr, grad *uintptr) Result
 
@@ -221,9 +248,35 @@ func initLibThorvg() error {
 
 	// Shape API
 	purego.RegisterLibFunc(&tvg_shape_new, lib, "tvg_shape_new")
+	purego.RegisterLibFunc(&tvg_shape_reset, lib, "tvg_shape_reset")
+	purego.RegisterLibFunc(&tvg_shape_move_to, lib, "tvg_shape_move_to")
+	purego.RegisterLibFunc(&tvg_shape_line_to, lib, "tvg_shape_line_to")
+	purego.RegisterLibFunc(&tvg_shape_cubic_to, lib, "tvg_shape_cubic_to")
+	purego.RegisterLibFunc(&tvg_shape_close, lib, "tvg_shape_close")
 	purego.RegisterLibFunc(&tvg_shape_append_rect, lib, "tvg_shape_append_rect")
 	purego.RegisterLibFunc(&tvg_shape_append_circle, lib, "tvg_shape_append_circle")
+	purego.RegisterLibFunc(&tvg_shape_append_path, lib, "tvg_shape_append_path")
+	purego.RegisterLibFunc(&tvg_shape_get_path, lib, "tvg_shape_get_path")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_width, lib, "tvg_shape_set_stroke_width")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_width, lib, "tvg_shape_get_stroke_width")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_color, lib, "tvg_shape_set_stroke_color")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_color, lib, "tvg_shape_get_stroke_color")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_gradient, lib, "tvg_shape_set_stroke_gradient")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_gradient, lib, "tvg_shape_get_stroke_gradient")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_dash, lib, "tvg_shape_set_stroke_dash")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_dash, lib, "tvg_shape_get_stroke_dash")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_cap, lib, "tvg_shape_set_stroke_cap")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_cap, lib, "tvg_shape_get_stroke_cap")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_join, lib, "tvg_shape_set_stroke_join")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_join, lib, "tvg_shape_get_stroke_join")
+	purego.RegisterLibFunc(&tvg_shape_set_stroke_miterlimit, lib, "tvg_shape_set_stroke_miterlimit")
+	purego.RegisterLibFunc(&tvg_shape_get_stroke_miterlimit, lib, "tvg_shape_get_stroke_miterlimit")
+	purego.RegisterLibFunc(&tvg_shape_set_trimpath, lib, "tvg_shape_set_trimpath")
 	purego.RegisterLibFunc(&tvg_shape_set_fill_color, lib, "tvg_shape_set_fill_color")
+	purego.RegisterLibFunc(&tvg_shape_get_fill_color, lib, "tvg_shape_get_fill_color")
+	purego.RegisterLibFunc(&tvg_shape_set_fill_rule, lib, "tvg_shape_set_fill_rule")
+	purego.RegisterLibFunc(&tvg_shape_get_fill_rule, lib, "tvg_shape_get_fill_rule")
+	purego.RegisterLibFunc(&tvg_shape_set_paint_order, lib, "tvg_shape_set_paint_order")
 	purego.RegisterLibFunc(&tvg_shape_set_gradient, lib, "tvg_shape_set_gradient")
 	purego.RegisterLibFunc(&tvg_shape_get_gradient, lib, "tvg_shape_get_gradient")
 
