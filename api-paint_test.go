@@ -7,9 +7,7 @@ import (
 )
 
 func TestPaintGetAABB(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 	_ = shape.AppendRect(10, 20, 30, 40, 0, 0, true)
@@ -21,9 +19,7 @@ func TestPaintGetAABB(t *testing.T) {
 }
 
 func TestPaintGetOBB(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 	_ = shape.AppendRect(10, 20, 30, 40, 0, 0, true)
@@ -37,9 +33,7 @@ func TestPaintGetOBB(t *testing.T) {
 }
 
 func TestPaintClip(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 

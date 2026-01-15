@@ -2,14 +2,10 @@ package thorvg
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestSaverSavePaint(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	background := ShapeNew()
 	_ = background.AppendRect(0, 0, 200, 150, 0, 0, true)

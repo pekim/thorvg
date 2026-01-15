@@ -7,9 +7,7 @@ import (
 )
 
 func TestSwCanvas(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	canvas := SwCanvasCreate(ENGINE_OPTION_DEFAULT)
 	_ = canvas

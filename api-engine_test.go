@@ -7,9 +7,7 @@ import (
 )
 
 func TestEngine(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	major, minor, micro, version, commit, _ := Version()
 	assert.Equal(t, 1, major)

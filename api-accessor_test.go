@@ -7,9 +7,7 @@ import (
 )
 
 func TestAccessorNoChildren(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 	accessor := AccessorNew()
@@ -21,9 +19,7 @@ func TestAccessorNoChildren(t *testing.T) {
 }
 
 func TestAccessor2Children(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	scene := SceneNew()
 	child1 := ShapeNew()
@@ -52,9 +48,7 @@ func TestAccessor2Children(t *testing.T) {
 }
 
 func TestAccessorNestedChildren(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	scene := SceneNew()
 	child1 := SceneNew()

@@ -7,9 +7,7 @@ import (
 )
 
 func TestShapeGradient(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 
@@ -30,9 +28,7 @@ func TestShapeGradient(t *testing.T) {
 }
 
 func TestShapePath(t *testing.T) {
-	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
-	_ = EngineInit(2)
-	defer func() { _ = EngineTerm() }()
+	defer testInitTerm(t)()
 
 	shape := ShapeNew()
 
