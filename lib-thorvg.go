@@ -182,6 +182,17 @@ var tvg_saver_save_animation func(saver uintptr, animation uintptr, path string,
 var tvg_saver_sync func(saver uintptr) Result
 var tvg_saver_del func(saver uintptr) Result
 
+// Animation API
+var tvg_animation_new func() uintptr
+var tvg_animation_set_frame func(animation Animation, no float32) Result
+var tvg_animation_get_picture func(animation Animation) uintptr
+var tvg_animation_get_frame func(animation Animation, no *float32) Result
+var tvg_animation_get_total_frame func(animation Animation, cnt *float32) Result
+var tvg_animation_get_duration func(animation Animation, duration *float32) Result
+var tvg_animation_set_segment func(animation Animation, begin float32, end float32) Result
+var tvg_animation_get_segment func(animation Animation, begin *float32, end *float32) Result
+var tvg_animation_del func(animation Animation) Result
+
 // Accessor API
 var tvg_accessor_new func() uintptr
 var tvg_accessor_del func(accessor uintptr) Result
@@ -353,6 +364,17 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_saver_save_animation, lib, "tvg_saver_save_animation")
 	purego.RegisterLibFunc(&tvg_saver_sync, lib, "tvg_saver_sync")
 	purego.RegisterLibFunc(&tvg_saver_del, lib, "tvg_saver_del")
+
+	// Animation API
+	purego.RegisterLibFunc(&tvg_animation_new, lib, "tvg_animation_new")
+	purego.RegisterLibFunc(&tvg_animation_set_frame, lib, "tvg_animation_set_frame")
+	purego.RegisterLibFunc(&tvg_animation_get_picture, lib, "tvg_animation_get_picture")
+	purego.RegisterLibFunc(&tvg_animation_get_frame, lib, "tvg_animation_get_frame")
+	purego.RegisterLibFunc(&tvg_animation_get_total_frame, lib, "tvg_animation_get_total_frame")
+	purego.RegisterLibFunc(&tvg_animation_get_duration, lib, "tvg_animation_get_duration")
+	purego.RegisterLibFunc(&tvg_animation_set_segment, lib, "tvg_animation_set_segment")
+	purego.RegisterLibFunc(&tvg_animation_get_segment, lib, "tvg_animation_get_segment")
+	purego.RegisterLibFunc(&tvg_animation_del, lib, "tvg_animation_del")
 
 	// Accessor API
 	purego.RegisterLibFunc(&tvg_accessor_new, lib, "tvg_accessor_new")
