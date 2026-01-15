@@ -36,19 +36,14 @@ func main() {
 	}
 	window.MakeContextCurrent()
 
-	err = tvg.EngineInit(2)
-	if err != nil {
-		panic(err)
-	}
+	tvg.SetErrorHandler(func(err tvg.ResultError) { panic(err) })
+	_ = tvg.EngineInit(2)
 	canvas := tvg.GlCanvasCreate()
 
 	onSize := func(width int, height int) {
 		context := window.GetGLXContext()
-		err = canvas.GlSetTarget(nil, nil, unsafe.Pointer(context), 0,
+		_ = canvas.GlSetTarget(nil, nil, unsafe.Pointer(context), 0,
 			uint(width), uint(height), tvg.COLORSPACE_ABGR8888S)
-		if err != nil {
-			panic(err)
-		}
 
 		windowWidth = width
 		windowHeight = height
@@ -65,10 +60,7 @@ func main() {
 	})
 
 	for !window.ShouldClose() {
-		err := draw.SimpleShapes(canvas, float32(windowWidth), float32(windowHeight))
-		if err != nil {
-			panic(err)
-		}
+		draw.SimpleShapes(canvas, float32(windowWidth), float32(windowHeight))
 
 		window.SwapBuffers()
 		glfw.WaitEvents()

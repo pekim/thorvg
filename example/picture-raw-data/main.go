@@ -16,26 +16,17 @@ func main() {
 	width := 600
 	height := 600
 
-	if err := tvg.EngineInit(2); err != nil {
-		panic(err)
-	}
+	tvg.SetErrorHandler(func(err tvg.ResultError) { panic(err) })
+	_ = tvg.EngineInit(2)
 
 	canvas := tvg.SwCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
-	if err := canvas.SwSetTarget(uint(width), uint(width), uint(height), tvg.COLORSPACE_ARGB8888); err != nil {
-		panic(err)
-	}
+	_ = canvas.SwSetTarget(uint(width), uint(width), uint(height), tvg.COLORSPACE_ARGB8888)
 
 	// background
 	bg := tvg.ShapeNew()
-	if err := bg.AppendRect(0, 0, float32(width), float32(height), 0, 0, true); err != nil {
-		panic(err)
-	}
-	if err := bg.SetFillColor(255, 255, 255, 255); err != nil {
-		panic(err)
-	}
-	if err := canvas.Push(bg); err != nil {
-		panic(err)
-	}
+	_ = bg.AppendRect(0, 0, float32(width), float32(height), 0, 0, true)
+	_ = bg.SetFillColor(255, 255, 255, 255)
+	_ = canvas.Push(bg)
 
 	// load  image
 	primateImage, err := png.Decode(bytes.NewReader(data.Primate))
@@ -45,34 +36,21 @@ func main() {
 	pix := primateImage.(*image.RGBA).Pix
 	swizzle.BGRA(pix)
 	picture := tvg.PictureNew()
-	if err := picture.LoadRaw(
+	_ = picture.LoadRaw(
 		pix,
 		uint(primateImage.Bounds().Dx()),
 		uint(primateImage.Bounds().Dy()),
 		tvg.COLORSPACE_ARGB8888,
-	); err != nil {
-		panic(err)
-	}
-	w, h, err := picture.GetSize()
-	if err != nil {
-		panic(err)
-	}
+	)
+	w, h, _ := picture.GetSize()
 
 	// draw image, centred
-	if err := picture.Translate((float32(width)-w)/2, (float32(height)-h)/2); err != nil {
-		panic(err)
-	}
-	if err := canvas.Push(picture); err != nil {
-		panic(err)
-	}
+	_ = picture.Translate((float32(width)-w)/2, (float32(height)-h)/2)
+	_ = canvas.Push(picture)
 
 	// finish
-	if err := canvas.Draw(true); err != nil {
-		panic(err)
-	}
-	if err := canvas.Sync(); err != nil {
-		panic(err)
-	}
+	_ = canvas.Draw(true)
+	_ = canvas.Sync()
 
 	buffer := canvas.Buffer()
 	swizzle.BGRA(buffer)

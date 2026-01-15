@@ -7,11 +7,11 @@ import (
 )
 
 func TestEngine(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
-	major, minor, micro, version, commit, err := Version()
-	assert.NoError(t, err)
+	major, minor, micro, version, commit, _ := Version()
 	assert.Equal(t, 1, major)
 	assert.Equal(t, 0, minor)
 	assert.Equal(t, 0, micro)

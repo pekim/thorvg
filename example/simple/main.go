@@ -15,15 +15,12 @@ func main() {
 	width := 600
 	height := 600
 
-	tvg.EngineInit(2) //nolint:errcheck
+	tvg.SetErrorHandler(func(err tvg.ResultError) { panic(err) })
+	_ = tvg.EngineInit(2)
 
 	canvas := tvg.SwCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
-	canvas.SwSetTarget(uint(width), uint(width), uint(height), tvg.COLORSPACE_ARGB8888) //nolint:errcheck
-
-	err := draw.SimpleShapes(canvas, float32(width), float32(height))
-	if err != nil {
-		log.Fatalf("error drawing: %v", err)
-	}
+	_ = canvas.SwSetTarget(uint(width), uint(width), uint(height), tvg.COLORSPACE_ARGB8888)
+	draw.SimpleShapes(canvas, float32(width), float32(height))
 
 	buffer := canvas.Buffer()
 	swizzle.BGRA(buffer)

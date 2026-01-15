@@ -7,27 +7,29 @@ import (
 )
 
 func TestAccessorNoChildren(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
 	shape := ShapeNew()
 	accessor := AccessorNew()
-	assert.NoError(t, accessor.Set(shape, func(paint Paint) bool {
+	_ = accessor.Set(shape, func(paint Paint) bool {
 		assert.IsType(t, Shape{}, paint)
 		assert.Equal(t, shape.paint_, paint.paint())
 		return true
-	}))
+	})
 }
 
 func TestAccessor2Children(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
 	scene := SceneNew()
 	child1 := ShapeNew()
-	assert.NoError(t, scene.Push(child1))
+	_ = scene.Push(child1)
 	child2 := ShapeNew()
-	assert.NoError(t, scene.Push(child2))
+	_ = scene.Push(child2)
 
 	expected := []struct {
 		paint Paint
@@ -40,26 +42,27 @@ func TestAccessor2Children(t *testing.T) {
 	i := 0
 
 	accessor := AccessorNew()
-	assert.NoError(t, accessor.Set(scene, func(paint Paint) bool {
+	_ = accessor.Set(scene, func(paint Paint) bool {
 		assert.IsType(t, expected[i].typ, paint)
 		assert.Equal(t, expected[i].paint.paint(), paint.paint())
 		i++
 		return true
-	}))
+	})
 	assert.Equal(t, len(expected), i, "all expected visited")
 }
 
 func TestAccessorNestedChildren(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
 	scene := SceneNew()
 	child1 := SceneNew()
-	assert.NoError(t, scene.Push(child1))
+	_ = scene.Push(child1)
 	child11 := ShapeNew()
-	assert.NoError(t, child1.Push(child11))
+	_ = child1.Push(child11)
 	child2 := ShapeNew()
-	assert.NoError(t, scene.Push(child2))
+	_ = scene.Push(child2)
 
 	expected := []struct {
 		paint Paint
@@ -73,11 +76,11 @@ func TestAccessorNestedChildren(t *testing.T) {
 	i := 0
 
 	accessor := AccessorNew()
-	assert.NoError(t, accessor.Set(scene, func(paint Paint) bool {
+	_ = accessor.Set(scene, func(paint Paint) bool {
 		assert.IsType(t, expected[i].typ, paint)
 		assert.Equal(t, expected[i].paint.paint(), paint.paint())
 		i++
 		return true
-	}))
+	})
 	assert.Equal(t, len(expected), i, "all expected visited")
 }

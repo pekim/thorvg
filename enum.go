@@ -44,14 +44,52 @@ func (err ResultError) Result() Result {
 	return err.result
 }
 
+var errorHandler func(err ResultError)
+
+/*
+SetErrorHandler sets an error handler function that will be called when any function
+returns an error that represents a Result that is not RESULT_SUCCESS.
+
+Providing nil for the handler will result in errors being returned from functions in
+the normal fashion.
+
+The previous error handler, which may be nil, will be returned.
+
+A lot of the functions in this package return an error if the underlying thorvg C function
+call returns an unsuccessful result.
+Checking every returned potential error in an application can be tedious.
+So an application may want to treat all, or most, thorvg errors in a common way.
+Perhaps by logging an error, or by exiting.
+In which case setting an error handler may be appropriate.
+
+An application may wish to treat most thorvg errors in a common way, but here and
+there needs to handle errors from a function call.
+In which case it may appropriate to temporarily remove the handler.
+
+	oldHandler := SetErrorHandler(nil)
+	if err := tvg.SomeFunction(...); err != nil {
+	  // handle the error
+	}
+	SetErrorHandler(oldHandler)
+*/
+func SetErrorHandler(handler func(err ResultError)) func(err ResultError) {
+	oldHandler := errorHandler
+	errorHandler = handler
+	return oldHandler
+}
+
 func (result Result) error() error {
 	if result == RESULT_SUCCESS {
 		return nil
 	}
-
-	return ResultError{
+	err := ResultError{
 		result: result,
 	}
+
+	if errorHandler != nil {
+		errorHandler(err)
+	}
+	return err
 }
 
 /*

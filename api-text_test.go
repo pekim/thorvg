@@ -8,26 +8,29 @@ import (
 )
 
 func TestText(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
 	text := TextNew()
-	assert.NoError(t, FontLoadData("DejaVuSans", data.DejaVuSans, ""))
-	assert.NoError(t, text.SetFont("DejaVuSans"))
+	_ = FontLoadData("DejaVuSans", data.DejaVuSans, "")
+	_ = text.SetFont("DejaVuSans")
 }
 
 func TestFontLoad(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
-	assert.NoError(t, FontLoad("example/data/DejaVuSans.ttf"))
-	assert.NoError(t, FontUnload("example/data/DejaVuSans.ttf"))
+	_ = FontLoad("example/data/DejaVuSans.ttf")
+	_ = FontUnload("example/data/DejaVuSans.ttf")
 }
 
 func TestFontLoadData(t *testing.T) {
-	assert.NoError(t, EngineInit(2))
-	defer func() { assert.NoError(t, EngineTerm()) }()
+	SetErrorHandler(func(err ResultError) { assert.Fail(t, err.Error()) })
+	_ = EngineInit(2)
+	defer func() { _ = EngineTerm() }()
 
-	assert.NoError(t, FontLoadData("DejaVuSans", data.DejaVuSans, ""))
-	assert.NoError(t, FontUnloadData("DejaVuSans"))
+	_ = FontLoadData("DejaVuSans", data.DejaVuSans, "")
+	_ = FontUnloadData("DejaVuSans")
 }
