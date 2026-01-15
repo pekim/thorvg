@@ -175,6 +175,13 @@ var tvg_font_load func(path string) Result
 var tvg_font_load_data func(name string, data *byte, size uint32, mimetype string, copy_ bool) Result
 var tvg_font_unload func(path string) Result
 
+// Saver API
+var tvg_saver_new func() Saver
+var tvg_saver_save_paint func(saver uintptr, paint uintptr, path string, quality uint32) Result
+var tvg_saver_save_animation func(saver uintptr, animation uintptr, path string, quality uint32, fps uint32) Result
+var tvg_saver_sync func(saver uintptr) Result
+var tvg_saver_del func(saver uintptr) Result
+
 // Accessor API
 var tvg_accessor_new func() uintptr
 var tvg_accessor_del func(accessor uintptr) Result
@@ -339,6 +346,13 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_font_load, lib, "tvg_font_load")
 	purego.RegisterLibFunc(&tvg_font_load_data, lib, "tvg_font_load_data")
 	purego.RegisterLibFunc(&tvg_font_unload, lib, "tvg_font_unload")
+
+	// Saver API
+	purego.RegisterLibFunc(&tvg_saver_new, lib, "tvg_saver_new")
+	purego.RegisterLibFunc(&tvg_saver_save_paint, lib, "tvg_saver_save_paint")
+	purego.RegisterLibFunc(&tvg_saver_save_animation, lib, "tvg_saver_save_animation")
+	purego.RegisterLibFunc(&tvg_saver_sync, lib, "tvg_saver_sync")
+	purego.RegisterLibFunc(&tvg_saver_del, lib, "tvg_saver_del")
 
 	// Accessor API
 	purego.RegisterLibFunc(&tvg_accessor_new, lib, "tvg_accessor_new")
