@@ -10,3 +10,12 @@ var Primate []byte
 
 //go:embed gopher.svg
 var Gopher []byte
+
+//go:embed lottie-ellipse.json
+var LottieEllipse []byte
+
+//go:embed lottie-parent-interleaved.json
+var LottieParentInterleaved []byte
+
+//go:embed lottie-gears-animation.json
+var LottieGearsAnimation []byte
