@@ -15,13 +15,13 @@ func SimpleShapes(canvas tvg.Canvas, width float32, height float32) {
 	bg := tvg.ShapeNew()
 	_ = bg.AppendRect(0, 0, width, height, 0, 0, true)
 	_ = bg.SetFillColor(255, 255, 255, 255)
-	_ = canvas.Push(bg)
+	_ = canvas.Add(bg)
 
 	// rectangle
 	rect := tvg.ShapeNew()
 	_ = rect.AppendRect(50, 50, 200, 200, 20, 20, true)
 	_ = rect.SetFillColor(255, 0, 0, 100)
-	_ = canvas.Push(rect)
+	_ = canvas.Add(rect)
 
 	// circle, with gradient fill
 	circle := tvg.ShapeNew()
@@ -33,7 +33,7 @@ func SimpleShapes(canvas tvg.Canvas, width float32, height float32) {
 		{Offset: 1.0, R: 0, G: 0, B: 0, A: 255},
 	})
 	_ = circle.SetGradient(gradient)
-	_ = canvas.Push(circle)
+	_ = canvas.Add(circle)
 
 	// finish
 	_ = canvas.Draw(true)

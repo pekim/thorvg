@@ -16,8 +16,8 @@ func TestSaverSavePaint(t *testing.T) {
 	_ = rect.SetFillColor(0xff, 0x00, 0x00, 0xff)
 
 	scene := SceneNew()
-	_ = scene.Push(background)
-	_ = scene.Push(rect)
+	_ = scene.Add(background)
+	_ = scene.Add(rect)
 
 	// saver := SaverNew()
 	// _= saver.SavePaint(scene, "saved.tvg", 100)

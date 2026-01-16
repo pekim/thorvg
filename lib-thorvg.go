@@ -47,8 +47,8 @@ var tvg_glcanvas_set_target func(canvas uintptr, display unsafe.Pointer, surface
 var tvg_wgcanvas_create func() uintptr
 var tvg_wgcanvas_set_target func(canvas uintptr, device unsafe.Pointer, instance unsafe.Pointer, target unsafe.Pointer, w uint32, h uint32, cs ColorSpace, typ int32) Result
 var tvg_canvas_destroy func(canvas uintptr) Result
-var tvg_canvas_push func(canvas uintptr, paint uintptr) Result
-var tvg_canvas_push_at func(canvas uintptr, target uintptr, paint uintptr) Result
+var tvg_canvas_add func(canvas uintptr, paint uintptr) Result
+var tvg_canvas_insert func(canvas uintptr, target uintptr, paint uintptr) Result
 var tvg_canvas_remove func(canvas uintptr, paint uintptr) Result
 var tvg_canvas_update func(canvas uintptr) Result
 var tvg_canvas_draw func(canvas uintptr, clear_ bool) Result
@@ -147,15 +147,15 @@ var tvg_picture_get_paint func(picture uintptr, id uint32) uintptr
 
 // Scene API
 var tvg_scene_new func() uintptr
-var tvg_scene_push func(scene uintptr, paint uintptr) Result
-var tvg_scene_push_at func(scene uintptr, target uintptr, at uintptr) Result
+var tvg_scene_add func(scene uintptr, paint uintptr) Result
+var tvg_scene_insert func(scene uintptr, target uintptr, at uintptr) Result
 var tvg_scene_remove func(scene uintptr, paint uintptr) Result
-var tvg_scene_reset_effects func(scene uintptr) Result
-var tvg_scene_push_effect_gaussian_blur func(scene uintptr, sigma float64, direction int32, border int32, quality int32) Result
-var tvg_scene_push_effect_drop_shadow func(scene uintptr, r int32, g int32, b int32, a int32, angle float64, distance float64, sigma float64, quality int32) Result
-var tvg_scene_push_effect_fill func(scene uintptr, r int32, g int32, b int32, a int32) Result
-var tvg_scene_push_effect_tint func(scene uintptr, black_r int32, black_g int32, black_b int32, white_r int32, white_g int32, white_b int32, intensity float64) Result
-var tvg_scene_push_effect_tritone func(scene uintptr, shadow_r int32, shadow_g int32, shadow_b int32, midtone_r int32, midtone_g int32, midtone_b int32, highlight_r int32, highlight_g int32, highlight_b int32, blend int32) Result
+var tvg_scene_clear_effects func(scene uintptr) Result
+var tvg_scene_add_effect_gaussian_blur func(scene uintptr, sigma float64, direction int32, border int32, quality int32) Result
+var tvg_scene_add_effect_drop_shadow func(scene uintptr, r int32, g int32, b int32, a int32, angle float64, distance float64, sigma float64, quality int32) Result
+var tvg_scene_add_effect_fill func(scene uintptr, r int32, g int32, b int32, a int32) Result
+var tvg_scene_add_effect_tint func(scene uintptr, black_r int32, black_g int32, black_b int32, white_r int32, white_g int32, white_b int32, intensity float64) Result
+var tvg_scene_add_effect_tritone func(scene uintptr, shadow_r int32, shadow_g int32, shadow_b int32, midtone_r int32, midtone_g int32, midtone_b int32, highlight_r int32, highlight_g int32, highlight_b int32, blend int32) Result
 
 // Text API
 var tvg_text_new func() uintptr
@@ -242,8 +242,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_wgcanvas_create, lib, "tvg_wgcanvas_create")
 	purego.RegisterLibFunc(&tvg_wgcanvas_set_target, lib, "tvg_wgcanvas_set_target")
 	purego.RegisterLibFunc(&tvg_canvas_destroy, lib, "tvg_canvas_destroy")
-	purego.RegisterLibFunc(&tvg_canvas_push, lib, "tvg_canvas_push")
-	purego.RegisterLibFunc(&tvg_canvas_push_at, lib, "tvg_canvas_push_at")
+	purego.RegisterLibFunc(&tvg_canvas_add, lib, "tvg_canvas_add")
+	purego.RegisterLibFunc(&tvg_canvas_insert, lib, "tvg_canvas_insert")
 	purego.RegisterLibFunc(&tvg_canvas_remove, lib, "tvg_canvas_remove")
 	purego.RegisterLibFunc(&tvg_canvas_update, lib, "tvg_canvas_update")
 	purego.RegisterLibFunc(&tvg_canvas_draw, lib, "tvg_canvas_draw")
@@ -341,15 +341,15 @@ func initLibThorvg() error {
 
 	// Scene API
 	purego.RegisterLibFunc(&tvg_scene_new, lib, "tvg_scene_new")
-	purego.RegisterLibFunc(&tvg_scene_push, lib, "tvg_scene_push")
-	purego.RegisterLibFunc(&tvg_scene_push_at, lib, "tvg_scene_push_at")
+	purego.RegisterLibFunc(&tvg_scene_add, lib, "tvg_scene_add")
+	purego.RegisterLibFunc(&tvg_scene_insert, lib, "tvg_scene_insert")
 	purego.RegisterLibFunc(&tvg_scene_remove, lib, "tvg_scene_remove")
-	purego.RegisterLibFunc(&tvg_scene_reset_effects, lib, "tvg_scene_reset_effects")
-	purego.RegisterLibFunc(&tvg_scene_push_effect_gaussian_blur, lib, "tvg_scene_push_effect_gaussian_blur")
-	purego.RegisterLibFunc(&tvg_scene_push_effect_drop_shadow, lib, "tvg_scene_push_effect_drop_shadow")
-	purego.RegisterLibFunc(&tvg_scene_push_effect_fill, lib, "tvg_scene_push_effect_fill")
-	purego.RegisterLibFunc(&tvg_scene_push_effect_tint, lib, "tvg_scene_push_effect_tint")
-	purego.RegisterLibFunc(&tvg_scene_push_effect_tritone, lib, "tvg_scene_push_effect_tritone")
+	purego.RegisterLibFunc(&tvg_scene_clear_effects, lib, "tvg_scene_clear_effects")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_gaussian_blur, lib, "tvg_scene_add_effect_gaussian_blur")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_drop_shadow, lib, "tvg_scene_add_effect_drop_shadow")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_fill, lib, "tvg_scene_add_effect_fill")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_tint, lib, "tvg_scene_add_effect_tint")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_tritone, lib, "tvg_scene_add_effect_tritone")
 
 	// Text API
 	purego.RegisterLibFunc(&tvg_text_new, lib, "tvg_text_new")

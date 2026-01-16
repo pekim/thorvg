@@ -417,8 +417,8 @@ belongs to one. Otherwise, it returns @c nullptr.
 
 	@return A pointer to the parent object if available, otherwise @c nullptr.
 
-	@see tvg_scene_push()
-	@see tvg_canvas_push()
+	@see tvg_scene_add()
+	@see tvg_canvas_add()
 
 	@since 1.0
 */

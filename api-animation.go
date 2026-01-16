@@ -38,7 +38,7 @@ func (animation Animation) SetFrame(no float32) error {
 GetPicture retrieves a picture instance associated with this animation instance.
 
 This function provides access to the picture instance that can be used to load animation formats, such as lot.
-After setting up the picture, it can be pushed to the designated canvas, enabling control over animation frames
+After setting up the picture, it can be added to the designated canvas, enabling control over animation frames
 with this Animation instance.
 
 	@param[in] animation A Tvg_Animation pointer to the animation object.

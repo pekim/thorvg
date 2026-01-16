@@ -23,9 +23,9 @@ func TestAccessor2Children(t *testing.T) {
 
 	scene := SceneNew()
 	child1 := ShapeNew()
-	_ = scene.Push(child1)
+	_ = scene.Add(child1)
 	child2 := ShapeNew()
-	_ = scene.Push(child2)
+	_ = scene.Add(child2)
 
 	expected := []struct {
 		paint Paint
@@ -52,11 +52,11 @@ func TestAccessorNestedChildren(t *testing.T) {
 
 	scene := SceneNew()
 	child1 := SceneNew()
-	_ = scene.Push(child1)
+	_ = scene.Add(child1)
 	child11 := ShapeNew()
-	_ = child1.Push(child11)
+	_ = child1.Add(child11)
 	child2 := ShapeNew()
-	_ = scene.Push(child2)
+	_ = scene.Add(child2)
 
 	expected := []struct {
 		paint Paint

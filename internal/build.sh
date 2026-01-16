@@ -5,7 +5,7 @@ set -eo pipefail
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR/..
 
-THORVG_COMMIT=0a680b13d1753afdb85b498f26a03e605efe7c2e
+THORVG_COMMIT=1a43240ec3ffdaa689412e7cd52e83cf8118e2b9
 THORVG_DIR=internal/thorvg-src
 GOOS=$(go env GOOS)
 GOARCH=$(go env GOARCH)

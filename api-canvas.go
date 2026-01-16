@@ -180,28 +180,28 @@ func (canvas *Canvas) Destroy() error {
 }
 
 /*
-Push inserts a drawing element into the canvas using a Tvg_Paint object.
+Add inserts a drawing element into the canvas using a Tvg_Paint object.
 
 	@param[in] canvas The Tvg_Canvas object managing the @p paint.
 	@param[in] paint The Tvg_Paint object to be drawn.
 
-Only the paints pushed into the canvas will be drawing targets.
+Only the paints added into the canvas will be drawing targets.
 They are retained by the canvas until you call tvg_canvas_remove()
 
 	@return Tvg_Result return values:
 	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION An internal error.
 
-	@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
-	@see tvg_canvas_push_at()
+	@note The rendering order of the paints is the same as the order as they were added. Consider sorting the paints before adding them if you intend to use layering.
+	@see tvg_canvas_insert()
 	@see tvg_canvas_remove()
 */
-func (canvas Canvas) Push(paint Paint) error {
-	return tvg_canvas_push(canvas.canvas, paint.paint()).error()
+func (canvas Canvas) Add(paint Paint) error {
+	return tvg_canvas_add(canvas.canvas, paint.paint()).error()
 }
 
 /*
-PushAt adds a paint object to the root scene.
+Insert adds a paint object to the root scene.
 
 This function appends a paint object to root scene of the canvas. If the optional @p at
 is provided, the new paint object will be inserted immediately before the specified
@@ -216,19 +216,19 @@ to the end of the root scene.
 								paint object is added to the end of the root scene. The default is @c nullptr.
 
 	@note The ownership of the @p paint object is transferred to the canvas upon addition.
-	@note The rendering order of the paints is the same as the order as they were pushed. Consider sorting the paints before pushing them if you intend to use layering.
+	@note The rendering order of the paints is the same as the order as they were added. Consider sorting the paints before adding them if you intend to use layering.
 
-	@see tvg_canvas_push()
+	@see tvg_canvas_add()
 	@see tvg_canvas_remove()
 	@see tvg_canvas_remove()
 	@since 1.0
 */
-func (canvas Canvas) PushAt(target Paint, paint Paint) error {
+func (canvas Canvas) Insert(target Paint, paint Paint) error {
 	var cTarget uintptr
 	if target != nil {
 		cTarget = target.paint()
 	}
-	return tvg_canvas_push_at(canvas.canvas, cTarget, paint.paint()).error()
+	return tvg_canvas_insert(canvas.canvas, cTarget, paint.paint()).error()
 }
 
 /*
@@ -242,8 +242,8 @@ performs to clear all paints from the scene.
 	@param[in] paint A pointer to the Paint object to be removed from the root scene.
 									If @c nullptr, remove all the paints from the root scene.
 
-	@see tvg_canvas_push()
-	@see tvg_canvas_push_at()
+	@see tvg_canvas_add()
+	@see tvg_canvas_insert()
 	@since 1.0
 */
 func (canvas Canvas) Remove(paint Paint) error {
@@ -339,7 +339,7 @@ Please note that changing the viewport is only allowed at the beginning of the r
 	@see tvg_glcanvas_set_target()
 	@see tvg_wgcanvas_set_target()
 
-	  @warning Changing the viewport is not allowed after calling tvg_canvas_push(),
+	  @warning Changing the viewport is not allowed after calling tvg_canvas_add(),
 
 		tvg_canvas_remove(), tvg_canvas_update(), or tvg_canvas_draw().
 

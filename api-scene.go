@@ -23,7 +23,7 @@ func SceneNew() Scene {
 }
 
 /*
-Push adds a paint object to the scene.
+Add adds a paint object to the scene.
 
 This function appends a paint object to the scene.
 
@@ -33,14 +33,14 @@ This function appends a paint object to the scene.
 	@note The ownership of the @p paint object is transferred to the scene upon addition.
 
 	@see tvg_scene_remove()
-	@see tvg_scene_push_at()
+	@see tvg_scene_insert()
 */
-func (scene Scene) Push(paint Paint) error {
-	return tvg_scene_push(scene.paint_, paint.paint()).error()
+func (scene Scene) Add(paint Paint) error {
+	return tvg_scene_add(scene.paint_, paint.paint()).error()
 }
 
 /*
-PushAt adds a paint object to the scene.
+Insert adds a paint object to the scene.
 
 This function appends a paint object to the scene. The new paint object @p target will
 be inserted immediately before the specified paint object @p at in the scene.
@@ -53,11 +53,11 @@ be inserted immediately before the specified paint object @p at in the scene.
 	@note The ownership of the @p paint object is transferred to the scene upon addition.
 
 	@see tvg_scene_remove()
-	@see tvg_scene_push()
+	@see tvg_scene_add()
 	@since 1.0
 */
-func (scene Scene) PushAt(target Paint, at Paint) error {
-	return tvg_scene_push_at(scene.paint_, target.paint(), at.paint()).error()
+func (scene Scene) Insert(target Paint, at Paint) error {
+	return tvg_scene_insert(scene.paint_, target.paint(), at.paint()).error()
 }
 
 /*
@@ -71,7 +71,7 @@ performs to clear all paints from the scene.
 	@param[in] paint A pointer to the Paint object to be removed from the scene.
 								If @c nullptr, remove all the paints from the scene.
 
-	@see tvg_scene_push()
+	@see tvg_scene_add()
 	@since 1.0
 */
 func (scene Scene) Remove(paint Paint) error {
@@ -79,7 +79,7 @@ func (scene Scene) Remove(paint Paint) error {
 }
 
 /*
-ResetEffects resets all previously applied scene effects.
+ClearEffects resets all previously applied scene effects.
 
 This function clears all effects that have been applied to the scene,
 restoring it to its original state without any post-processing.
@@ -88,12 +88,12 @@ restoring it to its original state without any post-processing.
 
 	@since 1.0
 */
-func (scene Scene) Reset_Effects() error {
-	return tvg_scene_reset_effects(scene.paint_).error()
+func (scene Scene) ClearEffects() error {
+	return tvg_scene_clear_effects(scene.paint_).error()
 }
 
 /*
-PushEffectGaussianBlur applies a Gaussian blur effect to the scene.
+AddEffectGaussianBlur applies a Gaussian blur effect to the scene.
 
 This function applies a Gaussian blur filter to the scene as a post-processing effect.
 The blur can be applied in different directions with configurable border handling and quality settings.
@@ -106,15 +106,15 @@ The blur can be applied in different directions with configurable border handlin
 
 	@since 1.0
 */
-func (scene Scene) PushEffectGaussianBlur(sigma float64, direction int, border int, quality int) error {
-	return tvg_scene_push_effect_gaussian_blur(
+func (scene Scene) AddEffectGaussianBlur(sigma float64, direction int, border int, quality int) error {
+	return tvg_scene_add_effect_gaussian_blur(
 		scene.paint_, sigma,
 		int32(direction), int32(border), int32(quality),
 	).error()
 }
 
 /*
-PushEffectDropShadow applies a drop shadow effect to the scene.
+AddEffectDropShadow applies a drop shadow effect to the scene.
 
 This function applies a drop shadow with a Gaussian blur to the scene. The shadow
 can be customized using color, opacity, angle, distance, blur radius (sigma),
@@ -132,18 +132,18 @@ and quality parameters.
 
 	@since 1.0
 */
-func (scene Scene) PushEffectDropShadow(
+func (scene Scene) AddEffectDropShadow(
 	r int, g int, b int, a int,
 	angle float64, distance float64, sigma float64, quality int,
 ) error {
-	return tvg_scene_push_effect_drop_shadow(scene.paint_,
+	return tvg_scene_add_effect_drop_shadow(scene.paint_,
 		int32(r), int32(g), int32(b), int32(a),
 		angle, distance, sigma, int32(quality),
 	).error()
 }
 
 /*
-PushEffectFill applies a fill color effect to the scene.
+AddEffectFill applies a fill color effect to the scene.
 
 This function overrides the scene's content colors with the specified fill color.
 
@@ -155,12 +155,12 @@ This function overrides the scene's content colors with the specified fill color
 
 	@since 1.0
 */
-func (scene Scene) PushEffectFill(r int, g int, b int, a int) error {
-	return tvg_scene_push_effect_fill(scene.paint_, int32(r), int32(g), int32(b), int32(a)).error()
+func (scene Scene) AddEffectFill(r int, g int, b int, a int) error {
+	return tvg_scene_add_effect_fill(scene.paint_, int32(r), int32(g), int32(b), int32(a)).error()
 }
 
 /*
-PushEffectTint applies a tint effect to the scene.
+AddEffectTint applies a tint effect to the scene.
 
 This function tints the current scene using specified black and white color values,
 modulated by a given intensity.
@@ -176,12 +176,12 @@ modulated by a given intensity.
 
 	@since 1.0
 */
-func (scene Scene) PushEffectTint(
+func (scene Scene) AddEffectTint(
 	black_r int, black_g int, black_b int,
 	white_r int, white_g int, white_b int,
 	intensity float64,
 ) error {
-	return tvg_scene_push_effect_tint(scene.paint_,
+	return tvg_scene_add_effect_tint(scene.paint_,
 		int32(black_r), int32(black_g), int32(black_b),
 		int32(white_r), int32(white_g), int32(white_b),
 		intensity,
@@ -189,7 +189,7 @@ func (scene Scene) PushEffectTint(
 }
 
 /*
-PushEffectTritone applies a tritone color effect to the scene.
+AddEffectTritone applies a tritone color effect to the scene.
 
 This function applies a tritone color effect to the given scene using three sets of RGB values
 representing shadow, midtone, and highlight colors.
@@ -208,13 +208,13 @@ representing shadow, midtone, and highlight colors.
 
 	@since 1.0
 */
-func (scene Scene) PushEffectTritone(
+func (scene Scene) AddEffectTritone(
 	shadow_r int, shadow_g int, shadow_b int,
 	midtone_r int, midtone_g int, midtone_b int,
 	highlight_r int, highlight_g int, highlight_b int,
 	blend int,
 ) error {
-	return tvg_scene_push_effect_tritone(scene.paint_,
+	return tvg_scene_add_effect_tritone(scene.paint_,
 		int32(shadow_r), int32(shadow_g), int32(shadow_b),
 		int32(midtone_r), int32(midtone_g), int32(midtone_b),
 		int32(highlight_r), int32(highlight_g), int32(highlight_b),

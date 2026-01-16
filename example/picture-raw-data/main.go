@@ -26,7 +26,7 @@ func main() {
 	bg := tvg.ShapeNew()
 	_ = bg.AppendRect(0, 0, float32(width), float32(height), 0, 0, true)
 	_ = bg.SetFillColor(255, 255, 255, 255)
-	_ = canvas.Push(bg)
+	_ = canvas.Add(bg)
 
 	// load  image
 	primateImage, err := png.Decode(bytes.NewReader(data.Primate))
@@ -46,7 +46,7 @@ func main() {
 
 	// draw image, centred
 	_ = picture.Translate((float32(width)-w)/2, (float32(height)-h)/2)
-	_ = canvas.Push(picture)
+	_ = canvas.Add(picture)
 
 	// finish
 	_ = canvas.Draw(true)

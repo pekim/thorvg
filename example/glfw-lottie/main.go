@@ -66,7 +66,7 @@ func main() {
 		bg := tvg.ShapeNew()
 		_ = bg.AppendRect(0, 0, float32(windowWidth), float32(windowHeight), 0, 0, true)
 		_ = bg.SetFillColor(255, 255, 255, 255)
-		_ = canvas.Push(bg)
+		_ = canvas.Add(bg)
 
 		// picture
 		picWidth, picHeight, _ := picture.GetSize()
@@ -78,7 +78,7 @@ func main() {
 		scaledWidth := float32(picWidth) * scale
 		scaledHeight := float32(picHeight) * scale
 		_ = picture.Translate(float32(windowWidth-int(scaledWidth))/2, float32(windowHeight-int(scaledHeight))/2)
-		_ = canvas.Push(picture)
+		_ = canvas.Add(picture)
 
 		// finish
 		_ = canvas.Draw(true)

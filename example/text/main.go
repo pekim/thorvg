@@ -36,7 +36,7 @@ func main() {
 	if err := bg.SetFillColor(255, 255, 255, 255); err != nil {
 		panic(err)
 	}
-	if err := canvas.Push(bg); err != nil {
+	if err := canvas.Add(bg); err != nil {
 		panic(err)
 	}
 
@@ -61,7 +61,7 @@ func main() {
 	if err := text.SetText("Lorem ipsum dolor sit amet, consectetur..."); err != nil {
 		panic(err)
 	}
-	if err := canvas.Push(text); err != nil {
+	if err := canvas.Add(text); err != nil {
 		panic(err)
 	}
 
