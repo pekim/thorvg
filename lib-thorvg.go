@@ -199,6 +199,18 @@ var tvg_accessor_del func(accessor uintptr) Result
 var tvg_accessor_set func(accessor uintptr, paint uintptr, func_ uintptr, data uintptr) Result
 var tvg_accessor_generate_id func(name string) uint32
 
+// LottieAnimation API
+var tvg_lottie_animation_new func() uintptr
+var tvg_lottie_animation_gen_slot func(animation uintptr, slot string) uint32
+var tvg_lottie_animation_apply_slot func(animation uintptr, id uint32) Result
+var tvg_lottie_animation_del_slot func(animation uintptr, id uint32) Result
+var tvg_lottie_animation_set_marker func(animation uintptr, marker string) Result
+var tvg_lottie_animation_get_markers_cnt func(animation uintptr, cnt *uint32) Result
+var tvg_lottie_animation_get_marker func(animation uintptr, idx uint32, name **byte) Result
+var tvg_lottie_animation_tween func(animation uintptr, from float32, to float32, progress float32) Result
+var tvg_lottie_animation_assign func(animation uintptr, layer string, ix uint32, var_ string, val float32) Result
+var tvg_lottie_animation_set_quality func(animation uintptr, value uint8) Result
+
 var libThorvgInitialised = false
 
 func initLibThorvg() error {
@@ -381,6 +393,18 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_accessor_del, lib, "tvg_accessor_del")
 	purego.RegisterLibFunc(&tvg_accessor_set, lib, "tvg_accessor_set")
 	purego.RegisterLibFunc(&tvg_accessor_generate_id, lib, "tvg_accessor_generate_id")
+
+	// LottieAnimation API
+	purego.RegisterLibFunc(&tvg_lottie_animation_new, lib, "tvg_lottie_animation_new")
+	purego.RegisterLibFunc(&tvg_lottie_animation_gen_slot, lib, "tvg_lottie_animation_gen_slot")
+	purego.RegisterLibFunc(&tvg_lottie_animation_apply_slot, lib, "tvg_lottie_animation_apply_slot")
+	purego.RegisterLibFunc(&tvg_lottie_animation_del_slot, lib, "tvg_lottie_animation_del_slot")
+	purego.RegisterLibFunc(&tvg_lottie_animation_set_marker, lib, "tvg_lottie_animation_set_marker")
+	purego.RegisterLibFunc(&tvg_lottie_animation_get_markers_cnt, lib, "tvg_lottie_animation_get_markers_cnt")
+	purego.RegisterLibFunc(&tvg_lottie_animation_get_marker, lib, "tvg_lottie_animation_get_marker")
+	purego.RegisterLibFunc(&tvg_lottie_animation_tween, lib, "tvg_lottie_animation_tween")
+	purego.RegisterLibFunc(&tvg_lottie_animation_assign, lib, "tvg_lottie_animation_assign")
+	purego.RegisterLibFunc(&tvg_lottie_animation_set_quality, lib, "tvg_lottie_animation_set_quality")
 
 	return nil
 }
