@@ -768,7 +768,7 @@ TVG_API Tvg_Result tvg_canvas_set_viewport(Tvg_Canvas canvas, int32_t x, int32_t
 /**
  * @brief Safely releases a Tv_Paint object.
  *
- * This is the counterpart to the `new()` API, and releases the given Paint object safely, 
+ * This is the counterpart to the `new()` API, and releases the given Paint object safely,
  * handling @c nullptr and managing ownership properly.
  *
  * @param[in] paint A Tvg_Paint object to release.
@@ -1634,7 +1634,7 @@ TVG_API Tvg_Result tvg_shape_set_fill_rule(Tvg_Paint paint, Tvg_Fill_Rule rule);
 /**
  * @brief Retrieves the current fill rule used by the shape.
  *
- * This function returns the fill rule, which determines how the interior 
+ * This function returns the fill rule, which determines how the interior
  * regions of the shape are calculated when it overlaps itself.
  *
  * @param[in] paint A Tvg_Paint pointer to the shape object.
@@ -2266,8 +2266,8 @@ TVG_API Tvg_Result tvg_scene_add_effect_gaussian_blur(Tvg_Paint scene, double si
 /**
  * @brief Adds a drop shadow effect to the scene.
  *
- * This function adds a drop shadow with a Gaussian blur to the scene. The shadow 
- * can be customized using color, opacity, angle, distance, blur radius (sigma), 
+ * This function adds a drop shadow with a Gaussian blur to the scene. The shadow
+ * can be customized using color, opacity, angle, distance, blur radius (sigma),
  * and quality parameters.
  *
  * @param[in] scene A pointer to the Tvg_Paint scene object.
@@ -2324,7 +2324,7 @@ TVG_API Tvg_Result tvg_scene_add_effect_tint(Tvg_Paint scene, int black_r, int b
 /**
  * @brief Adds a tritone color effect to the scene.
  *
- * This function adds a tritone color effect to the given scene using three sets of RGB values 
+ * This function adds a tritone color effect to the given scene using three sets of RGB values
  * representing shadow, midtone, and highlight colors.
  *
  * @param[in] scene A pointer to the Tvg_Paint scene object.

@@ -7,10 +7,6 @@ cd $SCRIPT_DIR/..
 
 THORVG_COMMIT=1a43240ec3ffdaa689412e7cd52e83cf8118e2b9
 THORVG_DIR=internal/thorvg-src
-GOOS=$(go env GOOS)
-GOARCH=$(go env GOARCH)
-LIBRARY_DIR=internal/lib
-LIBRARY_FILE=$LIBRARY_DIR/libthorvg_${GOOS}_${GOARCH}
 
 # clone if not already cloned
 if [ ! -e $THORVG_DIR ]; then
@@ -26,35 +22,16 @@ if [ "$HEAD" != "$THORVG_COMMIT" ]; then
 fi
 popd
 
-# build thorvg with C bindings
+# configure thorvg with C bindings
 pushd $THORVG_DIR
-meson setup build -Dbindings=capi -Dengines=sw,gl -Dsimd=true
-ninja -C build
+meson setup build --reconfigure -Dbindings=capi -Dengines=sw,gl -Dsimd=true
 popd
 
-# copy library and C header
-cp $THORVG_DIR/build/src/libthorvg-1.so.1.0.0 $LIBRARY_FILE
-cp $THORVG_DIR/src/bindings/capi/thorvg_capi.h $LIBRARY_DIR
+# copy required thorvg source files
+cp -r $THORVG_DIR/inc internal/cgo/
+cp -r $THORVG_DIR/src internal/cgo/
 
-# strip symbols from the library, reducing the size
-# from ~11M to ~1.2M
-strip $LIBRARY_FILE
-
-# generate a Go file that embeds the GOOS/GOARCH specific library
-cat << EOF > lib-thorvg_${GOOS}_${GOARCH}.go
-package thorvg
-
-import _ "embed"
-
-//go:embed $LIBRARY_FILE
-var sharedObject []byte
-EOF
-
-# generate a Go file with a hash value of the library
-HASH=$(sha256sum $LIBRARY_FILE | cut -d " " -f 1)
-cat << EOF > lib-thorvg-constant.go
-package thorvg
-
-const sharedObjectHash = "$HASH"
-const libthorvgCommit = "$THORVG_COMMIT"
-EOF
+# generated cgo code
+echo -e "\nGenerate code"
+rm -f internal/cgo/*.cpp
+go run internal/generate/main.go

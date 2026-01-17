@@ -3,9 +3,9 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        exclude: internal/lib
+        exclude: internal/cgo
       - id: end-of-file-fixer
-        exclude: internal/lib
+        exclude: internal/cgo
       - id: check-yaml
   - repo: https://github.com/tekwizely/pre-commit-golang
     rev: v1.0.0-rc.4
