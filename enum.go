@@ -1,5 +1,8 @@
 package thorvg
 
+// #include "thorvg_capi.h"
+import "C"
+
 // enum is a type used for almost all enum types.
 //
 // A C enum on 64 bit architectures is typically (but not guaranteed
@@ -25,7 +28,8 @@ const (
 )
 
 type ResultError struct {
-	result Result
+	oldResult Result
+	result    C.Tvg_Result
 }
 
 func (err ResultError) Error() string {
@@ -37,11 +41,11 @@ func (err ResultError) Error() string {
 		RESULT_MEMORY_CORRUPTION:      "RESULT_MEMORY_CORRUPTION : The value returned in the event of bad memory handling - e.g. failing in pointer releasing or casting",
 		RESULT_NOT_SUPPORTED:          "RESULT_NOT_SUPPORTED : The value returned in case of choosing unsupported engine features(options).",
 		RESULT_UNKNOWN:                "RESULT_UNKNOWN : The value returned in all other cases.",
-	}[err.result]
+	}[err.oldResult]
 }
 
 func (err ResultError) Result() Result {
-	return err.result
+	return err.oldResult
 }
 
 var errorHandler func(err ResultError)
@@ -82,6 +86,21 @@ func (result Result) error() error {
 	if result == RESULT_SUCCESS {
 		return nil
 	}
+	err := ResultError{
+		oldResult: result,
+	}
+
+	if errorHandler != nil {
+		errorHandler(err)
+	}
+	return err
+}
+
+func resultError(result C.Tvg_Result) error {
+	if result == C.TVG_RESULT_SUCCESS {
+		return nil
+	}
+
 	err := ResultError{
 		result: result,
 	}

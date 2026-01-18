@@ -1,5 +1,8 @@
 package thorvg
 
+// #include "thorvg_capi.h"
+import "C"
+
 /*
 EngineInit initializes the ThorVG engine.
 
@@ -17,11 +20,8 @@ The number of threads is fixed on the first call to tvg_engine_init() and cannot
 	@see tvg_engine_term()
 */
 func EngineInit(threads int) error {
-	if err := initLibThorvg(); err != nil {
-		return err
-	}
-
-	return tvg_engine_init(threads).error()
+	result := C.tvg_engine_init(C.uint(threads))
+	return resultError(result)
 }
 
 /*
@@ -36,7 +36,8 @@ Cleans up resources and stops any internal threads initialized by tvg_engine_ini
 	@see tvg_engine_init()
 */
 func EngineTerm() error {
-	return tvg_engine_term().error()
+	result := C.tvg_engine_term()
+	return resultError(result)
 }
 
 /*
@@ -52,11 +53,12 @@ Version retrieves the version of the TVG engine.
 	@since 0.15
 */
 func Version() (int, int, int, string, string, error) {
-	var major uint32
-	var minor uint32
-	var micro uint32
-	var version *byte
-	result := tvg_engine_version(&major, &minor, &micro, &version)
+	var major C.uint32_t
+	var minor C.uint32_t
+	var micro C.uint32_t
+	var version *C.char
+	result := C.tvg_engine_version(&major, &minor, &micro, &version)
 
-	return int(major), int(minor), int(micro), goString(version), libthorvgCommit, result.error()
+	return int(major), int(minor), int(micro),
+		C.GoString(version), libthorvgCommit, resultError(result)
 }
