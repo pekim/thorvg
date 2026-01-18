@@ -2,12 +2,7 @@ module github.com/pekim/thorvg
 
 go 1.25.0
 
-require (
-	github.com/ebitengine/purego v0.9.1
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20250301202403-da16c1255728
-	github.com/jupiterrider/purego-sdl3 v0.0.0-20251207102000-8bd199c0f033
-	github.com/stretchr/testify v1.11.1
-)
+require github.com/stretchr/testify v1.11.1
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
