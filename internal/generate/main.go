@@ -96,10 +96,12 @@ func generateCgo(introTarget introTarget) {
 						flagLines = append(flagLines, fmt.Sprintf("#cgo CXXFLAGS: -I${SRCDIR}%s", file))
 					}
 				} else {
+					// Skip parameters that are not supported by cgo.
+					// At least not supported without use of CGO_CXXFLAGS_ALLOW environment variable.
 					if strings.HasPrefix(param, "-fdiagnostics-color") ||
-						strings.HasPrefix(param, "-DTEST_DIR") ||
 						strings.HasPrefix(param, "-fno-math-errno") ||
-						strings.HasPrefix(param, "-fno-unwind-tables") {
+						strings.HasPrefix(param, "-fno-unwind-tables") ||
+						strings.HasPrefix(param, "-DTEST_DIR") {
 						continue
 					}
 
