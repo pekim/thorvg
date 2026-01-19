@@ -1,49 +1,52 @@
 package thorvg
 
-// /*
-// Gradient is a structure representing a gradient fill of a Paint object.
-// */
-// type Gradient interface {
-// 	gradient() uintptr
-// }
+// #include "thorvg_capi.h"
+import "C"
 
-// type gradientCommon struct {
-// 	gradient_ uintptr
-// }
+/*
+Gradient is a structure representing a gradient fill of a Paint object.
+*/
+type Gradient interface {
+	gradient() C.Tvg_Gradient
+}
 
-// func (gradient gradientCommon) gradient() uintptr {
-// 	return gradient.gradient_
-// }
+type gradientCommon struct {
+	gradient_ C.Tvg_Gradient
+}
 
-// type LinearGradient struct {
-// 	gradientCommon
-// }
+func (gradient gradientCommon) gradient() C.Tvg_Gradient {
+	return gradient.gradient_
+}
 
-// type RadialGradient struct {
-// 	gradientCommon
-// }
+type LinearGradient struct {
+	gradientCommon
+}
 
-// /*
-// LinearGradientNew creates a new linear gradient object.
+type RadialGradient struct {
+	gradientCommon
+}
 
-// 	@return A new linear gradient object.
-// */
-// func LinearGradientNew() LinearGradient {
-// 	return LinearGradient{
-// 		gradientCommon{gradient_: tvg_linear_gradient_new()},
-// 	}
-// }
+/*
+LinearGradientNew creates a new linear gradient object.
 
-// /*
-// RadialGradientNew Creates a new radial gradient object.
+	@return A new linear gradient object.
+*/
+func LinearGradientNew() LinearGradient {
+	return LinearGradient{
+		gradientCommon{gradient_: C.tvg_linear_gradient_new()},
+	}
+}
 
-// 	@return A new radial gradient object.
-// */
-// func RadialGradientNew() RadialGradient {
-// 	return RadialGradient{
-// 		gradientCommon{gradient_: tvg_radial_gradient_new()},
-// 	}
-// }
+/*
+RadialGradientNew Creates a new radial gradient object.
+
+	@return A new radial gradient object.
+*/
+func RadialGradientNew() RadialGradient {
+	return RadialGradient{
+		gradientCommon{gradient_: C.tvg_radial_gradient_new()},
+	}
+}
 
 // /*
 // Set sets the linear gradient bounds.
@@ -276,22 +279,22 @@ package thorvg
 // 	return tvg_gradient_del(gradient.gradient_).error()
 // }
 
-// func newGradient(gradient uintptr) (Gradient, bool) {
-// 	var typ Type
-// 	result := tvg_gradient_get_type(gradient, &typ)
-// 	if result != RESULT_SUCCESS {
-// 		return nil, false
-// 	}
+func newGradient(gradient C.Tvg_Gradient) (Gradient, bool) {
+	var typ C.Tvg_Type
+	result := C.tvg_gradient_get_type(gradient, &typ)
+	if result != C.TVG_RESULT_SUCCESS {
+		return nil, false
+	}
 
-// 	switch typ {
+	switch typ {
 
-// 	case TYPE_LINEAR_GRAD:
-// 		return LinearGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
+	case C.TVG_TYPE_LINEAR_GRAD:
+		return LinearGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
 
-// 	case TYPE_RADIAL_GRAD:
-// 		return RadialGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
+	case C.TVG_TYPE_RADIAL_GRAD:
+		return RadialGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
 
-// 	default:
-// 		return nil, false
-// 	}
-// }
+	default:
+		return nil, false
+	}
+}
