@@ -9,27 +9,20 @@ import "C"
 // to be) 32 bits.
 type enum uint32
 
-/*
-Result is an enumeration specifying the result from the APIs.
-
-All ThorVG APIs could potentially return one of the values in the list.
-Please note that some APIs may additionally specify the reasons that trigger their return values.
-*/
-type Result enum
+type Result C.Tvg_Result
 
 const (
-	RESULT_SUCCESS                Result = iota // The value returned in case of a correct request execution.
-	RESULT_INVALID_ARGUMENT                     // The value returned in the event of a problem with the arguments given to the API - e.g. empty paths or null pointers.
-	RESULT_INSUFFICIENT_CONDITION               // The value returned in case the request cannot be processed - e.g. asking for properties of an object, which does not exist.
-	RESULT_FAILED_ALLOCATION                    // The value returned in case of unsuccessful memory allocation.
-	RESULT_MEMORY_CORRUPTION                    // The value returned in the event of bad memory handling - e.g. failing in pointer releasing or casting
-	RESULT_NOT_SUPPORTED                        // The value returned in case of choosing unsupported engine features(options).
-	RESULT_UNKNOWN                Result = 255  // The value returned in all other cases.
+	RESULT_SUCCESS                = Result(C.TVG_RESULT_SUCCESS)
+	RESULT_INVALID_ARGUMENT       = Result(C.TVG_RESULT_INVALID_ARGUMENT)
+	RESULT_INSUFFICIENT_CONDITION = Result(C.TVG_RESULT_INSUFFICIENT_CONDITION)
+	RESULT_FAILED_ALLOCATION      = Result(C.TVG_RESULT_FAILED_ALLOCATION)
+	RESULT_MEMORY_CORRUPTION      = Result(C.TVG_RESULT_MEMORY_CORRUPTION)
+	RESULT_NOT_SUPPORTED          = Result(C.TVG_RESULT_NOT_SUPPORTED)
+	RESULT_UNKNOWN                = Result(C.TVG_RESULT_UNKNOWN)
 )
 
 type ResultError struct {
-	oldResult Result
-	result    C.Tvg_Result
+	result Result
 }
 
 func (err ResultError) Error() string {
@@ -41,11 +34,11 @@ func (err ResultError) Error() string {
 		RESULT_MEMORY_CORRUPTION:      "RESULT_MEMORY_CORRUPTION : The value returned in the event of bad memory handling - e.g. failing in pointer releasing or casting",
 		RESULT_NOT_SUPPORTED:          "RESULT_NOT_SUPPORTED : The value returned in case of choosing unsupported engine features(options).",
 		RESULT_UNKNOWN:                "RESULT_UNKNOWN : The value returned in all other cases.",
-	}[err.oldResult]
+	}[err.result]
 }
 
 func (err ResultError) Result() Result {
-	return err.oldResult
+	return err.result
 }
 
 var errorHandler func(err ResultError)
@@ -82,27 +75,13 @@ func SetErrorHandler(handler func(err ResultError)) func(err ResultError) {
 	return oldHandler
 }
 
-func (result Result) error() error {
-	if result == RESULT_SUCCESS {
-		return nil
-	}
-	err := ResultError{
-		oldResult: result,
-	}
-
-	if errorHandler != nil {
-		errorHandler(err)
-	}
-	return err
-}
-
 func resultError(result C.Tvg_Result) error {
 	if result == C.TVG_RESULT_SUCCESS {
 		return nil
 	}
 
 	err := ResultError{
-		result: result,
+		result: Result(result),
 	}
 
 	if errorHandler != nil {

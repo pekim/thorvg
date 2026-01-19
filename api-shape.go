@@ -1,41 +1,45 @@
 package thorvg
 
-// type Shape struct {
-// 	paintCommon
-// }
+// #include "thorvg_capi.h"
+import "C"
 
-// /*
-// ShapeNew creates a new Shape object.
+type Shape struct {
+	paintCommon
+}
 
-// This function allocates and returns a new Shape instance.
-// To properly destroy the Shape object, use @ref tvg_paint_rel().
+/*
+ShapeNew creates a new Shape object.
 
-// 	@return A pointer to the newly created Shape object.
+This function allocates and returns a new Shape instance.
+To properly destroy the Shape object, use @ref tvg_paint_rel().
 
-// 	@see tvg_paint_rel()
-// */
-// func ShapeNew() Shape {
-// 	return Shape{
-// 		paintCommon: paintCommon{
-// 			paint_: tvg_shape_new(),
-// 		},
-// 	}
-// }
+	@return A pointer to the newly created Shape object.
 
-// /*
-// Reset resets the shape path properties.
+	@see tvg_paint_rel()
+*/
+func ShapeNew() Shape {
+	return Shape{
+		paintCommon: paintCommon{
+			paint_: C.tvg_shape_new(),
+		},
+	}
+}
 
-// The color, the fill and the stroke properties are retained.
+/*
+Reset resets the shape path properties.
 
-// 	@param[in] paint A Tvg_Paint pointer to the shape object.
+The color, the fill and the stroke properties are retained.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
+	@param[in] paint A Tvg_Paint pointer to the shape object.
 
-// 	@note The memory, where the path data is stored, is not deallocated at this stage for caching effect.
-// */
-// func (shape Shape) Reset() error {
-// 	return tvg_shape_reset(shape.paint_).error()
-// }
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
+
+	@note The memory, where the path data is stored, is not deallocated at this stage for caching effect.
+*/
+func (shape Shape) Reset() error {
+	result := C.tvg_shape_reset(shape.paint_)
+	return resultError(result)
+}
 
 // /*
 // MoveTo sets the initial point of the sub-path.

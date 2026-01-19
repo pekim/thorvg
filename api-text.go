@@ -1,12 +1,15 @@
 package thorvg
 
-// type Text struct {
-// 	paintCommon
-// }
+// #include "thorvg_capi.h"
+import "C"
 
-// func (text Text) paint() uintptr {
-// 	return text.paint_
-// }
+type Text struct {
+	paintCommon
+}
+
+func (text Text) paint() C.Tvg_Paint {
+	return text.paint_
+}
 
 // /*
 // TextNew creates a new Text object.

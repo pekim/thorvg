@@ -1,8 +1,15 @@
 package thorvg
 
-// type Scene struct {
-// 	paintCommon
-// }
+// #include "thorvg_capi.h"
+import "C"
+
+type Scene struct {
+	paintCommon
+}
+
+func (scene Scene) paint() C.Tvg_Paint {
+	return scene.paint_
+}
 
 // /*
 // SceneNew Creates a new Scene object.

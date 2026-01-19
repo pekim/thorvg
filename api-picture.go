@@ -1,10 +1,15 @@
 package thorvg
 
-// import (
-// 	"unsafe"
+// #include "thorvg_capi.h"
+import "C"
 
-// 	"github.com/ebitengine/purego"
-// )
+type Picture struct {
+	paintCommon
+}
+
+func (picture Picture) paint() C.Tvg_Paint {
+	return picture.paint_
+}
 
 // type Picture struct {
 // 	paintCommon
