@@ -110,35 +110,37 @@ func (shape Shape) Reset() error {
 // 	return tvg_shape_close(shape.paint_).error()
 // }
 
-// /*
-// AppendRect appends a rectangle to the path.
+/*
+AppendRect appends a rectangle to the path.
 
-// The rectangle with rounded corners can be achieved by setting non-zero values to @p rx and @p ry arguments.
-// The @p rx and @p ry values specify the radii of the ellipse defining the rounding of the corners.
+The rectangle with rounded corners can be achieved by setting non-zero values to @p rx and @p ry arguments.
+The @p rx and @p ry values specify the radii of the ellipse defining the rounding of the corners.
 
-// The position of the rectangle is specified by the coordinates of its upper-left corner -  @p x and @p y arguments.
+The position of the rectangle is specified by the coordinates of its upper-left corner -  @p x and @p y arguments.
 
-// The rectangle is treated as a new sub-path - it is not connected with the previous sub-path.
+The rectangle is treated as a new sub-path - it is not connected with the previous sub-path.
 
-// The value of the current point is set to (@p x + @p rx, @p y) - in case @p rx is greater
-// than @p w/2 the current point is set to (@p x + @p w/2, @p y)
+The value of the current point is set to (@p x + @p rx, @p y) - in case @p rx is greater
+than @p w/2 the current point is set to (@p x + @p w/2, @p y)
 
-// 	@param[in] paint A Tvg_Paint pointer to the shape object.
-// 	@param[in] x The horizontal coordinate of the upper-left corner of the rectangle.
-// 	@param[in] y The vertical coordinate of the upper-left corner of the rectangle.
-// 	@param[in] w The width of the rectangle.
-// 	@param[in] h The height of the rectangle.
-// 	@param[in] rx The x-axis radius of the ellipse defining the rounded corners of the rectangle.
-// 	@param[in] ry The y-axis radius of the ellipse defining the rounded corners of the rectangle.
-// 	@param[in] cw Specifies the path direction: @c true for clockwise, @c false for counterclockwise.
+	@param[in] paint A Tvg_Paint pointer to the shape object.
+	@param[in] x The horizontal coordinate of the upper-left corner of the rectangle.
+	@param[in] y The vertical coordinate of the upper-left corner of the rectangle.
+	@param[in] w The width of the rectangle.
+	@param[in] h The height of the rectangle.
+	@param[in] rx The x-axis radius of the ellipse defining the rounded corners of the rectangle.
+	@param[in] ry The y-axis radius of the ellipse defining the rounded corners of the rectangle.
+	@param[in] cw Specifies the path direction: @c true for clockwise, @c false for counterclockwise.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 
-// 	@note For @p rx and @p ry greater than or equal to the half of @p w and the half of @p h, respectively, the shape become an ellipse.
-// */
-// func (shape Shape) AppendRect(x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) error {
-// 	return tvg_shape_append_rect(shape.paint_, x, y, w, h, rx, ry, cw).error()
-// }
+	@note For @p rx and @p ry greater than or equal to the half of @p w and the half of @p h, respectively, the shape become an ellipse.
+*/
+func (shape Shape) AppendRect(x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) error {
+	result := C.tvg_shape_append_rect(shape.paint_,
+		C.float(x), C.float(y), C.float(w), C.float(h), C.float(rx), C.float(ry), C.bool(cw))
+	return resultError(result)
+}
 
 // /*
 // AppendCircle Appends an ellipse to the path.

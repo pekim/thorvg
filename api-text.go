@@ -11,25 +11,25 @@ func (text Text) paint() C.Tvg_Paint {
 	return text.paint_
 }
 
-// /*
-// TextNew creates a new Text object.
+/*
+TextNew creates a new Text object.
 
-// This function allocates and returns a new Text instance.
-// To properly destroy the Text object, use @ref tvg_paint_rel().
+This function allocates and returns a new Text instance.
+To properly destroy the Text object, use @ref tvg_paint_rel().
 
-// 	@return A pointer to the newly created Text object.
+	@return A pointer to the newly created Text object.
 
-// 	@see tvg_paint_rel()
+	@see tvg_paint_rel()
 
-// 	@since 0.15
-// */
-// func TextNew() Text {
-// 	return Text{
-// 		paintCommon: paintCommon{
-// 			paint_: tvg_text_new(),
-// 		},
-// 	}
-// }
+	@since 0.15
+*/
+func TextNew() Text {
+	return Text{
+		paintCommon: paintCommon{
+			paint_: C.tvg_text_new(),
+		},
+	}
+}
 
 // /*
 // SetFont sets the font family for the text.
