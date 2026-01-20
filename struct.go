@@ -1,6 +1,12 @@
 package thorvg
 
-import "structs"
+// #include "thorvg_capi.h"
+import "C"
+
+import (
+	"structs"
+	"unsafe"
+)
 
 /*
 ColorStop is a data structure storing the information about the color and its relative position inside the gradient bounds.
@@ -37,4 +43,15 @@ type Matrix struct {
 	E11, E12, E13 float32
 	E21, E22, E23 float32
 	E31, E32, E33 float32
+}
+
+var structSizes = []struct {
+	name string
+	c    int
+	go_  uintptr
+}{
+	// structs
+	{"ColorStop", C.sizeof_Tvg_Color_Stop, unsafe.Sizeof(ColorStop{})},
+	{"Point", C.sizeof_Tvg_Point, unsafe.Sizeof(Point{})},
+	{"Matrix", C.sizeof_Tvg_Matrix, unsafe.Sizeof(Matrix{})},
 }
