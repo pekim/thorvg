@@ -1,6 +1,6 @@
 package cvalidation
 
-// #include "../lib/thorvg_capi.h"
+// #include "../cgo/src/bindings/capi/thorvg_capi.h"
 import "C"
 
 import (
