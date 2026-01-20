@@ -1,7 +1,10 @@
 package thorvg
 
 // #include "thorvg_capi.h"
+// #include <stdlib.h>
 import "C"
+
+import "unsafe"
 
 type Picture struct {
 	paintCommon
@@ -10,10 +13,6 @@ type Picture struct {
 func (picture Picture) paint() C.Tvg_Paint {
 	return picture.paint_
 }
-
-// type Picture struct {
-// 	paintCommon
-// }
 
 // type PictureAssetResolver func(paint Paint, src string) bool
 
@@ -103,28 +102,36 @@ func (picture Picture) paint() C.Tvg_Paint {
 // 		mimetype, rpath, true).error()
 // }
 
-// /*
-// LoadData loads a picture data from a memory block of a given size.
+/*
+LoadData loads a picture data from a memory block of a given size.
 
-// ThorVG efficiently caches the loaded data using the specified @p data address as a key
-// when the @p copy has @c false. This means that loading the same data again will not result in duplicate operations
-// for the sharable @p data. Instead, ThorVG will reuse the previously loaded picture data.
+ThorVG efficiently caches the loaded data using the specified @p data address as a key
+when the @p copy has @c false. This means that loading the same data again will not result in duplicate operations
+for the sharable @p data. Instead, ThorVG will reuse the previously loaded picture data.
 
-// 	@param[in] picture A Tvg_Paint pointer to the picture object.
-// 	@param[in] data A pointer to a memory location where the content of the picture file is stored. A null-terminated string is expected for non-binary data if @p copy is @c false
-// 	@param[in] size The size in bytes of the memory occupied by the @p data.
-// 	@param[in] mimetype Mimetype or extension of data such as "jpg", "jpeg", "svg", "svg+xml", "lot", "lottie+json", "png", etc. In case an empty string or an unknown type is provided, the loaders will be tried one by one.
-// 	@param[in] rpath A resource directory path, if the @p data needs to access any external resources.
-// 	@param[in] copy If @c true the data are copied into the engine local buffer, otherwise they are not.
+	@param[in] picture A Tvg_Paint pointer to the picture object.
+	@param[in] data A pointer to a memory location where the content of the picture file is stored. A null-terminated string is expected for non-binary data if @p copy is @c false
+	@param[in] size The size in bytes of the memory occupied by the @p data.
+	@param[in] mimetype Mimetype or extension of data such as "jpg", "jpeg", "svg", "svg+xml", "lot", "lottie+json", "png", etc. In case an empty string or an unknown type is provided, the loaders will be tried one by one.
+	@param[in] rpath A resource directory path, if the @p data needs to access any external resources.
+	@param[in] copy If @c true the data are copied into the engine local buffer, otherwise they are not.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument or the @p size is zero or less.
-// 	@retval TVG_RESULT_NOT_SUPPORTED A file with an unknown extension.
+	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument or the @p size is zero or less.
+	@retval TVG_RESULT_NOT_SUPPORTED A file with an unknown extension.
 
-// 	@warning: It's the user responsibility to release the @p data memory if the @p copy is @c true.
-// */
-// func (picture Picture) LoadData(data []byte, mimetype string, rpath string) error {
-// 	return tvg_picture_load_data(picture.paint_, &data[0], uint32(len(data)), mimetype, rpath, true).error()
-// }
+	@warning: It's the user responsibility to release the @p data memory if the @p copy is @c true.
+*/
+func (picture Picture) LoadData(data []byte, mimetype string, rpath string) error {
+	cMimetype := C.CString(mimetype)
+	defer C.free(unsafe.Pointer(cMimetype))
+
+	cRpath := C.CString(rpath)
+	defer C.free(unsafe.Pointer(cRpath))
+
+	result := C.tvg_picture_load_data(picture.paint_, (*C.char)(unsafe.Pointer(&data[0])),
+		C.uint32_t(len(data)), cMimetype, cRpath, true)
+	return resultError(result)
+}
 
 // /*
 // SetAssetResolver sets the asset resolver callback for handling external resources (e.g., images and fonts).

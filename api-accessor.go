@@ -4,6 +4,7 @@ package thorvg
 // #include "api-accessor.h"
 // #include <stdlib.h>
 import "C"
+
 import "unsafe"
 
 // import "github.com/ebitengine/purego"
