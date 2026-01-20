@@ -11,40 +11,41 @@ func (scene Scene) paint() C.Tvg_Paint {
 	return scene.paint_
 }
 
-// /*
-// SceneNew Creates a new Scene object.
+/*
+SceneNew Creates a new Scene object.
 
-// This function allocates and returns a new Scene instance.
-// To properly destroy the Scene object, use @ref tvg_paint_rel().
+This function allocates and returns a new Scene instance.
+To properly destroy the Scene object, use @ref tvg_paint_rel().
 
-// 	@return A pointer to the newly created Scene object.
+	@return A pointer to the newly created Scene object.
 
-// 	@see tvg_paint_rel()
-// */
-// func SceneNew() Scene {
-// 	return Scene{
-// 		paintCommon: paintCommon{
-// 			paint_: tvg_scene_new(),
-// 		},
-// 	}
-// }
+	@see tvg_paint_rel()
+*/
+func SceneNew() Scene {
+	return Scene{
+		paintCommon: paintCommon{
+			paint_: C.tvg_scene_new(),
+		},
+	}
+}
 
-// /*
-// Add adds a paint object to the scene.
+/*
+Add adds a paint object to the scene.
 
-// This function appends a paint object to the scene.
+This function appends a paint object to the scene.
 
-// 	@param[in] scene A Tvg_Paint pointer to the scene object.
-// 	@param[in] paint A pointer to the Paint object to be added into the scene.
+	@param[in] scene A Tvg_Paint pointer to the scene object.
+	@param[in] paint A pointer to the Paint object to be added into the scene.
 
-// 	@note The ownership of the @p paint object is transferred to the scene upon addition.
+	@note The ownership of the @p paint object is transferred to the scene upon addition.
 
-// 	@see tvg_scene_remove()
-// 	@see tvg_scene_insert()
-// */
-// func (scene Scene) Add(paint Paint) error {
-// 	return tvg_scene_add(scene.paint_, paint.paint()).error()
-// }
+	@see tvg_scene_remove()
+	@see tvg_scene_insert()
+*/
+func (scene Scene) Add(paint Paint) error {
+	result := C.tvg_scene_add(scene.paint_, paint.paint())
+	return resultError(result)
+}
 
 // /*
 // Insert adds a paint object to the scene.
