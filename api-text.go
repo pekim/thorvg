@@ -1,7 +1,10 @@
 package thorvg
 
 // #include "thorvg_capi.h"
+// #include <stdlib.h>
 import "C"
+
+import "unsafe"
 
 type Text struct {
 	paintCommon
@@ -31,323 +34,362 @@ func TextNew() Text {
 	}
 }
 
-// /*
-// SetFont sets the font family for the text.
+/*
+SetFont sets the font family for the text.
 
-// This function specifies the name of the font to be used when rendering text.
+This function specifies the name of the font to be used when rendering text.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] name The name of the font. This should match a font available through the canvas backend.
-// 									If set to @c nullptr, ThorVG will attempt to select a fallback font available on the engine.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] name The name of the font. This should match a font available through the canvas backend.
+									If set to @c nullptr, ThorVG will attempt to select a fallback font available on the engine.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
-// 	@retval TVG_RESULT_INSUFFICIENT_CONDITION  The specified @p name cannot be found.
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION  The specified @p name cannot be found.
 
-// 	@note This function only sets the font family name. Use @ref size() to define the font size.
-// 	@note If the @p name is not specified, ThorVG will select an available fallback font.
+	@note This function only sets the font family name. Use @ref size() to define the font size.
+	@note If the @p name is not specified, ThorVG will select an available fallback font.
 
-// 	@see tvg_text_set_size()
-// 	@see tvg_font_load()
+	@see tvg_text_set_size()
+	@see tvg_font_load()
 
-// 	@since 1.0
-// */
-// func (text Text) SetFont(name string) error {
-// 	return tvg_text_set_font(text.paint(), name).error()
-// }
+	@since 1.0
+*/
+func (text Text) SetFont(name string) error {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
 
-// /*
-// SetSize sets the font size for the text.
+	result := C.tvg_text_set_font(text.paint(), cName)
+	return resultError(result)
+}
 
-// This function sets the font size used during text rendering.
-// The size is specified in point units, and supports floating-point precision
-// for smooth scaling and animation effects.
+/*
+SetSize sets the font size for the text.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] size The font size in points. Must be greater than 0.0.
+This function sets the font size used during text rendering.
+The size is specified in point units, and supports floating-point precision
+for smooth scaling and animation effects.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
-// 	@retval TVG_RESULT_INVALID_ARGUMENT if the @p size is less than or equal to 0.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] size The font size in points. Must be greater than 0.0.
 
-// 	@note Use this function in combination with @ref font() to fully define text appearance.
-// 	@note Fractional sizes (e.g., 12.5) are supported for sub-pixel rendering and animations.
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+	@retval TVG_RESULT_INVALID_ARGUMENT if the @p size is less than or equal to 0.
 
-// 	@see tvg_text_set_font()
+	@note Use this function in combination with @ref font() to fully define text appearance.
+	@note Fractional sizes (e.g., 12.5) are supported for sub-pixel rendering and animations.
 
-// 	@since 1.0
-// */
-// func (text Text) SetSize(size float32) error {
-// 	return tvg_text_set_size(text.paint_, size).error()
-// }
+	@see tvg_text_set_font()
 
-// /*
-// SetText assigns the given unicode text to be rendered.
+	@since 1.0
+*/
+func (text Text) SetSize(size float32) error {
+	result := C.tvg_text_set_size(text.paint_, C.float(size))
+	return resultError(result)
+}
 
-// This function sets the unicode text that will be displayed by the rendering system.
-// The text is set according to the specified UTF encoding method, which defaults to UTF-8.
+/*
+SetText assigns the given unicode text to be rendered.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] utf8 The multi-byte text encoded with utf8 string to be rendered.
+This function sets the unicode text that will be displayed by the rendering system.
+The text is set according to the specified UTF encoding method, which defaults to UTF-8.
 
-// 	@since 1.0
-// */
-// func (text Text) SetText(utf8 string) error {
-// 	return tvg_text_set_text(text.paint_, utf8).error()
-// }
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] utf8 The multi-byte text encoded with utf8 string to be rendered.
 
-// /*
-// Align sets text alignment or anchor per axis.
+	@since 1.0
+*/
+func (text Text) SetText(utf8 string) error {
+	cUtf8 := C.CString(utf8)
+	defer C.free(unsafe.Pointer(cUtf8))
 
-// If layout width/height is set on an axis, align within the layout box.
-// Otherwise, treat it as an anchor within the text bounds which point of
-// the text box is pinned to the paint position.
+	result := C.tvg_text_set_text(text.paint_, cUtf8)
+	return resultError(result)
+}
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] x Horizontal alignment/anchor in [0..1]: 0=left/start, 0.5=center, 1=right/end. (Default is 0)
-// 	@param[in] y Vertical alignment/anchor in [0..1]: 0=top, 0.5=middle, 1=bottom. (Default is 0)
+/*
+Align sets text alignment or anchor per axis.
 
-// 	@since 1.0
+If layout width/height is set on an axis, align within the layout box.
+Otherwise, treat it as an anchor within the text bounds which point of
+the text box is pinned to the paint position.
 
-// 	@see tvg_text_layout()
-// */
-// func (text Text) Align(x float32, y float32) error {
-// 	return tvg_text_align(text.paint_, x, y).error()
-// }
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] x Horizontal alignment/anchor in [0..1]: 0=left/start, 0.5=center, 1=right/end. (Default is 0)
+	@param[in] y Vertical alignment/anchor in [0..1]: 0=top, 0.5=middle, 1=bottom. (Default is 0)
 
-// /*
-// Layout sets the virtual layout box (constraints) for the text.
+	@since 1.0
 
-// If width/height is set on an axis, that axis is constrained by a virtual layout box and
-// the text may wrap/align inside it. If width/height == 0, the axis is
-// unconstrained and @ref tvg_text_align() acts as an anchor on that axis.
+	@see tvg_text_layout()
+*/
+func (text Text) Align(x float32, y float32) error {
+	result := C.tvg_text_align(text.paint_, C.float(x), C.float(y))
+	return resultError(result)
+}
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] w Layout width in user space. Use 0 for no horizontal constraint. (Default is 0)
-// 	@param[in] h Layout height in user space. Use 0 for no vertical constraint. (Default is 0)
+/*
+Layout sets the virtual layout box (constraints) for the text.
 
-// 	@note This defines constraints only; alignment/anchoring is controlled by @ref align().
-// 	@since 1.0
+If width/height is set on an axis, that axis is constrained by a virtual layout box and
+the text may wrap/align inside it. If width/height == 0, the axis is
+unconstrained and @ref tvg_text_align() acts as an anchor on that axis.
 
-// 	@see tvg_text_align()
-// 	@see tvg_text_spacing()
-// */
-// func (text Text) Layout(width float32, h float32) error {
-// 	return tvg_text_layout(text.paint_, width, h).error()
-// }
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] w Layout width in user space. Use 0 for no horizontal constraint. (Default is 0)
+	@param[in] h Layout height in user space. Use 0 for no vertical constraint. (Default is 0)
+
+	@note This defines constraints only; alignment/anchoring is controlled by @ref align().
+	@since 1.0
+
+	@see tvg_text_align()
+	@see tvg_text_spacing()
+*/
+func (text Text) Layout(width float32, h float32) error {
+	result := C.tvg_text_layout(text.paint_, C.float(width), C.float(h))
+	return resultError(result)
+}
+
+/*
+WrapMode sets the text wrapping mode for this text object.
+
+This method controls how the text is laid out when it exceeds the available space.
+The wrapping mode determines whether text is truncated, wrapped by character or word,
+or adjusted automatically. An ellipsis mode is also available for truncation with "...".
 
-// /*
-// WrapMode sets the text wrapping mode for this text object.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] mode The wrapping strategy to apply. Default is @c TVG_TEXT_WRAP_NONE.
 
-// This method controls how the text is laid out when it exceeds the available space.
-// The wrapping mode determines whether text is truncated, wrapped by character or word,
-// or adjusted automatically. An ellipsis mode is also available for truncation with "...".
+	@see Tvg_Text_Wrap
+	@since 1.0
+*/
+func (text Text) WrapMode(mode TextWrap) error {
+	result := C.tvg_text_wrap_mode(text.paint_, C.Tvg_Text_Wrap(mode))
+	return resultError(result)
+}
+
+/*
+Spacing sets the spacing scale factors for text layout.
+
+This function adjusts the letter spacing (horizontal space between glyphs) and
+line spacing (vertical space between lines of text) using scale factors.
+
+Both values are relative to the font's default metrics:
+- The letter spacing is applied as a scale factor to the glyph's advance width.
+- The line spacing is applied as a scale factor to the glyph's advance height.
+
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] letter The scale factor for letter spacing.
+											Values > 1.0 increase spacing, values < 1.0 decrease it.
+											Must be greater than or equal to 0.0. (default: 1.0)
+
+	@param[in] line The scale factor for line spacing.
+										Values > 1.0 increase line spacing, values < 1.0 decrease it.
+										Must be greater than or equal to 0.0. (default: 1.0)
+
+	  @since 1.0
+*/
+func (text Text) Spacing(letter float32, line float32) error {
+	result := C.tvg_text_spacing(text.paint_, C.float(letter), C.float(line))
+	return resultError(result)
+}
+
+/*
+SetItalic applies an italic (slant) transformation to the text.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] mode The wrapping strategy to apply. Default is @c TVG_TEXT_WRAP_NONE.
+This function applies a shear transformation to simulate an italic (oblique) style
+for the current text object. The shear factor determines the degree of slant
+applied along the X-axis.
 
-// 	@see Tvg_Text_Wrap
-// 	@since 1.0
-// */
-// func (text Text) WrapMode(mode TextWrap) error {
-// 	return tvg_text_wrap_mode(text.paint_, mode).error()
-// }
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] shear The shear factor to apply. A value of 0.0 applies no slant, while values around 0.5 result in a strong slant.
+									Must be in the range [0.0, 0.5]. Recommended value is 0.18.
 
-// /*
-// Spacing sets the spacing scale factors for text layout.
+	@note The @p shear factor will be clamped to the valid range if it exceeds the limits.
+	@note This does not require the font itself to be italic.
+				It visually simulates the effect by applying a transformation matrix.
 
-// This function adjusts the letter spacing (horizontal space between glyphs) and
-// line spacing (vertical space between lines of text) using scale factors.
+	@warning Excessive slanting may cause visual distortion depending on the font and size.
 
-// Both values are relative to the font's default metrics:
-// - The letter spacing is applied as a scale factor to the glyph's advance width.
-// - The line spacing is applied as a scale factor to the glyph's advance height.
+	@see tvg_text_set_font()
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] letter The scale factor for letter spacing.
-// 											Values > 1.0 increase spacing, values < 1.0 decrease it.
-// 											Must be greater than or equal to 0.0. (default: 1.0)
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
 
-// 	@param[in] line The scale factor for line spacing.
-// 										Values > 1.0 increase line spacing, values < 1.0 decrease it.
-// 										Must be greater than or equal to 0.0. (default: 1.0)
+	@since 1.0
+*/
+func (text Text) SetItalic(shear float32) error {
+	result := C.tvg_text_set_italic(text.paint_, C.float(shear))
+	return resultError(result)
+}
+
+/*
+SetOutline sets an outline (stroke) around the text object.
 
-// 	  @since 1.0
-// */
-// func (text Text) Spacing(letter float32, line float32) error {
-// 	return tvg_text_spacing(text.paint_, letter, line).error()
-// }
+This function adds an outline to the text with the specified width and RGB color.
+The outline enhances the visibility of the text by rendering a stroke around its glyphs.
 
-// /*
-// SetItalic applies an italic (slant) transformation to the text.
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param width The width of the outline. Must be positive value. (The default is 0)
+	@param r     Red component of the outline color (0–255).
+	@param g     Green component of the outline color (0–255).
+	@param b     Blue component of the outline color (0–255).
 
-// This function applies a shear transformation to simulate an italic (oblique) style
-// for the current text object. The shear factor determines the degree of slant
-// applied along the X-axis.
+	@note To disable the outline, set @p width to 0.
+	@see tvg_text_set_fill_color() to set the main text fill color.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] shear The shear factor to apply. A value of 0.0 applies no slant, while values around 0.5 result in a strong slant.
-// 									Must be in the range [0.0, 0.5]. Recommended value is 0.18.
+	@since 1.0
+*/
+func (text Text) SetOutline(width float32, r uint8, g uint8, b uint8) error {
+	result := C.tvg_text_set_outline(text.paint_, C.float(width), C.uint8_t(r), C.uint8_t(g), C.uint8_t(b))
+	return resultError(result)
+}
 
-// 	@note The @p shear factor will be clamped to the valid range if it exceeds the limits.
-// 	@note This does not require the font itself to be italic.
-// 				It visually simulates the effect by applying a transformation matrix.
+/*
+SetColor sets the text solid color.
 
-// 	@warning Excessive slanting may cause visual distortion depending on the font and size.
+	@param[in] paint A Tvg_Paint pointer to the text object.
+	@param[in] r The red color channel value in the range [0 ~ 255]. The default value is 0.
+	@param[in] g The green color channel value in the range [0 ~ 255]. The default value is 0.
+	@param[in] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
 
-// 	@see tvg_text_set_font()
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
 
-// 	@since 1.0
-// */
-// func (text Text) SetItalic(shear float32) error {
-// 	return tvg_text_set_italic(text.paint_, shear).error()
-// }
+	@see tvg_text_set_font()
+	@see tvg_text_set_outline()
 
-// /*
-// SetOutline sets an outline (stroke) around the text object.
+	@since 0.15
+*/
+func (text Text) SetColor(r uint8, g uint8, b uint8) error {
+	result := C.tvg_text_set_color(text.paint_, C.uint8_t(r), C.uint8_t(g), C.uint8_t(b))
+	return resultError(result)
+}
 
-// This function adds an outline to the text with the specified width and RGB color.
-// The outline enhances the visibility of the text by rendering a stroke around its glyphs.
+/*
+SetGradient sets the gradient fill for the text.
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param width The width of the outline. Must be positive value. (The default is 0)
-// 	@param r     Red component of the outline color (0–255).
-// 	@param g     Green component of the outline color (0–255).
-// 	@param b     Blue component of the outline color (0–255).
+	@param[in] text A Tvg_Paint pointer to the text object.
+	@param[in] grad The linear or radial gradient fill
 
-// 	@note To disable the outline, set @p width to 0.
-// 	@see tvg_text_set_fill_color() to set the main text fill color.
+	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+	@retval TVG_RESULT_MEMORY_CORRUPTION An invalid Tvg_Gradient pointer.
 
-// 	@since 1.0
-// */
-// func (text Text) SetOutline(width float32, r uint8, g uint8, b uint8) error {
-// 	return tvg_text_set_outline(text.paint_, width, r, g, b).error()
-// }
+	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
+	@see tvg_text_set_font()
 
-// /*
-// SetColor sets the text solid color.
+	@since 0.15
+*/
+func (text Text) SetGradient(gradient Gradient) error {
+	result := C.tvg_text_set_gradient(text.paint_, gradient.gradient())
+	return resultError(result)
+}
 
-// 	@param[in] paint A Tvg_Paint pointer to the text object.
-// 	@param[in] r The red color channel value in the range [0 ~ 255]. The default value is 0.
-// 	@param[in] g The green color channel value in the range [0 ~ 255]. The default value is 0.
-// 	@param[in] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
+/*
+FontLoad loads a scalable font data from a file.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
+ThorVG efficiently caches the loaded data using the specified @p path as a key.
+This means that loading the same file again will not result in duplicate operations;
+instead, ThorVG will reuse the previously loaded font data.
 
-// 	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
+	@param[in] path The path to the font file.
 
-// 	@see tvg_text_set_font()
-// 	@see tvg_text_set_outline()
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid @p path passed as an argument.
+	@retval TVG_RESULT_NOT_SUPPORTED When trying to load a file with an unknown extension.
 
-// 	@since 0.15
-// */
-// func (text Text) SetColor(r uint8, g uint8, b uint8) error {
-// 	return tvg_text_set_color(text.paint_, r, g, b).error()
-// }
+	@see tvg_font_unload()
 
-// /*
-// SetGradient sets the gradient fill for the text.
+	@since 0.15
+*/
+func FontLoad(path string) error {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
 
-// 	@param[in] text A Tvg_Paint pointer to the text object.
-// 	@param[in] grad The linear or radial gradient fill
+	result := C.tvg_font_load(cPath)
+	return resultError(result)
+}
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the @p paint argument.
-// 	@retval TVG_RESULT_MEMORY_CORRUPTION An invalid Tvg_Gradient pointer.
+/*
+FontLoadData loads a scalable font data from a memory block of a given size.
 
-// 	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-// 	@see tvg_text_set_font()
+ThorVG efficiently caches the loaded font data using the specified @p name as a key.
+This means that loading the same fonts again will not result in duplicate operations.
+Instead, ThorVG will reuse the previously loaded font data.
 
-// 	@since 0.15
-// */
-// // func (text Text) SetGradient(gradient Gradient) error {
-// // 	return tvg_text_set_gradient(text.paint_, gradient).error()
-// // }
+	@param[in] name The name under which the font will be stored and accessible (e.x. in a @p tvg_text_set_font API).
+	@param[in] data A pointer to a memory location where the content of the font data is stored.
+	@param[in] size The size in bytes of the memory occupied by the @p data.
+	@param[in] mimetype Mimetype or extension of font data. In case a @c nullptr or an empty "" value is provided the loader will be determined automatically.
+	@param[in] copy If @c true the data are copied into the engine local buffer, otherwise they are not (default).
 
-// /*
-// FontLoad loads a scalable font data from a file.
+	@retval TVG_RESULT_INVALID_ARGUMENT If no name is provided or if @p size is zero while @p data points to a valid memory location.
+	@retval TVG_RESULT_NOT_SUPPORTED When trying to load a file with an unknown extension.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION When trying to unload the font data that has not been previously loaded.
 
-// ThorVG efficiently caches the loaded data using the specified @p path as a key.
-// This means that loading the same file again will not result in duplicate operations;
-// instead, ThorVG will reuse the previously loaded font data.
+	@warning: It's the user responsibility to release the @p data memory.
 
-// 	@param[in] path The path to the font file.
+	@note To unload the font data loaded using this API, pass the proper @p name and @c nullptr as @p data.
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid @p path passed as an argument.
-// 	@retval TVG_RESULT_NOT_SUPPORTED When trying to load a file with an unknown extension.
+	@since 0.15
+*/
+func FontLoadData(name string, data []byte, mimetype string) error {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
 
-// 	@see tvg_font_unload()
+	cMimetype := C.CString(mimetype)
+	defer C.free(unsafe.Pointer(cMimetype))
 
-// 	@since 0.15
-// */
-// func FontLoad(path string) error {
-// 	return tvg_font_load(path).error()
-// }
+	result := C.tvg_font_load_data(cName, (*C.char)(unsafe.Pointer(&data[0])), C.uint32_t(len(data)), cMimetype, true)
+	return resultError(result)
+}
 
-// /*
-// FontLoadData loads a scalable font data from a memory block of a given size.
+/*
+FontUnloadData unloads a font previously loaded with FontLoadData.
 
-// ThorVG efficiently caches the loaded font data using the specified @p name as a key.
-// This means that loading the same fonts again will not result in duplicate operations.
-// Instead, ThorVG will reuse the previously loaded font data.
+The name should match the name of the previously load font.
+*/
+func FontUnloadData(name string) error {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
 
-// 	@param[in] name The name under which the font will be stored and accessible (e.x. in a @p tvg_text_set_font API).
-// 	@param[in] data A pointer to a memory location where the content of the font data is stored.
-// 	@param[in] size The size in bytes of the memory occupied by the @p data.
-// 	@param[in] mimetype Mimetype or extension of font data. In case a @c nullptr or an empty "" value is provided the loader will be determined automatically.
-// 	@param[in] copy If @c true the data are copied into the engine local buffer, otherwise they are not (default).
+	cMimetype := C.CString("")
+	defer C.free(unsafe.Pointer(cMimetype))
 
-// 	@retval TVG_RESULT_INVALID_ARGUMENT If no name is provided or if @p size is zero while @p data points to a valid memory location.
-// 	@retval TVG_RESULT_NOT_SUPPORTED When trying to load a file with an unknown extension.
-// 	@retval TVG_RESULT_INSUFFICIENT_CONDITION When trying to unload the font data that has not been previously loaded.
+	result := C.tvg_font_load_data(cName, nil, 0, cMimetype, false)
+	return resultError(result)
+}
 
-// 	@warning: It's the user responsibility to release the @p data memory.
+/*
+FontUnload unloads the specified scalable font data that was previously loaded.
 
-// 	@note To unload the font data loaded using this API, pass the proper @p name and @c nullptr as @p data.
+This function is used to release resources associated with a font file that has been loaded into memory.
 
-// 	@since 0.15
-// */
-// func FontLoadData(name string, data []byte, mimetype string) error {
-// 	return tvg_font_load_data(name, &data[0], uint32(len(data)), mimetype, true).error()
-// }
+	@param[in] path The path to the loaded font file.
 
-// /*
-// FontUnloadData unloads a font previously loaded with FontLoadData.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION The loader is not initialized.
 
-// The name should match the name of the previously load font.
-// */
-// func FontUnloadData(name string) error {
-// 	return tvg_font_load_data(name, nil, 0, "", false).error()
-// }
+	@note If the font data is currently in use, it will not be immediately unloaded.
+	@see tvg_font_load()
 
-// /*
-// FontUnload unloads the specified scalable font data that was previously loaded.
+	@since 0.15
+*/
+func FontUnload(path string) error {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
 
-// This function is used to release resources associated with a font file that has been loaded into memory.
+	result := C.tvg_font_unload(cPath)
+	return resultError(result)
+}
 
-// 	@param[in] path The path to the loaded font file.
+/*
+Duplicate duplicates a Text.
 
-// 	@retval TVG_RESULT_INSUFFICIENT_CONDITION The loader is not initialized.
+Creates a new object and sets its all properties as in the original object.
 
-// 	@note If the font data is currently in use, it will not be immediately unloaded.
-// 	@see tvg_font_load()
+	@param[in] paint The Tvg_Paint object to be copied.
 
-// 	@since 0.15
-// */
-// func FontUnload(path string) error {
-// 	return tvg_font_unload(path).error()
-// }
-
-// /*
-// Duplicate duplicates a Text.
-
-// Creates a new object and sets its all properties as in the original object.
-
-// 	@param[in] paint The Tvg_Paint object to be copied.
-
-// 	@return A copied Tvg_Paint object if succeed, @c nullptr otherwise.
-// */
-// func (text Text) Duplicate() Text {
-// 	return Text{
-// 		paintCommon: text.duplicate(),
-// 	}
-// }
+	@return A copied Tvg_Paint object if succeed, @c nullptr otherwise.
+*/
+func (text Text) Duplicate() Text {
+	return Text{
+		paintCommon: text.duplicate(),
+	}
+}
