@@ -2,11 +2,8 @@
 
 ## updating thorvg
 
-The shell script `build.sh` can be used to update the thorvg
-shared object and header files.
-
-Update the value of the `THORVG_COMMIT` variable in the script if required.
-Then run the script `./internal/build.sh`.
+- Update the value of the `THORVG_COMMIT` variable in the script if required.
+- Run `go generate` to execute the shell script `./internal/build.sh`.
 
 ## pre-commit hook
 
