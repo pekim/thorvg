@@ -58,16 +58,6 @@ func returns false iteration stops and the function returns.
 	@since 1.0
 */
 func (accessor Accessor) Set(paint Paint, func_ func(paint Paint) bool) error {
-	// puregoFunc := purego.NewCallback(func(cPaint uintptr, _data uintptr) bool {
-	// 	paint, ok := newPaint(cPaint)
-	// 	if !ok {
-	// 		// This should never occur, so provide a non-specific Paint type.
-	// 		paint = paintCommon{paint_: cPaint}
-	// 	}
-
-	// 	return func_(paint)
-	// })
-
 	accessorCallback = func_
 	result := C.tvg_accessor_set(accessor.accessor, paint.paint(), (*[0]byte)(C.c_accessor_callback), nil)
 	return resultError(result)
