@@ -81,15 +81,24 @@ func (canvas *Canvas) SwSetTarget(stride uint, width uint, height uint, cs Color
 }
 
 /*
-GlCanvasCreate creates an OpenGL rasterizer Canvas object.
+GlCanvasCreate creates a new OpenGL/ES Canvas object with optional rendering engine settings.
+
+This method generates a OpenGL/ES canvas instance that can be used for drawing vector graphics.
+It accepts an optional parameter @p op to choose between different rendering engine behaviors.
+
+	@param[in] op The rendering engine option.
 
 	@return A new Tvg_Canvas object.
 
-	@since 1.0.0
+	@note Currently, it does not support @c TVG_ENGINE_OPTION_SMART_RENDER. The request will be ignored.
+
+	@see enum Tvg_Engine_Option
+
+	@since 1.0
 */
-func GlCanvasCreate() Canvas {
+func GlCanvasCreate(op EngineOption) Canvas {
 	return Canvas{
-		canvas: C.tvg_glcanvas_create(),
+		canvas: C.tvg_glcanvas_create(C.Tvg_Engine_Option(op)),
 	}
 }
 
@@ -128,15 +137,24 @@ func (canvas *Canvas) GlSetTarget(
 }
 
 /*
-WgCanvasCreate creates a WebGPU rasterizer Canvas object.
+WgCanvasCreate creates a new WebGPU Canvas object with optional rendering engine settings.
+
+This method generates a WebGPU canvas instance that can be used for drawing vector graphics.
+It accepts an optional parameter @p op to choose between different rendering engine behaviors.
+
+	@param[in] op The rendering engine option.
 
 	@return A new Tvg_Canvas object.
 
-	@since 1.0.0
+	@note Currently, it does not support @c TVG_ENGINE_OPTION_SMART_RENDER. The request will be ignored.
+
+	@see enum Tvg_Engine_Option
+
+	@since 1.0
 */
-func WgCanvasCreate() Canvas {
+func WgCanvasCreate(op EngineOption) Canvas {
 	return Canvas{
-		canvas: C.tvg_wgcanvas_create(),
+		canvas: C.tvg_wgcanvas_create(C.Tvg_Engine_Option(op)),
 	}
 }
 

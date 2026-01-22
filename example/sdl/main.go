@@ -30,7 +30,7 @@ func main() {
 	tvg.SetErrorHandler(func(err tvg.ResultError) { panic(err) })
 	_ = tvg.EngineInit(2)
 
-	canvas := tvg.GlCanvasCreate()
+	canvas := tvg.GlCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
 
 	context := unsafe.Pointer(sdl.GLGetCurrentContext())
 

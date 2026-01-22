@@ -5,7 +5,7 @@ set -eo pipefail
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR/..
 
-THORVG_COMMIT=1a43240ec3ffdaa689412e7cd52e83cf8118e2b9
+THORVG_COMMIT=bf5fe14c1eb61377f34a48e49f91be61374c36c6
 THORVG_DIR=internal/thorvg-src
 
 # clone if not already cloned

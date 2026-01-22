@@ -40,7 +40,7 @@ func main() {
 
 	tvg.SetErrorHandler(func(err tvg.ResultError) { panic(err) })
 	_ = tvg.EngineInit(2)
-	canvas := tvg.GlCanvasCreate()
+	canvas := tvg.GlCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
 	// var canvas tvg.Canvas
 
 	animation := tvg.LottieAnimationNew()
@@ -58,7 +58,7 @@ func main() {
 		_ = picture.LoadData(data.LottieGearsAnimation, "lottie+json", "")
 
 		context := window.GetGLXContext()
-		canvas = tvg.GlCanvasCreate()
+		canvas = tvg.GlCanvasCreate(tvg.ENGINE_OPTION_DEFAULT)
 
 		_ = canvas.GlSetTarget(nil, nil, unsafe.Pointer(context), 0, uint(width), uint(height), tvg.COLORSPACE_ABGR8888S)
 
