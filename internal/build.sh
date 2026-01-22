@@ -31,6 +31,14 @@ popd
 cp -r $THORVG_DIR/inc internal/cgo/
 cp -r $THORVG_DIR/src internal/cgo/
 
+# generate a Go file with the thorvg library commit
+HASH=$(sha256sum $LIBRARY_FILE | cut -d " " -f 1)
+cat << EOF > lib-thorvg-constant.go
+package thorvg
+
+const libthorvgCommit = "$THORVG_COMMIT"
+EOF
+
 # generated cgo code
 echo -e "\nGenerate code"
 rm -f internal/cgo/*.cpp
