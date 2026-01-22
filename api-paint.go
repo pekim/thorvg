@@ -6,9 +6,9 @@ import "C"
 import "unsafe"
 
 /*
-Paint is a structure representing a graphical element.
+Paint represents a graphical element.
 
-	@warning The TvgPaint objects cannot be shared between Canvases.
+The TvgPaint objects cannot be shared between Canvases.
 */
 type Paint interface {
 	paint() C.Tvg_Paint

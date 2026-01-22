@@ -6,7 +6,7 @@ import "C"
 import "unsafe"
 
 /*
-Gradient is a structure representing a gradient fill of a Paint object.
+Gradient represents a gradient fill of a Paint object.
 */
 type Gradient interface {
 	gradient() C.Tvg_Gradient

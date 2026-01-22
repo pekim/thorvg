@@ -6,6 +6,19 @@ import "C"
 
 import "unsafe"
 
+/*
+Saver can be used to export a paint object into a specified file, from which to recover the paint data later.
+
+ThorVG provides a feature for exporting & importing paint data.
+The Saver role is to export the paint data to a file.
+It's useful when you need to save the composed scene or image from a paint object and recreate it later.
+
+The file format is decided by the extension name(i.e. "*.tvg")
+while the supported formats depend on the TVG packaging environment.
+If it doesn't support the file format, the save() method returns RESULT_NOT_SUPPORTED.
+
+Once you export a paint to the file successfully, you can recreate it using the Picture class.
+*/
 type Saver struct {
 	saver C.Tvg_Saver
 }

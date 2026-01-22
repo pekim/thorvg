@@ -9,7 +9,7 @@ import (
 )
 
 /*
-Canvas is a structure responsible for managing and drawing graphical elements.
+Canvas is responsible for managing and drawing graphical elements.
 
 It sets up the target buffer, which can be drawn on the screen. It stores the Paint objects (Shape, Scene, Picture).
 */

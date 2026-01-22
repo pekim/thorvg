@@ -5,6 +5,21 @@ import "C"
 
 import "unsafe"
 
+/*
+Shape represents two-dimensional figures and their properties.
+
+A shape has three major properties: shape outline, stroking, filling.
+The outline in the Shape is retained as the path.
+Path can be composed by accumulating primitive commands such as moveTo(), lineTo(), cubicTo(),
+or complete shape interfaces such as appendRect(), appendCircle(), etc.
+Path can consists of sub-paths.
+One sub-path is determined by a close command.
+
+The stroke of Shape is an optional property in case the Shape needs to be represented
+with/without the outline borders.
+It's efficient since the shape path and the stroking path can be shared with each other.
+It's also convenient when controlling both in one context.
+*/
 type Shape struct {
 	paintCommon
 }

@@ -7,6 +7,10 @@ import "C"
 
 import "unsafe"
 
+/*
+Picture represents an image read in one of the supported formats: raw, svg, png, jpg, lot and etc.
+Besides the methods inherited from Paint, it provides methods to load & draw images on the canvas.
+*/
 type Picture struct {
 	paintCommon
 }

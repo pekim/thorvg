@@ -8,7 +8,7 @@ import "C"
 import "unsafe"
 
 /*
-Accessor ia a structure representing an object that enables iterating through a scene's descendents.
+Accessor represents an object that enables iterating through a scene's descendents.
 */
 type Accessor struct {
 	accessor C.Tvg_Accessor

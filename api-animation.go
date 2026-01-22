@@ -3,6 +3,10 @@ package thorvg
 // #include "thorvg_capi.h"
 import "C"
 
+/*
+Animation enables manipulation of animatable images.
+It supports the display and control of animation frames.
+*/
 type Animation struct {
 	animation C.Tvg_Animation
 }

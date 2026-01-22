@@ -3,6 +3,15 @@ package thorvg
 // #include "thorvg_capi.h"
 import "C"
 
+/*
+Scene can be used to composite children paints.
+
+As the traditional graphics rendering method, TVG also enables scene-graph mechanism.
+This feature supports an array function for managing the multiple paints as one group paint.
+
+As a group, the scene can be transformed, made translucent and composited with other target paints,
+its children will be affected by the scene world.
+*/
 type Scene struct {
 	paintCommon
 }

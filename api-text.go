@@ -6,6 +6,10 @@ import "C"
 
 import "unsafe"
 
+/*
+Text represents text objects in a graphical context,
+allowing for rendering and manipulation of unicode text.
+*/
 type Text struct {
 	paintCommon
 }

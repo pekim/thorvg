@@ -15,6 +15,10 @@ const (
 	RESULT_UNKNOWN                = Result(C.TVG_RESULT_UNKNOWN)
 )
 
+/*
+ResultError is an error type that represents a failing result returned from
+an api call.
+*/
 type ResultError struct {
 	result Result
 }
@@ -31,6 +35,9 @@ func (err ResultError) Error() string {
 	}[err.result]
 }
 
+/*
+Result returns the error's Result.
+*/
 func (err ResultError) Result() Result {
 	return err.result
 }
