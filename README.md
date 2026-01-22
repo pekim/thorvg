@@ -3,6 +3,12 @@
 This library provides Go bindings for the
 [thorvg](https://www.thorvg.org/) library.
 
+## building
+
+Because of the use of cgo in the library,
+the Go toolchain will need to be able to find a
+C compiler (typically gcc or clang) and linker on the path.
+
 ## image loaders
 
 The only supported image loaders are those for svg and lottie files.
