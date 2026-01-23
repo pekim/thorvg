@@ -256,9 +256,9 @@ SetGradient sets the gradient fill for the text.
 
 	@since 0.15
 */
-// func (text Text) SetGradient(gradient Gradient) error {
-// 	return tvg_text_set_gradient(text.paint_, gradient).error()
-// }
+func (text Text) SetGradient(gradient Gradient) error {
+	return tvg_text_set_gradient(text.paint_, gradient.gradient()).error()
+}
 
 /*
 FontLoad loads a scalable font data from a file.

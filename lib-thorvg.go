@@ -169,8 +169,7 @@ var tvg_text_spacing func(text uintptr, letter float32, line float32) Result
 var tvg_text_set_italic func(text uintptr, shear float32) Result
 var tvg_text_set_outline func(text uintptr, width float32, r uint8, g uint8, b uint8) Result
 var tvg_text_set_color func(text uintptr, r uint8, g uint8, b uint8) Result
-
-// var tvg_text_set_gradient func(text uintptr, gradient Gradient) Result
+var tvg_text_set_gradient func(text uintptr, gradient uintptr) Result
 var tvg_font_load func(path string) Result
 var tvg_font_load_data func(name string, data *byte, size uint32, mimetype string, copy_ bool) Result
 var tvg_font_unload func(path string) Result
@@ -365,7 +364,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_text_set_color, lib, "tvg_text_set_color")
 	// tvg_text_set_gradient is dependent on the linux struct argument support
 	// in https://github.com/ebitengine/purego/pull/361.
-	// purego.RegisterLibFunc(&tvg_text_set_gradient, lib, "tvg_text_set_gradient")
+	purego.RegisterLibFunc(&tvg_text_set_gradient, lib, "tvg_text_set_gradient")
 	purego.RegisterLibFunc(&tvg_font_load, lib, "tvg_font_load")
 	purego.RegisterLibFunc(&tvg_font_load_data, lib, "tvg_font_load_data")
 	purego.RegisterLibFunc(&tvg_font_unload, lib, "tvg_font_unload")
