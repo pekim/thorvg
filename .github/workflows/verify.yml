@@ -83,7 +83,7 @@ jobs:
         run: sudo apt install -y libx11-dev libxrandr-dev xorg
 
       - name: install clang
-        run: sudo apt install -y clang
+        run: sudo apt install -y llvm-toolchain-20
 
       - uses: actions/setup-go@v6
         with:
