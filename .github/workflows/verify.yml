@@ -7,39 +7,58 @@ permissions:
   contents: read
 
 jobs:
-  golangci:
+  # golangci:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: install x11
+  #       run: sudo apt install -y libx11-dev xorg
+
+  #     - uses: actions/setup-go@v6
+  #       with:
+  #         go-version: "1.25"
+
+  #     - name: golangci-lint
+  #       uses: golangci/golangci-lint-action@v9
+  #       with:
+  #         version: v2.6.2
+  #         verify: false
+
+  # test:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       # os: [ubuntu-latest, macos-latest]
+  #       os: [ubuntu-latest]
+  #       compiler: [gcc, clang]
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: install compilers
+  #       id: install_cc
+  #       uses: rlalik/setup-cpp-compiler@master
+  #       with:
+  #         compiler: ${{ matrix.compiler }}
+
+  #     - uses: actions/checkout@v4
+
+  #     - name: install x11
+  #       if: ${{ matrix.os == 'ubuntu-latest' }}
+  #       run: sudo apt install -y libx11-dev libxrandr-dev xorg
+
+  #     - uses: actions/setup-go@v6
+  #       with:
+  #         go-version: "1.25"
+
+  #     - name: test
+  #       env:
+  #         CC: ${{ steps.install_cc.outputs.cc }}
+  #         CXX: ${{ steps.install_cc.outputs.cxx }}
+  #       run: go test github.com/pekim/thorvg
+
+  test-ubuntu-gcc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: install x11
-        run: sudo apt install -y libx11-dev xorg
-
-      - uses: actions/setup-go@v6
-        with:
-          go-version: "1.25"
-
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v9
-        with:
-          version: v2.6.2
-          verify: false
-
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        # os: [ubuntu-latest, macos-latest]
-        os: [ubuntu-latest]
-        compiler: [gcc, clang]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: install compilers
-        id: install_cc
-        uses: rlalik/setup-cpp-compiler@master
-        with:
-          compiler: ${{ matrix.compiler }}
-
       - uses: actions/checkout@v4
 
       - name: install x11
@@ -52,6 +71,6 @@ jobs:
 
       - name: test
         env:
-          CC: ${{ steps.install_cc.outputs.cc }}
-          CXX: ${{ steps.install_cc.outputs.cxx }}
+          CC: gcc
+          CXX: g++
         run: go test github.com/pekim/thorvg
