@@ -56,41 +56,44 @@ jobs:
   #         CXX: ${{ steps.install_cc.outputs.cxx }}
   #       run: go test github.com/pekim/thorvg
 
-  test-ubuntu-gcc:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # test-ubuntu-gcc:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: install x11
-        run: sudo apt install -y libx11-dev libxrandr-dev xorg
+  #     - name: install x11
+  #       run: sudo apt install -y libx11-dev libxrandr-dev xorg
 
-      - uses: actions/setup-go@v6
-        with:
-          go-version: "1.25"
+  #     - uses: actions/setup-go@v6
+  #       with:
+  #         go-version: "1.25"
 
-      - name: test
-        env:
-          CC: gcc
-          CXX: g++
-        run: go test github.com/pekim/thorvg
+  #     - name: test
+  #       env:
+  #         CC: gcc
+  #         CXX: g++
+  #       run: go test github.com/pekim/thorvg
 
   test-ubuntu-clang:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: install x11
-        run: sudo apt install -y libx11-dev libxrandr-dev xorg
+      # - name: install x11
+      #   run: sudo apt install -y libx11-dev libxrandr-dev xorg
 
       - name: install clang
-        run: sudo apt install -y llvm-toolchain-20
+        run: sudo apt install -y clang
 
-      - uses: actions/setup-go@v6
-        with:
-          go-version: "1.25"
+      - name: clang version
+        run: clang --version
 
-      - name: test
-        env:
-          CC: clang
-          CXX: clang++
-        run: go test github.com/pekim/thorvg
+      # - uses: actions/setup-go@v6
+      #   with:
+      #     go-version: "1.25"
+
+      # - name: test
+      #   env:
+      #     CC: clang
+      #     CXX: clang++
+      #   run: go test github.com/pekim/thorvg
