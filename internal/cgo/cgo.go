@@ -53,7 +53,7 @@ package cgo
 #cgo LDFLAGS: -Wl,--as-needed
 #cgo LDFLAGS: -Wl,--no-undefined
 #cgo LDFLAGS: -Wl,-O1
-#cgo LDFLAGS: -shared
+// #cgo LDFLAGS: -shared
 #cgo LDFLAGS: -fPIC
 #cgo LDFLAGS: -fopenmp
 #cgo LDFLAGS: -lpthread

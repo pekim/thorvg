@@ -46,5 +46,5 @@ jobs:
       - name: test
         env:
           CC: ${{ matrix.compiler }}
-          CXX: ${{ matrix.compiler }}
+          CXX: ${{ matrix.compiler }}++
         run: go test ./...
