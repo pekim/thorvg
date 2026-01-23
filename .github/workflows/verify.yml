@@ -34,6 +34,12 @@ jobs:
         compiler: [gcc, clang]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: install compilers
+        id: install_cc
+        uses: rlalik/setup-cpp-compiler@master
+        with:
+          compiler: latest
+
       - uses: actions/checkout@v4
 
       - name: install x11
@@ -45,6 +51,6 @@ jobs:
 
       - name: test
         env:
-          CC: ${{ matrix.compiler }}
-          CXX: ${{ matrix.compiler }}++
+          CC: ${{ steps.install_cc.outputs.cc }}
+          CXX: ${{ steps.install_cc.outputs.cxx }}
         run: go test ./...
