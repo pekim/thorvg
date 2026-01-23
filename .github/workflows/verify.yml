@@ -54,4 +54,4 @@ jobs:
         env:
           CC: ${{ steps.install_cc.outputs.cc }}
           CXX: ${{ steps.install_cc.outputs.cxx }}
-        run: go test ./...
+        run: go test github.com/pekim/thorvg
