@@ -61,8 +61,6 @@ func (accessor Accessor) Set(paint Paint, func_ func(paint Paint) bool) error {
 	return tvg_accessor_set(uintptr(accessor), paint.paint(), puregoFunc, 0).error()
 }
 
-// TVG_API Tvg_Result tvg_accessor_set(Tvg_Accessor accessor, Tvg_Paint paint, bool (*func)(Tvg_Paint paint, void* data), void* data);
-
 /*
 AccessorGenerateId generates a unique ID (hash key) from a given name.
 

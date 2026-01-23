@@ -47,8 +47,6 @@ func (picture Picture) Load(path string) error {
 	return tvg_picture_load(picture.paint_, path).error()
 }
 
-// TVG_API Tvg_Result tvg_picture_load(Tvg_Paint picture, char* path);
-
 /*
 LoadRaw loads raw image data in a specific format from a memory block of the given size.
 
@@ -268,8 +266,6 @@ func (picture Picture) GetPaint(id uint) (Paint, bool) {
 	paint := tvg_picture_get_paint(picture.paint_, uint32(id))
 	return newPaint(paint)
 }
-
-// TVG_API Tvg_Paint tvg_picture_get_paint(Tvg_Paint picture, uint32_t id);
 
 /*
 Duplicate duplicates a Picture.

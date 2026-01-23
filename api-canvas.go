@@ -161,11 +161,6 @@ func (canvas *Canvas) WgSetTarget(
 	return result.error()
 }
 
-// TVG_API Tvg_Result tvg_wgcanvas_set_target(
-// Tvg_Canvas canvas,
-//  void* device, void* instance, void* target,
-//  uint32_t w, uint32_t h, Tvg_Colorspace cs, int type);
-
 /*
 Destroy clears the canvas internal data, releases all paints stored by the canvas and destroys the canvas object itself.
 
