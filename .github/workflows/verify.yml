@@ -37,7 +37,7 @@ jobs:
         id: install_cc
         uses: rlalik/setup-cpp-compiler@master
         with:
-          compiler: latest
+          compiler: ${{ matrix.compiler }}
 
       - uses: actions/checkout@v4
 
