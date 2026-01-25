@@ -32,6 +32,10 @@ jobs:
         os: [ubuntu-24.04, macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: install clang
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install llvm # required so that libomp.dylib is available
+
       - uses: actions/checkout@v6
 
       - uses: actions/setup-go@v6
