@@ -8,9 +8,16 @@ import (
 
 func testInitTerm(t *testing.T) func() {
 	t.Helper()
+
 	SetErrorHandler(func(err ResultError) {
 		assert.Fail(t, err.Error())
 	})
-	_ = EngineInit(2)
-	return func() { _ = EngineTerm() }
+
+	err := EngineInit(0)
+	assert.NoError(t, err)
+
+	return func() {
+		err := EngineTerm()
+		assert.NoError(t, err)
+	}
 }
