@@ -11,13 +11,13 @@ import (
 )
 
 func libraryFilepath() (string, error) {
-	filepath := filepath.Join(os.TempDir(), fmt.Sprintf("libthorvg-%s.so", sharedObjectHash))
+	filepath := filepath.Join(os.TempDir(), fmt.Sprintf("libthorvg-%s.so", sharedObjectID))
 
 	// Check if the file exists. If it does, don't create it.
 	//
 	// The code would be simpler, and very nearly as quick, if the check were omitted and the
 	// file written every time. However that causes problems if multiple applications are run
-	// concurrently. The replaced file becomes unavailable, and an segment violation results.
+	// concurrently. The replaced file becomes unavailable, and a segment violation results.
 	_, err := os.Stat(filepath)
 	if err == nil {
 		return filepath, nil

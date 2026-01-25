@@ -1,4 +1,3 @@
 package thorvg
 
-const sharedObjectHash = "18f3d3f561418d317c20c621bed460636025076ecd610255aebdace00061be9f"
 const libthorvgCommit = "1a43240ec3ffdaa689412e7cd52e83cf8118e2b9"

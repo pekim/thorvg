@@ -1,4 +1,4 @@
-package cvalidation
+package thorvg
 
 import (
 	"testing"

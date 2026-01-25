@@ -3,9 +3,9 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        exclude: internal/lib
+        exclude: thorvg_capi.h
       - id: end-of-file-fixer
-        exclude: internal/lib
+        exclude: thorvg_capi.h
       - id: check-yaml
   - repo: https://github.com/tekwizely/pre-commit-golang
     rev: v1.0.0-rc.4
