@@ -1,14 +1,34 @@
 # thorvg
 
-## updating thorvg
+This library provides Go bindings for the
+[thorvg](https://www.thorvg.org/) library.
+There is no use of cgo.
 
-The shell script `build.sh` can be used to update the thorvg
-shared object and header files.
+## image loaders
 
-Update the value of the `THORVG_COMMIT` variable in the script if required.
-Then run the script `./internal/build.sh`.
+The only supported image loaders are those for svg and lottie files.
+For other image formats use Go's image packages to load the raw data.
 
-## pre-commit hook
+## AI
+
+No AI was used in the creation of this library.
+
+## Platforms
+
+The following platforms are currently suppported.
+
+- `linux/amd64`
+- `macos/amd64`
+- `macos/arm64`
+
+## development
+
+### upgrading thorvg
+
+See https://github.com/pekim/thorvg-binaries for details of how to
+upgrade the thorvg library.
+
+### pre-commit hook
 
 - install `goimports` if not already installed
   - https://pkg.go.dev/golang.org/x/tools/cmd/goimports
