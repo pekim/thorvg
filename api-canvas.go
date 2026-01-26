@@ -124,44 +124,6 @@ func (canvas *Canvas) GlSetTarget(
 }
 
 /*
-WgCanvasCreate creates a WebGPU rasterizer Canvas object.
-
-	@return A new Tvg_Canvas object.
-
-	@since 1.0.0
-*/
-func WgCanvasCreate() Canvas {
-	return Canvas{
-		canvas: tvg_wgcanvas_create(),
-	}
-}
-
-/*
-WgSetTarget sets the drawing target for the rasterization.
-
-	@param[in] device WGPUDevice, a desired handle for the wgpu device. If it is @c nullptr, ThorVG will assign an appropriate device internally.
-	@param[in] instance WGPUInstance, context for all other wgpu objects.
-	@param[in] target Either WGPUSurface or WGPUTexture, serving as handles to a presentable surface or texture.
-	@param[in] w The width of the target.
-	@param[in] h The height of the target.
-	@param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c WGPUTextureFormat_RGBA8Unorm.
-	@param[in] type @c 0: surface, @c 1: texture are used as pesentable target.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
-	@retval TVG_RESULT_NOT_SUPPORTED In case the wg engine is not supported.
-
-	  @since 1.0
-*/
-func (canvas *Canvas) WgSetTarget(
-	device unsafe.Pointer, instance unsafe.Pointer, target unsafe.Pointer,
-	width uint32, height uint32, colorSpace ColorSpace, typ int,
-) error {
-	result := tvg_wgcanvas_set_target(canvas.canvas, device, instance, target,
-		uint32(width), uint32(height), colorSpace, int32(typ))
-	return result.error()
-}
-
-/*
 Destroy clears the canvas internal data, releases all paints stored by the canvas and destroys the canvas object itself.
 
 	@param[in] canvas The Tvg_Canvas object to be destroyed.
