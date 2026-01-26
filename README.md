@@ -4,6 +4,15 @@ This library provides Go bindings for the
 [thorvg](https://www.thorvg.org/) library.
 There is no use of cgo.
 
+## status
+
+The libary is developed under `linux/amd64`.
+And it appears to work on other other supported [platforms](#platforms),
+in that all of the tests pass when run in github actions.
+
+However it is an immature library, and there may well be as undiscovered problems.
+So caution is advised.
+
 ## image loaders
 
 The only supported image loaders are those for svg and lottie files.
