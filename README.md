@@ -1,5 +1,8 @@
 # thorvg
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/pekim/thorvg.svg)](https://pkg.go.dev/github.com/pekim/thorvg.svg)
+[![golangci-lint](https://github.com/pekim/thorvg/actions/workflows/verify.yml/badge.svg)](https://github.com/pekim/thorvg/actions/workflows/verify.yml)
+
 This library provides Go bindings for the
 [thorvg](https://www.thorvg.org/) library.
 There is no use of cgo.
