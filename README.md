@@ -30,6 +30,7 @@ No AI was used in the creation of this library.
 The following platforms are currently suppported.
 
 - `linux/amd64`
+- `linux/arm64`
 - `macos/amd64`
 - `macos/arm64`
 
