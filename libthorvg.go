@@ -42,7 +42,7 @@ var tvg_engine_version func(major *uint32, minor *uint32, micro *uint32, version
 // Canvas API
 var tvg_swcanvas_create func(option EngineOption) uintptr
 var tvg_swcanvas_set_target func(canvas uintptr, buffer *byte, stride uint32, w uint32, h uint32, cs ColorSpace) Result
-var tvg_glcanvas_create func() uintptr
+var tvg_glcanvas_create func(option EngineOption) uintptr
 var tvg_glcanvas_set_target func(canvas uintptr, display unsafe.Pointer, surface unsafe.Pointer, context unsafe.Pointer, id int32, w uint32, h uint32, cs ColorSpace) Result
 var tvg_wgcanvas_create func() uintptr
 var tvg_wgcanvas_set_target func(canvas uintptr, device unsafe.Pointer, instance unsafe.Pointer, target unsafe.Pointer, w uint32, h uint32, cs ColorSpace, typ int32) Result

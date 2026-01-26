@@ -2,4 +2,4 @@
 
 package thorvg
 
-const libthorvgCommit = "1a43240ec3ffdaa689412e7cd52e83cf8118e2b9"
+const libthorvgCommit = "4d4794f896329ab8077b2c1671aa253d7d87ee54"

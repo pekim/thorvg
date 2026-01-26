@@ -14,5 +14,5 @@ func TestEngine(t *testing.T) {
 	assert.Equal(t, 0, minor)
 	assert.Equal(t, 0, micro)
 	assert.Equal(t, "1.0.0", version)
-	assert.Equal(t, "1a43240ec3ffdaa689412e7cd52e83cf8118e2b9", commit)
+	assert.Equal(t, libthorvgCommit, commit)
 }
