@@ -3,6 +3,8 @@ package thorvg
 import (
 	"math"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
 )
 
 // func cString(s string) (uintptr, func()) {
@@ -20,18 +22,5 @@ func goString(cStr *byte) string {
 	if cStr == nil {
 		return ""
 	}
-
-	// Look for terminating 0, to find the length of the string.
-	length := 0
-	str := unsafe.Slice(cStr, math.MaxInt)
-	for i, b := range str {
-		if b == 0 {
-			length = i
-			break
-		}
-	}
-
-	// goBytes := make([]byte, length)
-	// copy(goBytes, str)
-	return string(slice(cStr, length))
+	return unix.ByteSliceToString(unsafe.Slice(cStr, math.MaxInt))
 }
