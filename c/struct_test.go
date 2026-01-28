@@ -1,4 +1,4 @@
-package thorvg
+package c
 
 import (
 	"reflect"
