@@ -268,6 +268,45 @@ func (picture Picture) GetPaint(id uint) (Paint, bool) {
 }
 
 /*
+SetFilter sets the image filtering method for rendering this picture.
+
+Specifies how the image data should be filtered when it is scaled or transformed
+during rendering. This affects the visual quality and performance of the output.
+
+	@param[in] picture A Tvg_Paint pointer to the picture object.
+	@param[in] method The filtering method to apply. Default is @c TVG_FILTER_METHOD_BILINEAR.
+
+	@see Tvg_Filter_Method
+	@note Experimental API
+*/
+func (picture Picture) SetFilter(method FilterMethod) error {
+	return tvg_picture_set_filter(picture.paint_, method).error()
+}
+
+/*
+SetAccessible enables or disables accessible mode for a Picture.
+
+When accessible mode is enabled, the Picture maintains an internal mapping
+of ID-accessible vector assets nodes (such as SVG), allowing efficient access to Paint objects
+and their associated identifier information via Accessor APIs.
+
+When disabled, no additional mapping is maintained and all nodes are treated
+as general traversal targets.
+
+	@param[in] picture The target Picture object.
+	@param[in] accessible Set to @c true to enable accessible mode, or @c false to disable it.
+
+	@see tvg_accessor_generate_id()
+	@see tvg_accessor_get_name()
+	@see tvg_picture_get_paint()
+
+	@since 1.0
+*/
+func (picture Picture) SetAccessible(accessible bool) error {
+	return tvg_picture_set_accessible(picture.paint_, accessible).error()
+}
+
+/*
 Duplicate duplicates a Picture.
 
 Creates a new object and sets its all properties as in the original object.

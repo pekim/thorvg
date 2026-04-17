@@ -270,3 +270,15 @@ const (
 	TEXT_WRAP_ELLIPSIS                    // Truncate overflowing text and append an ellipsis ("...") at the end. Typically used for single-line labels.
 	TEXT_WRAP_HYPHENATION                 // Reserved. No Support.
 )
+
+/*
+FilterMethod defines the image filtering method used during image scaling or transformation.
+
+@note Experimental API
+*/
+type FilterMethod enum
+
+const (
+	FILTER_METHOD_BILINEAR FilterMethod = iota ///< Smooth interpolation using surrounding pixels for higher quality.
+	FILTER_METHOD_NEAREST                      ///< Fast filtering using nearest-neighbor sampling.
+)

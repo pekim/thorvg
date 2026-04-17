@@ -146,6 +146,8 @@ var tvg_picture_get_size func(picture uintptr, w *float32, h *float32) Result
 var tvg_picture_set_origin func(picture uintptr, x float32, y float32) Result
 var tvg_picture_get_origin func(picture uintptr, x *float32, y *float32) Result
 var tvg_picture_get_paint func(picture uintptr, id uint32) uintptr
+var tvg_picture_set_filter func(paint uintptr, method FilterMethod) Result
+var tvg_picture_set_accessible func(paint uintptr, accessible bool) Result
 
 // Scene API
 var tvg_scene_new func() uintptr
@@ -341,6 +343,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_picture_set_origin, lib, "tvg_picture_set_origin")
 	purego.RegisterLibFunc(&tvg_picture_get_origin, lib, "tvg_picture_get_origin")
 	purego.RegisterLibFunc(&tvg_picture_get_paint, lib, "tvg_picture_get_paint")
+	purego.RegisterLibFunc(&tvg_picture_set_filter, lib, "tvg_picture_set_filter")
+	purego.RegisterLibFunc(&tvg_picture_set_accessible, lib, "tvg_picture_set_accessible")
 
 	// Scene API
 	purego.RegisterLibFunc(&tvg_scene_new, lib, "tvg_scene_new")
