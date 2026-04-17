@@ -114,7 +114,7 @@ func (paint paintCommon) SetVisible(visible bool) error {
 }
 
 /*
-GetVisibile gets the current visibility status of the Paint object.
+GetVisible gets the current visibility status of the Paint object.
 
 	@param[in] paint The Tvg_Paint object to return the visibility status.
 
@@ -127,6 +127,41 @@ GetVisibile gets the current visibility status of the Paint object.
 */
 func (paint paintCommon) GetVisible() bool {
 	return tvg_paint_get_visible(paint.paint_)
+}
+
+/*
+GetId gets the ID of the Paint object.
+
+	@param[in] paint The paint object whose ID will be returned.
+
+	@return The ID of the paint object, or 0 if the ID is not set.
+
+	@see tvg_picture_get_paint()
+	@see tvg_accessor_generate_id()
+	@see tvg_paint_set_id()
+
+	@note Experimental API
+*/
+func (paint paintCommon) GetId() uint32 {
+	return tvg_paint_get_id(paint.paint_)
+}
+
+/*
+SetId sets the ID of the Paint object.
+
+The ID is used to specify a paint instance in a scene.
+
+	@param[in] paint The paint object whose ID will be set.
+	@param[in] id The ID to assign to the paint object.
+
+	@see tvg_picture_get_paint()
+	@see tvg_accessor_generate_id()
+	@see tvg_paint_get_id()
+
+	@note Experimental API
+*/
+func (paint paintCommon) SetId(id uint32) error {
+	return tvg_paint_set_id(paint.paint_, id).error()
 }
 
 /*

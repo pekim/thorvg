@@ -62,6 +62,8 @@ var tvg_paint_unref func(paint uintptr, free bool) uint16
 var tvg_paint_get_ref func(paint uintptr) uint16
 var tvg_paint_set_visible func(paint uintptr, visible bool) Result
 var tvg_paint_get_visible func(paint uintptr) bool
+var tvg_paint_get_id func(paint uintptr) uint32
+var tvg_paint_set_id func(paint uintptr, id uint32) Result
 var tvg_paint_scale func(paint uintptr, factor float32) Result
 var tvg_paint_rotate func(paint uintptr, degree float32) Result
 var tvg_paint_translate func(paint uintptr, x float32, y float32) Result
@@ -256,6 +258,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_paint_get_ref, lib, "tvg_paint_get_ref")
 	purego.RegisterLibFunc(&tvg_paint_set_visible, lib, "tvg_paint_set_visible")
 	purego.RegisterLibFunc(&tvg_paint_get_visible, lib, "tvg_paint_get_visible")
+	purego.RegisterLibFunc(&tvg_paint_get_id, lib, "tvg_paint_get_id")
+	purego.RegisterLibFunc(&tvg_paint_set_id, lib, "tvg_paint_set_id")
 	purego.RegisterLibFunc(&tvg_paint_scale, lib, "tvg_paint_scale")
 	purego.RegisterLibFunc(&tvg_paint_rotate, lib, "tvg_paint_rotate")
 	purego.RegisterLibFunc(&tvg_paint_translate, lib, "tvg_paint_translate")

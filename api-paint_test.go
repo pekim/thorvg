@@ -53,3 +53,12 @@ func TestPaintClip(t *testing.T) {
 	assert.True(t, ok)
 	assert.IsType(t, Text{}, clipper)
 }
+
+func TestPaintId(t *testing.T) {
+	defer testInitTerm(t)()
+
+	shape := ShapeNew()
+	assert.Equal(t, uint32(0), shape.GetId())
+	assert.NoError(t, shape.SetId(19))
+	assert.Equal(t, uint32(19), shape.GetId())
+}
