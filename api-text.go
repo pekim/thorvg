@@ -1,5 +1,7 @@
 package thorvg
 
+import "unsafe"
+
 type Text struct {
 	paintCommon
 }
@@ -258,6 +260,57 @@ SetGradient sets the gradient fill for the text.
 */
 func (text Text) SetGradient(gradient Gradient) error {
 	return tvg_text_set_gradient(text.paint_, gradient.gradient()).error()
+}
+
+/*
+GetTextMetrics retrieves the layout metrics of the text object.
+
+Fills the provided @ref Tvg_Text_Metrics structure with the font layout values of this text object,
+such as ascent, descent, linegap, and line advance.
+
+The returned values reflect the font size applied to the text object,
+but do not include any transformations (e.g., scale, rotation, or translation).
+
+	@param[in] text The text object.
+	@param[out] metrics A pointer to a @ref Tvg_Text_Metrics structure to be filled with the resulting values.
+
+	@return TVG_RESULT_INSUFFICIENT_CONDITION if no font or size has been set yet.
+
+	@see Tvg_Text_Metrics
+	@note Experimental API
+*/
+func (text Text) GetTextMetrics() (TextMetrics, error) {
+	var metrics TextMetrics
+	result := tvg_text_get_text_metrics(text.paint_, &metrics)
+	return metrics, result.error()
+}
+
+/*
+GetGlyphMetrics retrieves the layout metrics of a glyph in the text object.
+
+Fills the provided @ref Tvg_Glyph_Metrics structure with the horizontal layout values
+of the specified glyph, such as advance, left-side bearing, and bounding box.
+
+The returned values reflect the font size applied to the text object,
+but do not include any transformations (e.g., scale, rotation, or translation).
+
+The input character must be a single UTF-8 encoded character.
+
+	@param[in] text The text object.
+	@param[in] ch A pointer to a UTF-8 encoded character.
+	@param[out] metrics A pointer to a @ref Tvg_Glyph_Metrics structure to be filled with the resulting values.
+
+	@return TVG_RESULT_INSUFFICIENT_CONDITION if no font or size has been set yet.
+	@return TVG_RESULT_INVALID_ARGUMENT if the given character is invalid or not supported.
+
+	@see Tvg_Glyph_Metrics
+	@note Currently, ThorVG only supports horizontal text layout.
+	@note Experimental API
+*/
+func (text Text) GetGlyphMetrics(ch rune) (GlyphMetrics, error) {
+	var metrics GlyphMetrics
+	result := tvg_text_get_glyph_metrics(text.paint_, (*byte)(unsafe.Pointer(&ch)), &metrics)
+	return metrics, result.error()
 }
 
 /*

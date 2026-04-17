@@ -38,3 +38,47 @@ type Matrix struct {
 	E21, E22, E23 float32
 	E31, E32, E33 float32
 }
+
+/*
+TextMetrics describes the font metrics of a text object.
+
+Provides the basic vertical layout metrics used for text rendering,
+such as ascent, descent, and line spacing (linegap).
+
+	@see tvg_text_get_text_metrics()
+	@note Experimental API
+*/
+type TextMetrics struct {
+	_ structs.HostLayout
+
+	Ascent  float32 ///< Distance from the baseline to the top of the highest glyph (usually positive).
+	Descent float32 ///< Distance from the baseline to the bottom of the lowest glyph (usually negative, as in TTF).
+	Linegap float32 ///< Additional spacing recommended between lines (leading).
+	Advance float32 ///< The total vertical advance between lines of text: ascent - descent + linegap (i.e., ascent + |descent| + linegap when descent is negative).
+}
+
+/*
+GlyphMetrics describes the layout metrics of a glyph.
+
+Provides the basic layout metrics used for positioning an individual glyph,
+including its advance along the baseline direction, bearing relative to the
+inline axis origin, and its bounding box in local glyph space.
+
+The advance value represents the distance the pen position moves along the
+baseline (inline direction), regardless of whether the text is laid out
+horizontally or vertically.
+
+The bounding box is defined in the glyph’s local coordinate space and is
+independent of any layout direction or transformation.
+
+	@see tvg_text_get_glyph_metrics()
+	@note Experimental API
+*/
+type GlyphMetrics struct {
+	_ structs.HostLayout
+
+	Advance float32 ///< The advance distance along the baseline (inline) direction.
+	Bearing float32 ///< The bearing from the origin to the glyph’s visible bound along the inline-start direction.
+	Min     Point   ///< The minimum point of the glyph bounding box in local space.
+	Max     Point   ///< The maximum point of the glyph bounding box in local space.
+}
