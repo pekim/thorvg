@@ -28,4 +28,12 @@ var testStructs = []struct {
 		c:   C.Tvg_Matrix{},
 		go_: tvg.Matrix{},
 	},
+	{
+		c:   C.Tvg_Text_Metrics{},
+		go_: tvg.TextMetrics{},
+	},
+	{
+		c:   C.Tvg_Glyph_Metrics{},
+		go_: tvg.GlyphMetrics{},
+	},
 }
