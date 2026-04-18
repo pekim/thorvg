@@ -112,6 +112,37 @@ func (animation Animation) GetMarker(idx uint) (string, error) {
 }
 
 /*
+GetMarkerInfo retrieves marker information by index.
+
+	@param[in] animation The Lottie animation object.
+	@param[in] idx The zero-based index of the animation marker.
+	@param[out] name Pointer to receive the marker name.
+									Pass @c nullptr if the value is not required.
+	@param[out] begin Pointer to receive the marker's starting frame.
+										Pass @c nullptr if the value is not required.
+	@param[out] end Pointer to receive the marker's ending frame.
+									Pass @c nullptr if the value is not required.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT if @p idx is out of range.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION In case the animation is not loaded.
+
+	@see tvg_lottie_animation_get_markers_cnt()
+	@note Experimental API
+*/
+func (animation Animation) GetMarkerInfo(idx uint) (string, float32, float32, error) {
+	var name *byte
+	var begin float32
+	var end float32
+	result := tvg_lottie_animation_get_marker_info(uintptr(animation), uint32(idx), &name, &begin, &end)
+	if result != RESULT_SUCCESS {
+		return "", 0, 0, result.error()
+	}
+	return goString(name), begin, end, nil
+}
+
+// TVG_API Tvg_Result tvg_lottie_animation_get_marker_info(Tvg_Animation animation, uint32_t idx, const char** name, float* begin, float* end);
+
+/*
 Tween interpolates between two frames over a specified duration.
 
 This method performs tweening, a process of generating intermediate frame
