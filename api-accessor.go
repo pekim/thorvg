@@ -76,3 +76,28 @@ You can use this to assign a unique ID to the Paint object.
 func AccessorGenerateId(name string) uint {
 	return uint(tvg_accessor_generate_id(name))
 }
+
+/*
+GetName retrieves the original name string from a given unique ID.
+
+Returns the name associated with the specified identifier.
+
+This method is only valid when @ref tvg_picture_set_accessible() is set to @c true
+for the Picture associated with the given @p paint in @ref tvg_accessor_set() Otherwise, the name
+information may not be available.
+
+	@param[in] accessor An accessor object.
+	@param[in] id The unique identifier.
+
+	@return The corresponding name string, or @c nullptr if not found or unavailable.
+
+	@see tvg_accessor_generate_id()
+	@see tvg_accessor_set()
+	@see tvg_picture_set_accessible()
+
+	@note This function is only available within Accessor callbacks registered via @ref tvg_accessor_set().
+	@note Experimental API
+*/
+func (accessor Accessor) GetName(id uint) string {
+	return tvg_accessor_get_name(uintptr(accessor), uint32(id))
+}

@@ -203,6 +203,7 @@ var tvg_accessor_new func() uintptr
 var tvg_accessor_del func(accessor uintptr) Result
 var tvg_accessor_set func(accessor uintptr, paint uintptr, func_ uintptr, data uintptr) Result
 var tvg_accessor_generate_id func(name string) uint32
+var tvg_accessor_get_name func(accessor uintptr, id uint32) string
 
 // LottieAnimation API
 var tvg_lottie_animation_new func() uintptr
@@ -404,6 +405,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_accessor_del, lib, "tvg_accessor_del")
 	purego.RegisterLibFunc(&tvg_accessor_set, lib, "tvg_accessor_set")
 	purego.RegisterLibFunc(&tvg_accessor_generate_id, lib, "tvg_accessor_generate_id")
+	purego.RegisterLibFunc(&tvg_accessor_get_name, lib, "tvg_accessor_get_name")
 
 	// LottieAnimation API
 	purego.RegisterLibFunc(&tvg_lottie_animation_new, lib, "tvg_lottie_animation_new")
