@@ -2,4 +2,4 @@
 
 package thorvg
 
-const libthorvgCommit = "c2ad4340380d53eb7289c7e9c29a5e57da4bfd46"
+const libthorvgVersion = "1.0.4"
