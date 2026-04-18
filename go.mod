@@ -3,11 +3,11 @@ module github.com/pekim/thorvg
 go 1.25.0
 
 require (
-	github.com/ebitengine/purego v0.9.1
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20250301202403-da16c1255728
-	github.com/jupiterrider/purego-sdl3 v0.0.0-20251207102000-8bd199c0f033
+	github.com/ebitengine/purego v0.10.0
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20260406072232-3ac4aa2bb164
+	github.com/jupiterrider/purego-sdl3 v0.0.0-20260315104720-a5f7946e1e34
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sys v0.40.0
+	golang.org/x/sys v0.43.0
 )
 
 require (
