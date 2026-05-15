@@ -7,4 +7,4 @@ import _ "embed"
 //go:embed libthorvg_darwin_arm64
 var sharedObject []byte
 
-const sharedObjectID = "201529db"
+const sharedObjectID = "ff47305d"
