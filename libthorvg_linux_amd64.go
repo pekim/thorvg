@@ -7,4 +7,4 @@ import _ "embed"
 //go:embed libthorvg_linux_amd64
 var sharedObject []byte
 
-const sharedObjectID = "c6b74fe7"
+const sharedObjectID = "5b6f8b28"

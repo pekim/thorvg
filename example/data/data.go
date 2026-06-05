@@ -19,3 +19,6 @@ var LottieParentInterleaved []byte
 
 //go:embed lottie-gears-animation.json
 var LottieGearsAnimation []byte
+
+//go:embed lottie-audio-layer.json
+var LottieAudioLayer []byte

@@ -125,6 +125,7 @@ const (
 	ENGINE_OPTION_NONE         EngineOption = 0      // No engine options are enabled. This may be used to explicitly disable all optional behaviors.
 	ENGINE_OPTION_DEFAULT      EngineOption = 1 << 0 // Uses the default rendering mode.
 	ENGINE_OPTION_SMART_RENDER EngineOption = 1 << 1 // Enables automatic partial (smart) rendering optimizations.
+	TVG_ENGINE_OPTION_ALIASED  EngineOption = 1 << 2 // Disables anti-aliased rendering from the default rendering mode. @note Experimental API.
 )
 
 /*
@@ -167,13 +168,13 @@ const (
 	BLEND_METHOD_COLORDODGE                     // Divides the bottom layer by the inverted top layer. D / (255 - S)
 	BLEND_METHOD_COLORBURN                      // Divides the inverted bottom layer by the top layer, and then inverts the result. 255 - (255 - D) / S
 	BLEND_METHOD_HARDLIGHT                      // The same as Overlay but with the color roles reversed. (2 * S * D) if (S < Sa), otherwise (Sa * Da) - 2 * (Da - S) * (Sa - D)
-	BLEND_METHOD_SOFTLIGHT                      // The same as Overlay but with applying pure black or white does not result in pure black or white. (1 - 2 * S) * (D ^ 2) + (2 * S * D)
+	BLEND_METHOD_SOFTLIGHT                      // Darkens or lightens the colors, depending on the source color value. If S <= 0.5: D - (1 - 2 * S) * D * (1 - D), otherwise: D + (2 * S - 1) * (G(D) - D), where G(D) = ((16 * D - 12) * D + 4) * D if D <= 0.25, otherwise sqrt(D)
 	BLEND_METHOD_DIFFERENCE                     // Subtracts the bottom layer from the top layer or the other way around, to always get a non-negative value. (S - D) if (S > D), otherwise (D - S)
 	BLEND_METHOD_EXCLUSION                      // The result is twice the product of the top and bottom layers, subtracted from their sum. s + d - (2 * s * d)
-	BLEND_METHOD_HUE                            // Combine with HSL(Sh + Ds + Dl) then convert it to RGB.
-	BLEND_METHOD_SATURATION                     // Combine with HSL(Dh + Ss + Dl) then convert it to RGB.
-	BLEND_METHOD_COLOR                          // Combine with HSL(Sh + Ss + Dl) then convert it to RGB.
-	BLEND_METHOD_LUMINOSITY                     // Combine with HSL(Dh + Ds + Sl) then convert it to RGB.
+	BLEND_METHOD_HUE                            // Uses the hue of the source and the saturation and luminosity of the destination. @since 1.0
+	BLEND_METHOD_SATURATION                     // Uses the saturation of the source and the hue and luminosity of the destination. @since 1.0
+	BLEND_METHOD_COLOR                          // Uses the hue and saturation of the source and the luminosity of the destination. @since 1.0
+	BLEND_METHOD_LUMINOSITY                     // Uses the luminosity of the source and the hue and saturation of the destination. @since 1.0
 	BLEND_METHOD_ADD                            // Simply adds pixel values of one layer with the other. (S + D)
 	BLEND_METHOD_COMPOSITION BlendMethod = 255  // Used for intermediate composition. @since 1.0
 )

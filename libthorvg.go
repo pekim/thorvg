@@ -215,8 +215,8 @@ var tvg_lottie_animation_get_markers_cnt func(animation uintptr, cnt *uint32) Re
 var tvg_lottie_animation_get_marker func(animation uintptr, idx uint32, name **byte) Result
 var tvg_lottie_animation_get_marker_info func(animation uintptr, idx uint32, name **byte, begin *float32, end *float32) Result
 var tvg_lottie_animation_tween func(animation uintptr, from float32, to float32, progress float32) Result
-var tvg_lottie_animation_assign func(animation uintptr, layer string, ix uint32, var_ string, val float32) Result
 var tvg_lottie_animation_set_quality func(animation uintptr, value uint8) Result
+var tvg_lottie_animation_set_audio_resolver func(animation uintptr, resolver uintptr, data uintptr) Result
 
 var libThorvgInitialised = false
 
@@ -418,8 +418,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_lottie_animation_get_marker, lib, "tvg_lottie_animation_get_marker")
 	purego.RegisterLibFunc(&tvg_lottie_animation_get_marker_info, lib, "tvg_lottie_animation_get_marker_info")
 	purego.RegisterLibFunc(&tvg_lottie_animation_tween, lib, "tvg_lottie_animation_tween")
-	purego.RegisterLibFunc(&tvg_lottie_animation_assign, lib, "tvg_lottie_animation_assign")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_quality, lib, "tvg_lottie_animation_set_quality")
+	purego.RegisterLibFunc(&tvg_lottie_animation_set_audio_resolver, lib, "tvg_lottie_animation_set_audio_resolver")
 
 	return nil
 }

@@ -10,7 +10,7 @@
 
 #define TVG_VERSION_MAJOR 1  // for compile-time checks
 #define TVG_VERSION_MINOR 0  // for compile-time checks
-#define TVG_VERSION_MICRO 5  // for compile-time checks
+#define TVG_VERSION_MICRO 6  // for compile-time checks
 
 #ifndef TVG_STATIC
     #ifdef _WIN32
@@ -164,10 +164,12 @@ typedef enum {
  *
  * @since 1.0
  */
-typedef enum {
-    TVG_ENGINE_OPTION_NONE = 0,                   /**< No engine options are enabled. This may be used to explicitly disable all optional behaviors. */
-    TVG_ENGINE_OPTION_DEFAULT = 1 << 0,           /**< Uses the default rendering mode. */
-    TVG_ENGINE_OPTION_SMART_RENDER = 1 << 1       /**< Enables automatic partial (smart) rendering optimizations. */
+typedef enum
+{
+    TVG_ENGINE_OPTION_NONE = 0,                      /**< No engine options are enabled. This may be used to explicitly disable all optional behaviors. */
+    TVG_ENGINE_OPTION_DEFAULT = 1 << 0,              /**< Uses the default rendering mode. */
+    TVG_ENGINE_OPTION_SMART_RENDER = 1 << 1,         /**< Enables automatic partial (smart) rendering optimizations. */
+    TVG_ENGINE_OPTION_ALIASED = 1 << 2               /**< Disables anti-aliased rendering from the default rendering mode. @note Experimental API */
 } Tvg_Engine_Option;
 
 
@@ -207,13 +209,13 @@ typedef enum {
     TVG_BLEND_METHOD_COLORDODGE,        ///< Divides the bottom layer by the inverted top layer. D / (255 - S)
     TVG_BLEND_METHOD_COLORBURN,         ///< Divides the inverted bottom layer by the top layer, and then inverts the result. 255 - (255 - D) / S
     TVG_BLEND_METHOD_HARDLIGHT,         ///< The same as Overlay but with the color roles reversed. (2 * S * D) if (S < Sa), otherwise (Sa * Da) - 2 * (Da - S) * (Sa - D)
-    TVG_BLEND_METHOD_SOFTLIGHT,         ///< The same as Overlay but with applying pure black or white does not result in pure black or white. (1 - 2 * S) * (D ^ 2) + (2 * S * D)
+    TVG_BLEND_METHOD_SOFTLIGHT,         ///< Darkens or lightens the colors, depending on the source color value. If S <= 0.5: D - (1 - 2 * S) * D * (1 - D), otherwise: D + (2 * S - 1) * (G(D) - D), where G(D) = ((16 * D - 12) * D + 4) * D if D <= 0.25, otherwise sqrt(D).
     TVG_BLEND_METHOD_DIFFERENCE,        ///< Subtracts the bottom layer from the top layer or the other way around, to always get a non-negative value. (S - D) if (S > D), otherwise (D - S)
     TVG_BLEND_METHOD_EXCLUSION,         ///< The result is twice the product of the top and bottom layers, subtracted from their sum. s + d - (2 * s * d)
-    TVG_BLEND_METHOD_HUE,               ///< Combine with HSL(Sh + Ds + Dl) then convert it to RGB.
-    TVG_BLEND_METHOD_SATURATION,        ///< Combine with HSL(Dh + Ss + Dl) then convert it to RGB.
-    TVG_BLEND_METHOD_COLOR,             ///< Combine with HSL(Sh + Ss + Dl) then convert it to RGB.
-    TVG_BLEND_METHOD_LUMINOSITY,        ///< Combine with HSL(Dh + Ds + Sl) then convert it to RGB.
+    TVG_BLEND_METHOD_HUE,               ///< Uses the hue of the source and the saturation and luminosity of the destination. @since 1.0
+    TVG_BLEND_METHOD_SATURATION,        ///< Uses the saturation of the source and the hue and luminosity of the destination. @since 1.0
+    TVG_BLEND_METHOD_COLOR,             ///< Uses the hue and saturation of the source and the luminosity of the destination. @since 1.0
+    TVG_BLEND_METHOD_LUMINOSITY,        ///< Uses the luminosity of the source and the hue and saturation of the destination. @since 1.0
     TVG_BLEND_METHOD_ADD,               ///< Simply adds pixel values of one layer with the other. (S + D)
     TVG_BLEND_METHOD_COMPOSITION = 255  ///< Used for intermediate composition. @since 1.0
 } Tvg_Blend_Method;
@@ -3397,24 +3399,6 @@ TVG_API Tvg_Result tvg_lottie_animation_tween(Tvg_Animation animation, float fro
 
 
 /**
- * @brief Updates the value of an expression variable for a specific layer.
- *
- * @param[in] animation The Tvg_Animation pointer to the Lottie animation object.
- * @param[in] layer The name of the layer containing the variable to be updated.
- * @param[in] ix The property index of the variable within the layer.
- * @param[in] var The name of the variable to be updated.
- * @param[in] val The new value to assign to the variable.
- *
- * @retval TVG_RESULT_INSUFFICIENT_CONDITION If the animation is not loaded.
- * @retval TVG_RESULT_INVALID_ARGUMENT When the given parameter is invalid.
- * @retval TVG_RESULT_NOT_SUPPORTED When neither the layer nor the property is found in the current animation.
- *
- * @note Experimental API
- */
-TVG_API Tvg_Result tvg_lottie_animation_assign(Tvg_Animation animation, const char* layer, uint32_t ix, const char* var, float val);
-
-
-/**
  * @brief Sets the quality level for Lottie effects.
  *
  * This function controls the rendering quality of effects like blur, shadows, etc.
@@ -3432,6 +3416,73 @@ TVG_API Tvg_Result tvg_lottie_animation_assign(Tvg_Animation animation, const ch
  * @since 1.0
  */
 TVG_API Tvg_Result tvg_lottie_animation_set_quality(Tvg_Animation animation, uint8_t value);
+
+/**
+ * @brief Describes the current state of a Lottie audio layer.
+ *
+ * This structure is provided to the audio resolver callback and contains
+ * the information required to synchronize audio playback with the animation
+ * timeline. Applications are responsible for managing audio playback using
+ * their own audio engine.
+ *
+ * Example:
+ * @code
+ * void on_audio(const Tvg_Audio_Info* info, void* data)
+ * {
+ *     if (info->active) {
+ *         // Start or seek playback of info->src.
+ *     } else {
+ *         // Stop playback of info->src.
+ *     }
+ * }
+ * @endcode
+ *
+ * @see tvg_lottie_animation_set_audio_resolver()
+ *
+ * @note Experimental API
+ */
+typedef struct {
+    const char* src;      ///< Audio source: a file path/URL or embedded raw bytes.
+    const char* mimeType; ///< MIME type string; valid when @c embedded; may be @c NULL.
+    uint32_t    size;     ///< Embedded data size in bytes; valid when @c embedded.
+    float       offset;   ///< Position within the audio file in seconds; valid when @c active.
+    float       volume;   ///< Volume [0, 100]; valid when @c active.
+    bool        active;   ///< @c true while the layer is within its playback range.
+    bool        embedded; ///< @c true if @p src points to embedded audio data; @c false if it is a file path or URL.
+} Tvg_Audio_Info;
+
+/**
+ * @brief Callback invoked to provide audio playback information for a Lottie animation.
+ *
+ * Applications can use this callback to synchronize external audio
+ * playback with the animation timeline.
+ *
+ * @param[in] info Audio information for the current timeline state.
+ * @param[in] data User data specified when registering the callback.
+ *
+ * @see tvg_lottie_animation_set_audio_resolver()
+ * @note Experimental API.
+ */
+typedef void (*Tvg_Audio_Resolver)(const Tvg_Audio_Info* info, void* data);
+
+/**
+ * @brief Sets the audio resolver callback for Lottie audio layers.
+ *
+ * The resolver is invoked whenever the playback state of an audio layer changes.
+ * It allows applications to synchronize audio playback with the animation timeline.
+ *
+ * @param[in] animation A Lottie animation object.
+ * @param[in] resolver A user-defined callback that receives audio playback state updates.
+ * @param[in] data User data passed to @p resolver.
+ *
+ * @retval TVG_RESULT_INSUFFICIENT_CONDITION The animation has not been loaded.
+ *
+ * @note To disable audio notifications, pass @c nullptr as @p resolver.
+ * @note Experimental API.
+ *
+ * @see Tvg_Audio_Resolver
+ */
+TVG_API Tvg_Result tvg_lottie_animation_set_audio_resolver(Tvg_Animation animation, Tvg_Audio_Resolver resolver, void* data);
 
 /** \} */   // end addtogroup ThorVGCapi_LottieAnimation
 
