@@ -10,7 +10,7 @@
 
 #define TVG_VERSION_MAJOR 1  // for compile-time checks
 #define TVG_VERSION_MINOR 0  // for compile-time checks
-#define TVG_VERSION_MICRO 6  // for compile-time checks
+#define TVG_VERSION_MICRO 7  // for compile-time checks
 
 #ifndef TVG_STATIC
     #ifdef _WIN32
@@ -139,12 +139,14 @@ typedef struct {
  *
  * @ingroup ThorVGCapi_Canvas
  */
-typedef enum {
-    TVG_COLORSPACE_ABGR8888 = 0,  ///< The channels are joined in the order: alpha, blue, green, red. Colors are alpha-premultiplied.
-    TVG_COLORSPACE_ARGB8888,      ///< The channels are joined in the order: alpha, red, green, blue. Colors are alpha-premultiplied.
-    TVG_COLORSPACE_ABGR8888S,     ///< The channels are joined in the order: alpha, blue, green, red. Colors are un-alpha-premultiplied. (since 0.13)
-    TVG_COLORSPACE_ARGB8888S,     ///< The channels are joined in the order: alpha, red, green, blue. Colors are un-alpha-premultiplied. (since 0.13)
-    TVG_COLORSPACE_UNKNOWN = 255, ///< Unknown channel data. This is reserved for an initial ColorSpace value. (since 1.0)
+typedef enum
+{
+    TVG_COLORSPACE_ABGR8888 = 0,   ///< The channels are joined in the order: alpha, blue, green, red. Colors are alpha-premultiplied.
+    TVG_COLORSPACE_ARGB8888,       ///< The channels are joined in the order: alpha, red, green, blue. Colors are alpha-premultiplied.
+    TVG_COLORSPACE_ABGR8888S,      ///< The channels are joined in the order: alpha, blue, green, red. Colors are un-alpha-premultiplied. (since 0.13)
+    TVG_COLORSPACE_ARGB8888S,      ///< The channels are joined in the order: alpha, red, green, blue. Colors are un-alpha-premultiplied. (since 0.13)
+    TVG_COLORSPACE_GRAYSCALE8,     ///< Single channel, 1 byte per pixel 8-bit grayscale. (since 1.1)
+    TVG_COLORSPACE_UNKNOWN = 255,  ///< Unknown channel data. This is reserved for an initial ColorSpace value. (since 1.0)
 } Tvg_Colorspace;
 
 
@@ -537,6 +539,7 @@ TVG_API Tvg_Canvas tvg_swcanvas_create(Tvg_Engine_Option op);
  *
  * @warning Do not access @p buffer during tvg_canvas_draw() - tvg_canvas_sync(). It should not be accessed while the engine is writing on it.
  *
+ * @note Currently, only @c TVG_COLORSPACE_ABGR8888, @c TVG_COLORSPACE_ARGB8888, @c TVG_COLORSPACE_ABGR8888S, and @c TVG_COLORSPACE_ARGB8888S are supported for @p cs.
  * @see Tvg_Colorspace
  */
 TVG_API Tvg_Result tvg_swcanvas_set_target(Tvg_Canvas canvas, uint32_t* buffer, uint32_t stride, uint32_t w, uint32_t h, Tvg_Colorspace cs);
@@ -620,6 +623,20 @@ TVG_API Tvg_Result tvg_glcanvas_set_target(Tvg_Canvas canvas, void* display, voi
 /* WgCanvas API                                                         */
 /************************************************************************/
 
+
+/**
+ * @brief Encapsulates the WebGPU context required for rendering.
+ *
+ * This structure contains the WebGPU objects used to initialize the rendering backend.
+ *
+ * @note Experimental API
+ */
+typedef struct {
+        void* instance;  // WGPUInstance, context for all other wgpu objects.
+        void* adapter;   // WGPUAdapter, the adapter associated with the rendering device.
+        void* device;    // WGPUDevice, a desired handle for the wgpu device.
+} Tvg_WgContext;
+
 /**
  * @brief Creates a new WebGPU Canvas object with optional rendering engine settings.
  *
@@ -641,20 +658,41 @@ TVG_API Tvg_Canvas tvg_wgcanvas_create(Tvg_Engine_Option op);
 /**
  * @brief Sets the drawing target for the rasterization.
  *
- * @param[in] device WGPUDevice, a desired handle for the wgpu device. If it is @c nullptr, ThorVG will assign an appropriate device internally.
+ * @param[in] device WGPUDevice, a desired handle for the wgpu device.
  * @param[in] instance WGPUInstance, context for all other wgpu objects.
  * @param[in] target Either WGPUSurface or WGPUTexture, serving as handles to a presentable surface or texture.
  * @param[in] w The width of the target.
  * @param[in] h The height of the target.
- * @param[in] cs Specifies how the pixel values should be interpreted. Currently, it only allows @c TVG_COLORSPACE_ABGR8888S as @c WGPUTextureFormat_RGBA8Unorm.
- * @param[in] type @c 0: surface, @c 1: texture are used as pesentable target.
+ * @param[in] cs Specifies how the pixel values should be interpreted. Currently, it allows @c TVG_COLORSPACE_ABGR8888 and @c TVG_COLORSPACE_ABGR8888S.
+ * @param[in] type @c 0: surface, @c 1: texture are used as presentable target.
  *
  * @retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
  * @retval TVG_RESULT_NOT_SUPPORTED In case the wg engine is not supported.
  *
+ * @warning Regardless of the value of @p cs, this target API uses the default alpha mode.
+ *
+ * @see tvg_wgcanvas_set_target_with_context()
+ *
  * @since 1.0
  */
 TVG_API Tvg_Result tvg_wgcanvas_set_target(Tvg_Canvas canvas, void* device, void* instance, void* target, uint32_t w, uint32_t h, Tvg_Colorspace cs, int type);
+
+/**
+ * @brief Sets the drawing target for the rasterization.
+ *
+ * @param[in] context Tvg_WgContext context.
+ * @param[in] target Either WGPUSurface or WGPUTexture, serving as handles to a presentable surface or texture.
+ * @param[in] w The width of the target.
+ * @param[in] h The height of the target.
+ * @param[in] cs Specifies how the pixel values should be interpreted. Currently, it allows @c TVG_COLORSPACE_ABGR8888 and @c TVG_COLORSPACE_ABGR8888S.
+ * @param[in] type @c 0: surface, @c 1: texture are used as presentable target.
+ *
+ * @retval TVG_RESULT_INSUFFICIENT_CONDITION if the canvas is performing rendering. Please ensure the canvas is synced.
+ * @retval TVG_RESULT_NOT_SUPPORTED In case the wg engine is not supported.
+ *
+ * @note Experimental API
+ */
+TVG_API Tvg_Result tvg_wgcanvas_set_target_with_context(Tvg_Canvas canvas, const Tvg_WgContext* context, void* target, uint32_t w, uint32_t h, Tvg_Colorspace cs, int type);
 
 /** \} */   // end defgroup ThorVGCapi_WgCanvas
 
@@ -2817,6 +2855,8 @@ TVG_API Tvg_Result tvg_text_get_text_metrics(const Tvg_Paint text, Tvg_Text_Metr
  * @param[in] text A Tvg_Paint pointer to the text object.
  * @param[in] ch A pointer to a UTF-8 encoded character.
  * @param[out] metrics A pointer to a @ref Tvg_Glyph_Metrics structure to be filled with the resulting values.
+ * @param[out] next An optional pointer that receives the position immediately
+ *                  following the processed UTF-8 character.
  *
  * @return TVG_RESULT_INSUFFICIENT_CONDITION if no font or size has been set yet.
  * @return TVG_RESULT_INVALID_ARGUMENT if the given character is invalid or not supported.
@@ -2825,7 +2865,7 @@ TVG_API Tvg_Result tvg_text_get_text_metrics(const Tvg_Paint text, Tvg_Text_Metr
  * @note Currently, ThorVG only supports horizontal text layout.
  * @note Experimental API
  */
-TVG_API Tvg_Result tvg_text_get_glyph_metrics(const Tvg_Paint text, const char* ch, Tvg_Glyph_Metrics* metrics);
+TVG_API Tvg_Result tvg_text_get_glyph_metrics(const Tvg_Paint text, const char* ch, Tvg_Glyph_Metrics* metrics, const char** next);
 
 
 /**
@@ -3119,7 +3159,7 @@ TVG_API Tvg_Result tvg_animation_get_duration(Tvg_Animation animation, float* du
  * @retval TVG_RESULT_INSUFFICIENT_CONDITION In case the animation is not loaded.
  * @retval TVG_RESULT_INVALID_ARGUMENT If the @p begin is higher than @p end.
  *
- * @note Animation allows a range from 0.0 to the total frame. @p end should not be higher than @p begin.
+ * @note Animation allows a range from 0.0 to the total frame. @p end should not be lower than @p begin.
  * @note If a marker has been specified, its range will be disregarded.
  *
  * @see tvg_lottie_animation_set_marker()
