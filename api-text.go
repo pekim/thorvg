@@ -299,6 +299,8 @@ The input character must be a single UTF-8 encoded character.
 	@param[in] text The text object.
 	@param[in] ch A pointer to a UTF-8 encoded character.
 	@param[out] metrics A pointer to a @ref Tvg_Glyph_Metrics structure to be filled with the resulting values.
+	@param[out] next An optional pointer that receives the position immediately
+										following the processed UTF-8 character.
 
 	@return TVG_RESULT_INSUFFICIENT_CONDITION if no font or size has been set yet.
 	@return TVG_RESULT_INVALID_ARGUMENT if the given character is invalid or not supported.
@@ -309,7 +311,7 @@ The input character must be a single UTF-8 encoded character.
 */
 func (text Text) GetGlyphMetrics(ch rune) (GlyphMetrics, error) {
 	var metrics GlyphMetrics
-	result := tvg_text_get_glyph_metrics(text.paint_, (*byte)(unsafe.Pointer(&ch)), &metrics)
+	result := tvg_text_get_glyph_metrics(text.paint_, (*byte)(unsafe.Pointer(&ch)), &metrics, nil)
 	return metrics, result.error()
 }
 
