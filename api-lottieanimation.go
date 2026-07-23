@@ -168,6 +168,46 @@ func (animation Animation) Tween(from float32, to float32, progress float32) err
 }
 
 /*
+TweenTo sets the target frame for dynamic tweening.
+
+This method starts a dynamic interpolation from the current animation frame
+toward @p to. Use tvg_lottie_animation_tween_go() to update the interpolation progress.
+
+	@param[in] animation The Lottie animation object.
+	@param[in] to The target frame number of the interpolation.
+
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the animation is not loaded.
+
+	@note The dynamic tweening set by this method is discarded when @ref tvg_animation_set_frame()
+				or @ref tvg_lottie_animation_tween() is called.
+
+	@see tvg_lottie_animation_tween_go()
+	@note Experimental API
+*/
+func (animation Animation) TweenTo(to float32) error {
+	return tvg_lottie_animation_tween_to(uintptr(animation), to).error()
+}
+
+/*
+TweenGo updates the current tween toward the target frame.
+
+This method advances the interpolation started by @ref tvg_lottie_animation_tween_to() using the
+given @p progress value.
+
+	@param[in] animation The Lottie animation object.
+	@param[in] progress The current progress of the interpolation (range: 0.0 to 1.0).
+
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the animation is not loaded.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If @ref tvg_lottie_animation_tween_to() has not been called.
+
+	@see tvg_lottie_animation_tween_to()
+	@note Experimental API
+*/
+func (animation Animation) TweenGo(progress float32) error {
+	return tvg_lottie_animation_tween_go(uintptr(animation), progress).error()
+}
+
+/*
 SetQuality sets the quality level for Lottie effects.
 
 This function controls the rendering quality of effects like blur, shadows, etc.

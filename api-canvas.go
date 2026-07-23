@@ -36,7 +36,7 @@ It accepts an optional parameter @p op to choose between different rendering eng
 
 	@param[in] op The rendering engine option.
 
-	@return A new Tvg_Canvas object.
+	@return A new Canvas object.
 
 	@see enum Tvg_Engine_Option
 */
@@ -52,8 +52,8 @@ SwSetTarget Sets the buffer used in the rasterization process and defines the us
 For optimisation reasons TVG does not allocate memory for the output buffer on its own.
 The buffer of a desirable size should be allocated and owned by the caller.
 
-	@param[in] canvas The Tvg_Canvas object managing the @p buffer.
-	@param[in] buffer A pointer to the allocated memory block of the size @p stride x @p h.
+	@param[in] canvas The canvas object managing the @p buffer.
+	@param[in] buffer The allocated memory block of the size @p stride x @p h.
 	@param[in] stride The stride of the raster image - in most cases same value as @p w.
 	@param[in] w The width of the raster image.
 	@param[in] h The height of the raster image.
@@ -84,7 +84,7 @@ It accepts an optional parameter @p op to choose between different rendering eng
 
 	@param[in] op The rendering engine option.
 
-	@return A new Tvg_Canvas object.
+	@return A new Canvas object.
 
 	@note Currently, it does not support @c TVG_ENGINE_OPTION_SMART_RENDER. The request will be ignored.
 
@@ -135,9 +135,9 @@ func (canvas *Canvas) GlSetTarget(
 /*
 Destroy clears the canvas internal data, releases all paints stored by the canvas and destroys the canvas object itself.
 
-	@param[in] canvas The Tvg_Canvas object to be destroyed.
+	@param[in] canvas The Canvas object to be destroyed.
 
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer to the Tvg_Canvas object is passed.
+	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer to the Canvas object is passed.
 */
 func (canvas *Canvas) Destroy() error {
 	canvas.bufferPinner.Unpin()
@@ -146,10 +146,10 @@ func (canvas *Canvas) Destroy() error {
 }
 
 /*
-Add inserts a drawing element into the canvas using a Tvg_Paint object.
+Add inserts a drawing element into the canvas using a Paint object.
 
-	@param[in] canvas The Tvg_Canvas object managing the @p paint.
-	@param[in] paint The Tvg_Paint object to be drawn.
+	@param[in] canvas The Canvas object managing the @p paint.
+	@param[in] paint The Paint object to be drawn.
 
 Only the paints added into the canvas will be drawing targets.
 They are retained by the canvas until you call tvg_canvas_remove()
@@ -174,7 +174,7 @@ is provided, the new paint object will be inserted immediately before the specif
 paint object in the root scene. If @p at is @c nullptr, the paint object will be added
 to the end of the root scene.
 
-	@param[in] canvas The Tvg_Canvas object managing the @p paint.
+	@param[in] canvas The Canvas object managing the @p paint.
 	@param[in] target A pointer to the Paint object to be added into the root scene.
 										This parameter must not be @c nullptr.
 	@param[in] at A pointer to an existing Paint object in the root scene before which
@@ -204,7 +204,7 @@ This function removes a specified paint object from the root scene. If no paint
 object is specified (i.e., the default @c nullptr is used), the function
 performs to clear all paints from the scene.
 
-	@param[in] canvas A Tvg_Canvas object to remove the @p paint.
+	@param[in] canvas A Canvas object to remove the @p paint.
 	@param[in] paint A pointer to the Paint object to be removed from the root scene.
 									If @c nullptr, remove all the paints from the root scene.
 
@@ -222,7 +222,7 @@ Update requests the canvas to update modified paint objects in preparation for r
 This function triggers an internal update for all paint instances that have been modified
 since the last update. It ensures that the canvas state is ready for accurate rendering.
 
-	  @param[in] canvas The Tvg_Canvas object to be updated.
+	  @param[in] canvas The Canvas object to be updated.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION The canvas is not properly prepared.
@@ -241,7 +241,7 @@ func (canvas Canvas) Update(Paint) error {
 /*
 Draw requests the canvas to render the Paint objects.
 
-	@param[in] canvas The Tvg_Canvas object containing elements to be drawn.
+	@param[in] canvas The Canvas object containing elements to be drawn.
 	@param[in] clear If @c true, clears the target buffer to zero before drawing.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Canvas pointer.
@@ -269,7 +269,7 @@ func (canvas Canvas) Draw(clear_ bool) error {
 /*
 Sync guarantees that drawing task is finished.
 
-	@param[in] canvas The Tvg_Canvas object containing elements which were drawn.
+	@param[in] canvas The Canvas object containing elements which were drawn.
 
 The Canvas rendering can be performed asynchronously. To make sure that rendering is finished,
 the tvg_canvas_sync() must be called after the tvg_canvas_draw() regardless of threading.
@@ -291,7 +291,7 @@ The specified viewport clips rendering output to the boundaries of that rectangl
 
 Please note that changing the viewport is only allowed at the beginning of the rendering sequence—that is, after calling tvg_canvas_sync().
 
-	@param[in] canvas The Tvg_Canvas object containing elements which were drawn.
+	@param[in] canvas The Canvas object containing elements which were drawn.
 	@param[in] x The x-coordinate of the upper-left corner of the rectangle.
 	@param[in] y The y-coordinate of the upper-left corner of the rectangle.
 	@param[in] w The width of the rectangle.

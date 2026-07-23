@@ -73,6 +73,7 @@ var tvg_paint_set_opacity func(paint uintptr, opacity uint8) Result
 var tvg_paint_get_opacity func(paint uintptr, opacity *uint8) Result
 var tvg_paint_duplicate func(paint uintptr) uintptr
 var tvg_paint_intersects func(paint uintptr, x int32, y int32, w int32, h int32) bool
+var tvg_paint_intersects_region func(paint uintptr, x int32, y int32, w int32, h int32, visibleOnly bool) bool
 var tvg_paint_get_aabb func(paint uintptr, x *float32, y *float32, w *float32, h *float32) Result
 var tvg_paint_get_obb func(paint uintptr, pt4 *Point) Result
 var tvg_paint_set_mask_method func(paint uintptr, target uintptr, method MaskMethod) Result
@@ -215,6 +216,8 @@ var tvg_lottie_animation_get_markers_cnt func(animation uintptr, cnt *uint32) Re
 var tvg_lottie_animation_get_marker func(animation uintptr, idx uint32, name **byte) Result
 var tvg_lottie_animation_get_marker_info func(animation uintptr, idx uint32, name **byte, begin *float32, end *float32) Result
 var tvg_lottie_animation_tween func(animation uintptr, from float32, to float32, progress float32) Result
+var tvg_lottie_animation_tween_to func(animation uintptr, to float32) Result
+var tvg_lottie_animation_tween_go func(animation uintptr, progress float32) Result
 var tvg_lottie_animation_set_quality func(animation uintptr, value uint8) Result
 var tvg_lottie_animation_set_audio_resolver func(animation uintptr, resolver uintptr, data uintptr) Result
 
@@ -275,6 +278,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_paint_get_opacity, lib, "tvg_paint_get_opacity")
 	purego.RegisterLibFunc(&tvg_paint_duplicate, lib, "tvg_paint_duplicate")
 	purego.RegisterLibFunc(&tvg_paint_intersects, lib, "tvg_paint_intersects")
+	purego.RegisterLibFunc(&tvg_paint_intersects_region, lib, "tvg_paint_intersects_region")
 	purego.RegisterLibFunc(&tvg_paint_get_aabb, lib, "tvg_paint_get_aabb")
 	purego.RegisterLibFunc(&tvg_paint_get_obb, lib, "tvg_paint_get_obb")
 	purego.RegisterLibFunc(&tvg_paint_set_mask_method, lib, "tvg_paint_set_mask_method")
@@ -418,6 +422,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_lottie_animation_get_marker, lib, "tvg_lottie_animation_get_marker")
 	purego.RegisterLibFunc(&tvg_lottie_animation_get_marker_info, lib, "tvg_lottie_animation_get_marker_info")
 	purego.RegisterLibFunc(&tvg_lottie_animation_tween, lib, "tvg_lottie_animation_tween")
+	purego.RegisterLibFunc(&tvg_lottie_animation_tween_to, lib, "tvg_lottie_animation_tween_to")
+	purego.RegisterLibFunc(&tvg_lottie_animation_tween_go, lib, "tvg_lottie_animation_tween_go")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_quality, lib, "tvg_lottie_animation_set_quality")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_audio_resolver, lib, "tvg_lottie_animation_set_audio_resolver")
 

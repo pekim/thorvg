@@ -23,18 +23,18 @@ Rel safely releases a Tv_Paint object.
 This is the counterpart to the `new()` API, and releases the given Paint object safely,
 handling @c nullptr and managing ownership properly.
 
-	@param[in] paint A Tvg_Paint object to release.
+	@param[in] paint A Paint object to release.
 */
 func (paint paintCommon) Rel() error {
 	return tvg_paint_rel(paint.paint_).error()
 }
 
 /*
-Ref increments the reference count for the Tvg_Paint object.
+Ref increments the reference count for the Paint object.
 
-This method increases the reference count of Tvg_Paint object, allowing shared ownership and control over its lifetime.
+This method increases the reference count of Paint object, allowing shared ownership and control over its lifetime.
 
-	@param[in] paint The Tvg_Paint object to increase the reference count.
+	@param[in] paint The Paint object to increase the reference count.
 
 	@return The updated reference count after the increment by 1.
 
@@ -50,12 +50,12 @@ func (paint paintCommon) Ref() int {
 }
 
 /*
-Unref decrements the reference count for the Tvg_Paint object.
+Unref decrements the reference count for the Paint object.
 
-This method decreases the reference count of the Tvg_Paint object by 1.
+This method decreases the reference count of the Paint object by 1.
 If the reference count reaches zero and the @p free flag is set to true, the instance is automatically deleted.
 
-	@param[in] paint The Tvg_Paint object to decrease the reference count.
+	@param[in] paint The Paint object to decrease the reference count.
 	@param[in] free Flag indicating whether to delete the Paint instance when the reference count reaches zero.
 
 	@return The updated reference count after the decrement.
@@ -70,13 +70,13 @@ func (paint paintCommon) Unref(free bool) int {
 }
 
 /*
-GetRef retrieves the current reference count of the Tvg_Paint object.
+GetRef retrieves the current reference count of the Paint object.
 
-This method provides the current reference count, allowing the user to check the shared ownership state of the Tvg_Paint object.
+This method provides the current reference count, allowing the user to check the shared ownership state of the Paint object.
 
-	@param[in] paint The Tvg_Paint object to return the reference count.
+	@param[in] paint The Paint object to return the reference count.
 
-	@return The current reference count of the Tvg_Paint object.
+	@return The current reference count of the Paint object.
 
 	@see tvg_paint_ref()
 	@see tvg_paint_unref()
@@ -92,7 +92,7 @@ SetVisible sets the visibility of the Paint object.
 
 This is useful for selectively excluding paint objects during rendering.
 
-	@param[in] paint The Tvg_Paint object to set the visibility status.
+	@param[in] paint The Paint object to set the visibility status.
 	@param[in] on A boolean flag indicating visibility. The default is @c true.
 							@c true, the object will be rendered by the engine.
 							@c false, the object will be excluded from the drawing process.
@@ -116,7 +116,7 @@ func (paint paintCommon) SetVisible(visible bool) error {
 /*
 GetVisible gets the current visibility status of the Paint object.
 
-	@param[in] paint The Tvg_Paint object to return the visibility status.
+	@param[in] paint The Paint object to return the visibility status.
 
 	@return true if the object is visible and will be rendered.
 					false if the object is hidden and will not be rendered.
@@ -165,12 +165,11 @@ func (paint paintCommon) SetId(id uint32) error {
 }
 
 /*
-Scale scales the given Tvg_Paint object by the given factor.
+Scale scales the given Paint object by the given factor.
 
-	@param[in] paint The Tvg_Paint object to be scaled.
+	@param[in] paint The Paint object to be scaled.
 	@param[in] factor The value of the scaling factor. The default value is 1.
 
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION in case a custom transform is applied.
 
 	@see tvg_paint_set_transform()
@@ -185,10 +184,9 @@ Rotate rotates the given Tvg_Paint by the given angle.
 The angle in measured clockwise from the horizontal axis.
 The rotational axis passes through the point on the object with zero coordinates.
 
-	@param[in] paint The Tvg_Paint object to be rotated.
+	@param[in] paint The Paint object to be rotated.
 	@param[in] degree The value of the rotation angle in degrees.
 
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION in case a custom transform is applied.
 
 	@see tvg_paint_set_transform()
@@ -203,11 +201,10 @@ Translate moves the given Tvg_Paint in a two-dimensional space.
 The origin of the coordinate system is in the upper-left corner of the canvas.
 The horizontal and vertical axes point to the right and down, respectively.
 
-	@param[in] paint The Tvg_Paint object to be shifted.
+	@param[in] paint The Paint object to be shifted.
 	@param[in] x The value of the horizontal shift.
 	@param[in] y The value of the vertical shift.
 
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
 	@retval TVG_RESULT_INSUFFICIENT_CONDITION in case a custom transform is applied.
 
 	@see tvg_paint_set_transform()
@@ -221,10 +218,8 @@ SetTransform transforms the given Tvg_Paint using the augmented transformation m
 
 The augmented matrix of the transformation is expected to be given.
 
-	@param[in] paint The Tvg_Paint object to be transformed.
+	@param[in] paint The Paint object to be transformed.
 	@param[in] m The 3x3 augmented matrix.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr is passed as the argument.
 */
 func (paint paintCommon) SetTransform(matrix Matrix) error {
 	return tvg_paint_set_transform(paint.paint_, &matrix).error()
@@ -232,16 +227,14 @@ func (paint paintCommon) SetTransform(matrix Matrix) error {
 
 /*
 GetTransform gets the matrix of the affine transformation of the
-given Tvg_Paint object.
+given Paint object.
 
 In case no transformation was applied, the identity matrix is returned.
 
-	@param[in] paint The Tvg_Paint object of which to get the transformation matrix.
+	@param[in] paint The Paint object of which to get the transformation matrix.
 	@param[out] m The 3x3 augmented matrix.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr is passed as the argument.
 */
-func (paint paintCommon) Ret_transform() (Matrix, error) {
+func (paint paintCommon) GetTransform() (Matrix, error) {
 	var matrix Matrix
 	result := tvg_paint_get_transform(paint.paint_, &matrix)
 	return matrix, result.error()
@@ -250,7 +243,7 @@ func (paint paintCommon) Ret_transform() (Matrix, error) {
 /*
 SetOpacity sets the opacity of the given Tvg_Paint.
 
-	@param[in] paint The Tvg_Paint object of which the opacity value is to be set.
+	@param[in] paint The Paint object of which the opacity value is to be set.
 	@param[in] opacity The opacity value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
@@ -264,10 +257,8 @@ func (paint paintCommon) SetOpacity(opacity uint8) error {
 /*
 GetOpacity gets the opacity of the given Tvg_Paint.
 
-	@param[in] paint The Tvg_Paint object of which to get the opacity value.
+	@param[in] paint The Paint object of which to get the opacity value.
 	@param[out] opacity The opacity value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
 */
 func (paint paintCommon) GetOpacity() (uint8, error) {
 	var opacity uint8
@@ -276,13 +267,13 @@ func (paint paintCommon) GetOpacity() (uint8, error) {
 }
 
 /*
-duplicate duplicates the given Tvg_Paint object.
+duplicate duplicates the given Paint object.
 
 Creates a new object and sets its all properties as in the original object.
 
-	@param[in] paint The Tvg_Paint object to be copied.
+	@param[in] paint The Paint object to be copied.
 
-	@return A copied Tvg_Paint object if succeed, @c nullptr otherwise.
+	@return A copied Paint object if succeed, @c nullptr otherwise.
 */
 func (paint paintCommon) duplicate() paintCommon {
 	return paintCommon{
@@ -302,22 +293,53 @@ occurs within a painted region.
 The paint must be updated in a Canvas beforehand—typically after the Canvas has been
 drawn and synchronized.
 
-	@param[in] paint A Tvg_Paint pointer to the shape object to be tested.
+		@param[in] paint A Tvg_Paint pointer to the shape object to be tested.
+		@param[in] x The x-coordinate of the top-left corner of the test region.
+		@param[in] y The y-coordinate of the top-left corner of the test region.
+	  @param[in] w The width of the region to test. Must be greater than 0.
+		@param[in] h The height of the region to test. Must be greater than 0.
+
+		@return @c true if any part of the region intersects the filled area; otherwise, @c false.
+
+		@note To test a single point, set the region size to w = 1, h = 1.
+		@note For efficiency, an AABB (axis-aligned bounding box) test is performed internally before precise hit detection.
+		@note This test does not take into account the results of blending or masking.
+		@note This test does take into account the the hidden paints as well. @see tvg_paint_set_visible().
+		@since 1.0
+*/
+func (paint paintCommon) Intersects(x int, y int, width int, height int) bool {
+	return tvg_paint_intersects(paint.paint_, int32(x), int32(y), int32(width), int32(height))
+}
+
+/*
+IntersectsRegion checks whether a given region intersects the filled area of the paint.
+
+This function determines whether the specified rectangular region—defined by (`x`, `y`, `w`, `h`)—
+intersects the geometric fill region of the paint object.
+
+This is useful for hit-testing purposes, such as detecting whether a user interaction (e.g., touch or click)
+occurs within a painted region.
+
+The paint must be updated in a Canvas beforehand—typically after the Canvas has been
+drawn and synchronized.
+
+	@param[in] paint The paint object to be tested.
 	@param[in] x The x-coordinate of the top-left corner of the test region.
 	@param[in] y The y-coordinate of the top-left corner of the test region.
-	@param[in] w The width of the region to test. Must be greater than 0; defaults to 1.
-	@param[in] h The height of the region to test. Must be greater than 0; defaults to 1.
+	@param[in] w The width of the region to test. Must be greater than 0.
+	@param[in] h The height of the region to test. Must be greater than 0.
+	@param[in] visibleOnly If @c true, hidden paints are excluded from the intersection test.
 
 	@return @c true if any part of the region intersects the filled area; otherwise, @c false.
 
 	@note To test a single point, set the region size to w = 1, h = 1.
-	@note For efficiency, an AABB (axis-aligned bounding box) test is performed internally before precise hit detection.
 	@note This test does not take into account the results of blending or masking.
-	@note This test does take into account the the hidden paints as well. @see tvg_paint_set_visible().
-	@since 1.0
+
+	@see tvg_paint_set_visible()
+	@since Experimental API
 */
-func (paint paintCommon) Intersects(x int, y int, width int, height int) bool {
-	return tvg_paint_intersects(paint.paint_, int32(x), int32(y), int32(width), int32(height))
+func (paint paintCommon) IntersectsRegion(x int, y int, width int, height int, visibleOnly bool) bool {
+	return tvg_paint_intersects_region(paint.paint_, int32(x), int32(y), int32(width), int32(height), visibleOnly)
 }
 
 /*
@@ -329,7 +351,7 @@ The returned values @p x, @p y, @p w, @p h, may have invalid if the operation fa
 This bounding box can be used to determine the actual rendered area of the object on the canvas,
 for purposes such as hit-testing, culling, or layout calculations.
 
-	@param[in] paint The Tvg_Paint object of which to get the bounds.
+	@param[in] paint The Paint object of which to get the bounds.
 	@param[out] x The x-coordinate of the upper-left corner of the bounding box.
 	@param[out] y The y-coordinate of the upper-left corner of the bounding box.
 	@param[out] w The width of the bounding box.
@@ -358,7 +380,7 @@ This bounding box can be used to obtain the transformed bounding region in canva
 by taking the geometry's axis-aligned bounding box (AABB) in the object's local coordinate space
 and applying the object's transformations.
 
-	@param[in] paint The Tvg_Paint object of which to get the bounds.
+	@param[in] paint The Paint object of which to get the bounds.
 	@param[out] pt4 An array of four points representing the bounding box. The array size must be 4.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT @p paint or @p pt4 is invalid.
@@ -448,7 +470,7 @@ GetParent retrieves the parent paint object.
 This function returns a pointer to the parent object if the current paint
 belongs to one. Otherwise, it returns @c nullptr.
 
-	@param[in] paint The Tvg_Paint object of which to get the scene.
+	@param[in] paint The Paint object of which to get the scene.
 
 	@return A pointer to the parent object if available, otherwise @c nullptr.
 
@@ -464,7 +486,7 @@ func (paint paintCommon) GetParent() (any, bool) {
 /*
 GetType gets the unique value of the paint instance indicating the instance type.
 
-	@param[in] paint The Tvg_Paint object of which to get the type value.
+	@param[in] paint The Paint object of which to get the type value.
 	@param[out] type The unique type of the paint instance type.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
@@ -485,7 +507,7 @@ its process involves the combination of colors or images from the source paint o
 The blending operation is determined by the chosen @p BlendMethod, which
 specifies how the colors or images are combined.
 
-	@param[in] paint The Tvg_Paint object of which to set the blend method.
+	@param[in] paint The Paint object of which to set the blend method.
 	@param[in] method The blending method to be set.
 
 	@retval TVG_RESULT_INVALID_ARGUMENT In case a @c nullptr is passed as the argument.
