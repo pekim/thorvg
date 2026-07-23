@@ -2,4 +2,4 @@
 
 package thorvg
 
-const libthorvgVersion = "1.0.7"
+const libthorvgVersion = "1.1.0"
