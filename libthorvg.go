@@ -208,18 +208,35 @@ var tvg_accessor_get_name func(accessor uintptr, id uint32) string
 
 // LottieAnimation API
 var tvg_lottie_animation_new func() uintptr
-var tvg_lottie_animation_gen_slot func(animation uintptr, slot string) uint32
-var tvg_lottie_animation_apply_slot func(animation uintptr, id uint32) Result
-var tvg_lottie_animation_del_slot func(animation uintptr, id uint32) Result
-var tvg_lottie_animation_set_marker func(animation uintptr, marker string) Result
-var tvg_lottie_animation_get_markers_cnt func(animation uintptr, cnt *uint32) Result
-var tvg_lottie_animation_get_marker func(animation uintptr, idx uint32, name **byte) Result
-var tvg_lottie_animation_get_marker_info func(animation uintptr, idx uint32, name **byte, begin *float32, end *float32) Result
-var tvg_lottie_animation_tween func(animation uintptr, from float32, to float32, progress float32) Result
-var tvg_lottie_animation_tween_to func(animation uintptr, to float32) Result
-var tvg_lottie_animation_tween_go func(animation uintptr, progress float32) Result
-var tvg_lottie_animation_set_quality func(animation uintptr, value uint8) Result
-var tvg_lottie_animation_set_audio_resolver func(animation uintptr, resolver uintptr, data uintptr) Result
+var tvg_lottie_animation_gen_slot func(animation Animation, slot string) uint32
+var tvg_lottie_animation_apply_slot func(animation Animation, id uint32) Result
+var tvg_lottie_animation_del_slot func(animation Animation, id uint32) Result
+var tvg_lottie_animation_set_marker func(animation Animation, marker string) Result
+var tvg_lottie_animation_get_markers_cnt func(animation Animation, cnt *uint32) Result
+var tvg_lottie_animation_get_marker func(animation Animation, idx uint32, name **byte) Result
+var tvg_lottie_animation_get_marker_info func(animation Animation, idx uint32, name **byte, begin *float32, end *float32) Result
+var tvg_lottie_animation_tween func(animation Animation, from float32, to float32, progress float32) Result
+var tvg_lottie_animation_tween_to func(animation Animation, to float32) Result
+var tvg_lottie_animation_tween_go func(animation Animation, progress float32) Result
+var tvg_lottie_animation_set_quality func(animation Animation, value uint8) Result
+var tvg_lottie_animation_set_audio_resolver func(animation Animation, resolver uintptr, data uintptr) Result
+
+// Viedo API
+var tvg_video_new func() uintptr
+var tvg_video_del func(video Video) Result
+var tvg_video_get_picture func(video Video) uintptr
+var tvg_video_play func(video Video) Result
+var tvg_video_pause func(video Video) Result
+var tvg_video_stop func(video Video) Result
+var tvg_video_seek func(video Video, seconds float32) Result
+var tvg_video_set_loop func(video Video, on bool) Result
+var tvg_video_get_loop func(video Video) bool
+var tvg_video_set_volume func(video Video, volume float32) Result
+var tvg_video_get_volume func(video Video) float32
+var tvg_video_set_mute func(video Video, on bool) Result
+var tvg_video_get_muted func(video Video) bool
+var tvg_video_get_time func(video Video) float32
+var tvg_video_get_duration func(video Video) float32
 
 var libThorvgInitialised = false
 
@@ -426,6 +443,23 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_lottie_animation_tween_go, lib, "tvg_lottie_animation_tween_go")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_quality, lib, "tvg_lottie_animation_set_quality")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_audio_resolver, lib, "tvg_lottie_animation_set_audio_resolver")
+
+	// Viedo API
+	purego.RegisterLibFunc(&tvg_video_new, lib, "tvg_video_new")
+	purego.RegisterLibFunc(&tvg_video_del, lib, "tvg_video_del")
+	purego.RegisterLibFunc(&tvg_video_get_picture, lib, "tvg_video_get_picture")
+	purego.RegisterLibFunc(&tvg_video_play, lib, "tvg_video_play")
+	purego.RegisterLibFunc(&tvg_video_pause, lib, "tvg_video_pause")
+	purego.RegisterLibFunc(&tvg_video_stop, lib, "tvg_video_stop")
+	purego.RegisterLibFunc(&tvg_video_seek, lib, "tvg_video_seek")
+	purego.RegisterLibFunc(&tvg_video_set_loop, lib, "tvg_video_set_loop")
+	purego.RegisterLibFunc(&tvg_video_get_loop, lib, "tvg_video_get_loop")
+	purego.RegisterLibFunc(&tvg_video_set_volume, lib, "tvg_video_set_volume")
+	purego.RegisterLibFunc(&tvg_video_get_volume, lib, "tvg_video_get_volume")
+	purego.RegisterLibFunc(&tvg_video_set_mute, lib, "tvg_video_set_mute")
+	purego.RegisterLibFunc(&tvg_video_get_muted, lib, "tvg_video_get_muted")
+	purego.RegisterLibFunc(&tvg_video_get_time, lib, "tvg_video_get_time")
+	purego.RegisterLibFunc(&tvg_video_get_duration, lib, "tvg_video_get_duration")
 
 	return nil
 }

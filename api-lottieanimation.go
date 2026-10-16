@@ -28,7 +28,7 @@ AnimationGenSlot generates a new slot from the given slot data.
 	@since 1.0
 */
 func (animation Animation) AnimationGenSlot(slot string) uint32 {
-	return tvg_lottie_animation_gen_slot(uintptr(animation), slot)
+	return tvg_lottie_animation_gen_slot(animation, slot)
 }
 
 /*
@@ -44,7 +44,7 @@ ApplySlot applies a previously generated slot to the animation.
 	@since 1.0
 */
 func (animation Animation) ApplySlot(id uint) error {
-	return tvg_lottie_animation_apply_slot(uintptr(animation), uint32(id)).error()
+	return tvg_lottie_animation_apply_slot(animation, uint32(id)).error()
 }
 
 /*
@@ -62,7 +62,7 @@ DelSlot deletes a previously generated slot.
 	@since 1.0
 */
 func (animation Animation) DelSlot(id uint) error {
-	return tvg_lottie_animation_del_slot(uintptr(animation), uint32(id)).error()
+	return tvg_lottie_animation_del_slot(animation, uint32(id)).error()
 }
 
 /*
@@ -78,7 +78,7 @@ SetMarker specifies a segment by marker.
 	@since 1.0
 */
 func (animation Animation) SetMarker(marker string) error {
-	return tvg_lottie_animation_set_marker(uintptr(animation), marker).error()
+	return tvg_lottie_animation_set_marker(animation, marker).error()
 }
 
 /*
@@ -93,7 +93,7 @@ GetMarkersCnt gets the marker count of the animation.
 */
 func (animation Animation) GetMarkersCnt() (uint, error) {
 	var cnt uint32
-	result := tvg_lottie_animation_get_markers_cnt(uintptr(animation), &cnt)
+	result := tvg_lottie_animation_get_markers_cnt(animation, &cnt)
 	return uint(cnt), result.error()
 }
 
@@ -110,7 +110,7 @@ GetMarker gets the marker name by a given index.
 */
 func (animation Animation) GetMarker(idx uint) (string, error) {
 	var name *byte
-	result := tvg_lottie_animation_get_marker(uintptr(animation), uint32(idx), &name)
+	result := tvg_lottie_animation_get_marker(animation, uint32(idx), &name)
 	if result != RESULT_SUCCESS {
 		return "", result.error()
 	}
@@ -139,7 +139,7 @@ func (animation Animation) GetMarkerInfo(idx uint) (string, float32, float32, er
 	var name *byte
 	var begin float32
 	var end float32
-	result := tvg_lottie_animation_get_marker_info(uintptr(animation), uint32(idx), &name, &begin, &end)
+	result := tvg_lottie_animation_get_marker_info(animation, uint32(idx), &name, &begin, &end)
 	if result != RESULT_SUCCESS {
 		return "", 0, 0, result.error()
 	}
@@ -164,7 +164,7 @@ between @p from and @p to based on the given @p progress.
 	@since 1.0
 */
 func (animation Animation) Tween(from float32, to float32, progress float32) error {
-	return tvg_lottie_animation_tween(uintptr(animation), from, to, progress).error()
+	return tvg_lottie_animation_tween(animation, from, to, progress).error()
 }
 
 /*
@@ -185,7 +185,7 @@ toward @p to. Use tvg_lottie_animation_tween_go() to update the interpolation pr
 	@note Experimental API
 */
 func (animation Animation) TweenTo(to float32) error {
-	return tvg_lottie_animation_tween_to(uintptr(animation), to).error()
+	return tvg_lottie_animation_tween_to(animation, to).error()
 }
 
 /*
@@ -204,7 +204,7 @@ given @p progress value.
 	@note Experimental API
 */
 func (animation Animation) TweenGo(progress float32) error {
-	return tvg_lottie_animation_tween_go(uintptr(animation), progress).error()
+	return tvg_lottie_animation_tween_go(animation, progress).error()
 }
 
 /*
@@ -225,7 +225,7 @@ Lower values prioritize performance while higher values prioritize quality.
 	@since 1.0
 */
 func (animation Animation) SetQuality(value uint) error {
-	return tvg_lottie_animation_set_quality(uintptr(animation), uint8(value)).error()
+	return tvg_lottie_animation_set_quality(animation, uint8(value)).error()
 }
 
 /*
@@ -316,5 +316,5 @@ func (animation Animation) SetAudioResolver(resolver AudioResolver) error {
 		resolver(info)
 	})
 
-	return tvg_lottie_animation_set_audio_resolver(uintptr(animation), puregoResolver, 0).error()
+	return tvg_lottie_animation_set_audio_resolver(animation, puregoResolver, 0).error()
 }
