@@ -27,7 +27,7 @@ func SimpleShapes(canvas tvg.Canvas, width float32, height float32) {
 	circle := tvg.ShapeNew()
 	_ = circle.AppendCircle(400, 400, 100, 100, true)
 	gradient := tvg.RadialGradientNew()
-	_ = gradient.RadialSet(400, 400, 200, 400, 400, 0)
+	_ = gradient.Set(400, 400, 200, 400, 400, 0)
 	_ = gradient.SetColorStops([]tvg.ColorStop{
 		{Offset: 0.0, R: 255, G: 255, B: 255, A: 255},
 		{Offset: 1.0, R: 0, G: 0, B: 0, A: 255},

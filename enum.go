@@ -195,13 +195,16 @@ ThorVG's drawing objects can return object type values, allowing you to identify
 type Type enum
 
 const (
-	TYPE_UNDEF       Type = iota // Undefined type.
-	TYPE_SHAPE                   // A shape type paint.
-	TYPE_SCENE                   // A scene type paint.
-	TYPE_PICTURE                 // A picture type paint.
-	TYPE_TEXT                    // A text type paint.
-	TYPE_LINEAR_GRAD Type = 10   // A linear gradient type.
-	TYPE_RADIAL_GRAD Type = 11   // A radial gradient type.
+	TYPE_UNDEF   Type = iota // Undefined type.
+	TYPE_SHAPE               // A shape type paint.
+	TYPE_SCENE               // A scene type paint.
+	TYPE_PICTURE             // A picture type paint.
+	TYPE_TEXT                // A text type paint.
+)
+const (
+	TYPE_LINEAR_GRAD Type = iota + 10 // A linear gradient type.
+	TYPE_RADIAL_GRAD                  // A radial gradient type.
+	TYPE_CONIC_GRAD                   // A conic gradient type.
 )
 
 /*

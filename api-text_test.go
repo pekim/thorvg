@@ -18,7 +18,7 @@ func TestText(t *testing.T) {
 	assert.NoError(t, text.SetSize(18))
 
 	gradient := RadialGradientNew()
-	assert.NoError(t, gradient.RadialSet(1, 2, 3, 4, 5, 6))
+	assert.NoError(t, gradient.Set(1, 2, 3, 4, 5, 6))
 	assert.NoError(t, text.SetGradient(gradient))
 }
 

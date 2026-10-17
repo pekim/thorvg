@@ -23,6 +23,10 @@ type RadialGradient struct {
 	gradientCommon
 }
 
+type ConicGradient struct {
+	gradientCommon
+}
+
 /*
 LinearGradientNew creates a new linear gradient object.
 
@@ -35,13 +39,26 @@ func LinearGradientNew() LinearGradient {
 }
 
 /*
-RadialGradientNew Creates a new radial gradient object.
+RadialGradientNew creates a new radial gradient object.
 
 	@return A new radial gradient object.
 */
 func RadialGradientNew() RadialGradient {
 	return RadialGradient{
 		gradientCommon{gradient_: tvg_radial_gradient_new()},
+	}
+}
+
+/*
+ConicGradientNew creates a new conic gradient object.
+
+	@return A new conic gradient object.
+
+	@note Experimental API
+*/
+func ConicGradientNew() ConicGradient {
+	return ConicGradient{
+		gradientCommon{gradient_: tvg_conic_gradient_new()},
 	}
 }
 
@@ -112,7 +129,7 @@ and the stop at an offset of 0% aligns with the edge of the start circle.
 
 	@see tvg_gradient_set_color_stops()
 */
-func (gradient RadialGradient) RadialSet(cx float32, cy float32, r float32, fx float32, fy float32, fr float32) error {
+func (gradient RadialGradient) Set(cx float32, cy float32, r float32, fx float32, fy float32, fr float32) error {
 	return tvg_radial_gradient_set(gradient.gradient_, cx, cy, r, fx, fy, fr).error()
 }
 
@@ -131,12 +148,52 @@ RadialGet gets radial gradient attributes.
 
 	@see tvg_radial_gradient_set()
 */
-func (gradient RadialGradient) RadialGet() (float32, float32, float32, float32, float32, float32, error) {
+func (gradient RadialGradient) Get() (float32, float32, float32, float32, float32, float32, error) {
 	var cx, cy, r float32
 	var fx, fy, fr float32
 	result := tvg_radial_gradient_get(gradient.gradient_, &cx, &cy, &r, &fx, &fy, &fr)
 	return cx, cy, r, fx, fy, fr, result.error()
 }
+
+/*
+@brief Sets the conic gradient attributes.
+
+The gradient sweeps a full turn clockwise around the center (@p cx, @p cy), beginning at @p angle.
+Color stop offsets from 0% to 100% map clockwise over one full turn from @p angle.
+
+	@param[in] grad The Tvg_Gradient object of which attributes are to be set.
+	@param[in] cx The horizontal coordinate of the center of the gradient.
+	@param[in] cy The vertical coordinate of the center of the gradient.
+	@param[in] angle The initial angle in degrees, measured clockwise from the 3 o'clock direction (positive x-axis).
+
+	@note FillSpread options are ignored because the gradient always sweeps a full turn.
+	@note Experimental API
+
+	@see tvg_conic_gradient_get()
+*/
+func (gradient ConicGradient) Set(cx float32, cy float32, angle float32) error {
+	return tvg_conic_gradient_set(gradient.gradient_, cx, cy, angle).error()
+}
+
+/*
+@brief Gets the conic gradient attributes.
+
+	@param[in] grad The Tvg_Gradient object of which to get the gradient attributes.
+	@param[out] cx The horizontal coordinate of the center of the gradient.
+	@param[out] cy The vertical coordinate of the center of the gradient.
+	@param[out] angle The initial angle in degrees.
+
+	@note Experimental API
+
+	@see tvg_conic_gradient_set()
+*/
+func (gradient ConicGradient) Get() (float32, float32, float32, error) {
+	var cx, cy, angle float32
+	result := tvg_conic_gradient_get(gradient.gradient_, &cx, &cy, &angle)
+	return cx, cy, angle, result.error()
+}
+
+// +TVG_API Tvg_Result tvg_conic_gradient_get(const Tvg_Gradient grad, float* cx, float* cy, float* angle);
 
 /*
 SetColorStops Sets the parameters of the colors of the gradient and their position.
@@ -290,6 +347,9 @@ func newGradient(gradient uintptr) (Gradient, bool) {
 
 	case TYPE_RADIAL_GRAD:
 		return RadialGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
+
+	case TYPE_CONIC_GRAD:
+		return ConicGradient{gradientCommon: gradientCommon{gradient_: gradient}}, true
 
 	default:
 		return nil, false
