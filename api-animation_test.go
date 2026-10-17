@@ -25,6 +25,15 @@ func TestAnimation(t *testing.T) {
 	assert.InEpsilon(t, float32(900.0), end, 0.1)
 }
 
+func TestAnimationExpressionsSupported(t *testing.T) {
+	defer testInitTerm(t)()
+
+	animation := AnimationNew()
+	picture := animation.GetPicture()
+	_ = picture.LoadData(data.LottieGearsAnimation, "lottie+json", "")
+	assert.True(t, animation.ExpressionsSupported())
+}
+
 func TestLottieAnimationAudioLayer(t *testing.T) {
 	defer testInitTerm(t)()
 

@@ -229,6 +229,17 @@ func (animation Animation) SetQuality(value uint) error {
 }
 
 /*
+ExpressionsSupported checks whether Lottie expressions are supported.
+
+	@return @c true if expression support is enabled in this build, otherwise @c false.
+
+	@note Experimental API
+*/
+func (animation Animation) ExpressionsSupported() bool {
+	return tvg_lottie_animation_expressions_supported(animation)
+}
+
+/*
 AudioInfo describes the current state of a Lottie audio layer.
 
 This structure is provided to the audio resolver callback and contains
