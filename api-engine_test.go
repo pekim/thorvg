@@ -12,7 +12,7 @@ func TestEngine(t *testing.T) {
 	major, minor, micro, version, commit, _ := Version()
 	assert.Equal(t, 1, major)
 	assert.Equal(t, 1, minor)
-	assert.Equal(t, 2, micro)
-	assert.Equal(t, "1.1.2", version)
+	assert.Equal(t, 3, micro)
+	assert.Equal(t, "1.1.3", version)
 	assert.Equal(t, libthorvgVersion, commit)
 }
