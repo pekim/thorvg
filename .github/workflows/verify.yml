@@ -43,9 +43,9 @@ jobs:
             runner: macos-15
 
     steps:
-      - name: install clang
+      - name: install clang and libomp
         if: ${{ runner.os == 'macOS' }}
-        run: brew install llvm # required so that libomp.dylib is available
+        run: brew install llvm libomp
 
       - uses: actions/checkout@v6
 
