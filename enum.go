@@ -21,6 +21,7 @@ const (
 	RESULT_FAILED_ALLOCATION                    // The value returned in case of unsuccessful memory allocation.
 	RESULT_MEMORY_CORRUPTION                    // The value returned in the event of bad memory handling - e.g. failing in pointer releasing or casting
 	RESULT_NOT_SUPPORTED                        // The value returned in case of choosing unsupported engine features(options).
+	RESULT_SYSTEM_ERROR                         // The value returned when an underlying system operation fails. @note Experimental API
 	RESULT_UNKNOWN                Result = 255  // The value returned in all other cases.
 )
 
