@@ -62,8 +62,8 @@ Play starts or resumes playback.
 
 	@note Experimental API
 */
-func (video Video) Play() Result {
-	return tvg_video_play(video)
+func (video Video) Play() error {
+	return tvg_video_play(video).error()
 }
 
 /*
@@ -75,8 +75,8 @@ Pause pauses playback while keeping the current position.
 
 	@note Experimental API
 */
-func (video Video) Pause() Result {
-	return tvg_video_pause(video)
+func (video Video) Pause() error {
+	return tvg_video_pause(video).error()
 }
 
 /*
@@ -88,8 +88,8 @@ Stop stops playback and rewinds to the start.
 
 	@note Experimental API
 */
-func (video Video) Stop() Result {
-	return tvg_video_stop(video)
+func (video Video) Stop() error {
+	return tvg_video_stop(video).error()
 }
 
 /*
@@ -103,8 +103,8 @@ Seek sets the playback position.
 
 	@note Experimental API
 */
-func (video Video) Seek(seconds float32) Result {
-	return tvg_video_seek(video, seconds)
+func (video Video) Seek(seconds float32) error {
+	return tvg_video_seek(video, seconds).error()
 }
 
 /*
@@ -120,8 +120,8 @@ SetLoop enables or disables repeated playback.
 
 	@note Experimental API
 */
-func (video Video) SetLoop(on bool) Result {
-	return tvg_video_set_loop(video, on)
+func (video Video) SetLoop(on bool) error {
+	return tvg_video_set_loop(video, on).error()
 }
 
 /*
@@ -151,8 +151,8 @@ SetVolume sets the audio volume level.
 
 	@note Experimental API
 */
-func (video Video) SetVolume(volume float32) Result {
-	return tvg_video_set_volume(video, volume)
+func (video Video) SetVolume(volume float32) error {
+	return tvg_video_set_volume(video, volume).error()
 }
 
 /*
@@ -183,8 +183,8 @@ SetMute mutes or unmutes the audio without changing the volume level.
 
 	@note Experimental API
 */
-func (video Video) SetMute(on bool) Result {
-	return tvg_video_set_mute(video, on)
+func (video Video) SetMute(on bool) error {
+	return tvg_video_set_mute(video, on).error()
 }
 
 /*
