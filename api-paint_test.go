@@ -62,3 +62,13 @@ func TestPaintId(t *testing.T) {
 	assert.NoError(t, shape.SetId(19))
 	assert.Equal(t, uint32(19), shape.GetId())
 }
+
+func TestPaintData(t *testing.T) {
+	defer testInitTerm(t)()
+
+	data := uintptr(42)
+
+	shape := ShapeNew()
+	assert.NoError(t, shape.SetData(data))
+	assert.Equal(t, data, shape.GetData())
+}
