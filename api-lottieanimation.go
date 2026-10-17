@@ -329,3 +329,45 @@ func (animation Animation) SetAudioResolver(resolver AudioResolver) error {
 
 	return tvg_lottie_animation_set_audio_resolver(animation, puregoResolver, 0).error()
 }
+
+/*
+SetVolume sets the master playback volume of the Lottie animation.
+
+The specified volume is applied to all media assets in the animation.
+Each media asset preserves its own volume, and the effective playback
+volume is calculated by multiplying the master volume by the media
+asset's volume.
+
+A value of 1.0 preserves the original volume.
+A value of 0.0 mutes all media.
+Values greater than 1.0 amplify the playback volume.
+
+The recommended range is [0.0, 2.0].
+
+	@param[in] animation A Lottie animation object.
+	@param[in] volume Master playback volume.
+
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the animation is not loaded.
+
+	@note Experimental API
+
+	@see tvg_lottie_animation_get_volume()
+*/
+func (animation Animation) SetVolume(volume float32) error {
+	return tvg_lottie_animation_set_volume(animation, volume).error()
+}
+
+/*
+GetVolume retrieves the master playback volume of the Lottie animation.
+
+	@param[in] animation A Lottie animation object.
+
+	@return The current master playback volume, otherwise 0 if the animation is invalid.
+
+	@note Experimental API
+
+	@see tvg_lottie_animation_set_volume()
+*/
+func (animation Animation) GetVolume() float32 {
+	return tvg_lottie_animation_get_volume(animation)
+}

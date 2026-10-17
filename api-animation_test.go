@@ -34,6 +34,16 @@ func TestAnimationExpressionsSupported(t *testing.T) {
 	assert.True(t, animation.ExpressionsSupported())
 }
 
+func TestAnimationVolume(t *testing.T) {
+	defer testInitTerm(t)()
+
+	animation := AnimationNew()
+	picture := animation.GetPicture()
+	_ = picture.LoadData(data.LottieGearsAnimation, "lottie+json", "")
+	assert.NoError(t, animation.SetVolume(0.8))
+	assert.Equal(t, float32(0.8), animation.GetVolume())
+}
+
 func TestLottieAnimationAudioLayer(t *testing.T) {
 	defer testInitTerm(t)()
 

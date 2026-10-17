@@ -223,6 +223,8 @@ var tvg_lottie_animation_tween_go func(animation Animation, progress float32) Re
 var tvg_lottie_animation_set_quality func(animation Animation, value uint8) Result
 var tvg_lottie_animation_expressions_supported func(animation Animation) bool
 var tvg_lottie_animation_set_audio_resolver func(animation Animation, resolver uintptr, data uintptr) Result
+var tvg_lottie_animation_set_volume func(animation Animation, volume float32) Result
+var tvg_lottie_animation_get_volume func(animation Animation) float32
 
 // Viedo API
 var tvg_video_new func() uintptr
@@ -449,6 +451,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_quality, lib, "tvg_lottie_animation_set_quality")
 	purego.RegisterLibFunc(&tvg_lottie_animation_expressions_supported, lib, "tvg_lottie_animation_expressions_supported")
 	purego.RegisterLibFunc(&tvg_lottie_animation_set_audio_resolver, lib, "tvg_lottie_animation_set_audio_resolver")
+	purego.RegisterLibFunc(&tvg_lottie_animation_set_volume, lib, "tvg_lottie_animation_set_volume")
+	purego.RegisterLibFunc(&tvg_lottie_animation_get_volume, lib, "tvg_lottie_animation_get_volume")
 
 	// Viedo API
 	purego.RegisterLibFunc(&tvg_video_new, lib, "tvg_video_new")
