@@ -17,6 +17,18 @@ type Canvas struct {
 }
 
 /*
+Region is a data structure representing an axis-aligned rectangular region.
+
+The region is defined by its minimum and maximum x and y coordinates.
+
+	@note Experimental API
+*/
+type Region struct {
+	XMin, YMin int32
+	XMax, YMax int32
+}
+
+/*
 Buffer returns the buffer target of a software canvas.
 
 The buffer remains the canvas's target, so its contents should not be altered.
@@ -280,6 +292,46 @@ the tvg_canvas_sync() must be called after the tvg_canvas_draw() regardless of t
 */
 func (canvas Canvas) Sync() error {
 	return tvg_canvas_sync(canvas.canvas).error()
+}
+
+/*
+GetDirtyRegionsCnt returns the number of dirty regions of the canvas.
+
+	@param[in] canvas The canvas object.
+
+	@return The number of regions available for retrieval, or zero if @p canvas is NULL.
+
+	@note This function must be called after @ref tvg_canvas_draw() and before @ref tvg_canvas_sync().
+	@note If the active rendering backend does not support @c TVG_ENGINE_OPTION_SMART_RENDER, this function returns 1.
+	@note Experimental API
+
+	@see tvg_canvas_get_dirty_regions()
+*/
+func (canvas Canvas) GetDirtyRegionsCnt() uint32 {
+	return tvg_canvas_get_dirty_regions_cnt(canvas.canvas)
+}
+
+/*
+GetDirtyRegions retrieves the dirty regions of the canvas.
+
+	@param[in] canvas The canvas object.
+	@param[out] regions An array to receive the dirty regions.
+	@param[in] cnt The number of Tvg_Region elements that the array can hold.
+
+	@retval TVG_RESULT_INVALID_ARGUMENT If @p canvas or @p regions is @c NULL, or @p cnt is zero.
+	@retval TVG_RESULT_INSUFFICIENT_CONDITION If called outside the interval after tvg_canvas_draw() and before tvg_canvas_sync().
+
+	@note This function must be called after @ref tvg_canvas_draw() and before @ref tvg_canvas_sync().
+	@note If the active rendering backend does not support @c TVG_ENGINE_OPTION_SMART_RENDER,
+				a single region covering the entire render target is returned.
+	@note Experimental API
+
+	@see tvg_canvas_get_dirty_regions_cnt()
+*/
+func (canvas Canvas) GetDirtyRegions(cnt uint32) ([]Region, error) {
+	regions := make([]Region, cnt)
+	result := tvg_canvas_get_dirty_regions(canvas.canvas, &regions[0], cnt)
+	return regions, result.error()
 }
 
 /*

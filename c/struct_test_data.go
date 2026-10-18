@@ -36,4 +36,8 @@ var testStructs = []struct {
 		c:   C.Tvg_Glyph_Metrics{},
 		go_: tvg.GlyphMetrics{},
 	},
+	{
+		c:   C.Tvg_Region{},
+		go_: tvg.Region{},
+	},
 }

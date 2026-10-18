@@ -53,6 +53,8 @@ var tvg_canvas_remove func(canvas uintptr, paint uintptr) Result
 var tvg_canvas_update func(canvas uintptr) Result
 var tvg_canvas_draw func(canvas uintptr, clear_ bool) Result
 var tvg_canvas_sync func(canvas uintptr) Result
+var tvg_canvas_get_dirty_regions_cnt func(canvas uintptr) uint32
+var tvg_canvas_get_dirty_regions func(canvas uintptr, regions *Region, cnt uint32) Result
 var tvg_canvas_set_viewport func(canvas uintptr, x int32, y int32, w int32, h int32) Result
 
 // Paint API
@@ -283,6 +285,8 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_canvas_update, lib, "tvg_canvas_update")
 	purego.RegisterLibFunc(&tvg_canvas_draw, lib, "tvg_canvas_draw")
 	purego.RegisterLibFunc(&tvg_canvas_sync, lib, "tvg_canvas_sync")
+	purego.RegisterLibFunc(&tvg_canvas_get_dirty_regions, lib, "tvg_canvas_get_dirty_regions")
+	purego.RegisterLibFunc(&tvg_canvas_get_dirty_regions_cnt, lib, "tvg_canvas_get_dirty_regions_cnt")
 	purego.RegisterLibFunc(&tvg_canvas_set_viewport, lib, "tvg_canvas_set_viewport")
 
 	// Paint API
