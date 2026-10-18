@@ -164,6 +164,7 @@ var tvg_scene_insert func(scene uintptr, target uintptr, at uintptr) Result
 var tvg_scene_remove func(scene uintptr, paint uintptr) Result
 var tvg_scene_clear_effects func(scene uintptr) Result
 var tvg_scene_add_effect_gaussian_blur func(scene uintptr, sigma float64, direction int32, border int32, quality int32) Result
+var tvg_scene_add_effect_motion_blur func(scene uintptr, distance float64, angle float64, quality int32) Result
 var tvg_scene_add_effect_drop_shadow func(scene uintptr, r int32, g int32, b int32, a int32, angle float64, distance float64, sigma float64, quality int32) Result
 var tvg_scene_add_effect_fill func(scene uintptr, r int32, g int32, b int32, a int32) Result
 var tvg_scene_add_effect_tint func(scene uintptr, black_r int32, black_g int32, black_b int32, white_r int32, white_g int32, white_b int32, intensity float64) Result
@@ -395,6 +396,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_scene_remove, lib, "tvg_scene_remove")
 	purego.RegisterLibFunc(&tvg_scene_clear_effects, lib, "tvg_scene_clear_effects")
 	purego.RegisterLibFunc(&tvg_scene_add_effect_gaussian_blur, lib, "tvg_scene_add_effect_gaussian_blur")
+	purego.RegisterLibFunc(&tvg_scene_add_effect_motion_blur, lib, "tvg_scene_add_effect_motion_blur")
 	purego.RegisterLibFunc(&tvg_scene_add_effect_drop_shadow, lib, "tvg_scene_add_effect_drop_shadow")
 	purego.RegisterLibFunc(&tvg_scene_add_effect_fill, lib, "tvg_scene_add_effect_fill")
 	purego.RegisterLibFunc(&tvg_scene_add_effect_tint, lib, "tvg_scene_add_effect_tint")

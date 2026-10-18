@@ -114,6 +114,20 @@ func (scene Scene) AddEffectGaussianBlur(sigma float64, direction int, border in
 }
 
 /*
+AddEffectMotionBlur adds a centered linear motion blur.
+
+	@param[in] scene The scene to apply the effect to.
+	@param[in] distance Total blur length in scene-local units. Must be >= 0.
+	@param[in] angle Angle in degrees, clockwise from the positive X axis. The scene transform applies to the blur vector.
+	@param[in] quality Visual quality level [0 - 100].
+
+	@note Experimental API
+*/
+func (scene Scene) AddEffectMotionBlur(distance float64, angle float64, quality int32) error {
+	return tvg_scene_add_effect_motion_blur(scene.paint_, distance, angle, quality).error()
+}
+
+/*
 AddEffectDropShadow adds a drop shadow effect to the scene.
 
 This function adds a drop shadow with a Gaussian blur to the scene. The shadow
