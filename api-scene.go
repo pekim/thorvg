@@ -95,14 +95,14 @@ func (scene Scene) ClearEffects() error {
 /*
 AddEffectGaussianBlur applies a Gaussian blur effect to the scene.
 
-This function applies a Gaussian blur filter to the scene as a post-processing effect.
+This function adds a Gaussian blur filter to the scene as a post-processing effect.
 The blur can be applied in different directions with configurable border handling and quality settings.
 
-	@param[in] scene A pointer to the Tvg_Paint scene object.
-	@param[in] sigma The blur radius (sigma) value. Must be greater than 0.
+	@param[in] scene The scene object.
+	@param[in] sigma The blur radius (sigma) value. Must be >= 0.
 	@param[in] direction Blur direction: 0 = both directions, 1 = horizontal only, 2 = vertical only.
-	@param[in] border Border handling method: 0 = duplicate, 1 = wrap.
-	@param[in] quality Blur quality level [0 - 100].
+	@param[in] border Reserved for border handling. Currently ignored.
+	@param[in] quality Visual quality level [0 - 100].
 
 	@since 1.0
 */
@@ -114,13 +114,13 @@ func (scene Scene) AddEffectGaussianBlur(sigma float64, direction int, border in
 }
 
 /*
-AddEffectDropShadow applies a drop shadow effect to the scene.
+AddEffectDropShadow adds a drop shadow effect to the scene.
 
-This function applies a drop shadow with a Gaussian blur to the scene. The shadow
+This function adds a drop shadow with a Gaussian blur to the scene. The shadow
 can be customized using color, opacity, angle, distance, blur radius (sigma),
 and quality parameters.
 
-	@param[in] scene A pointer to the Tvg_Paint scene object.
+	@param[in] scene The scene object.
 	@param[in] r Red channel value of the shadow color [0 - 255].
 	@param[in] g Green channel value of the shadow color [0 - 255].
 	@param[in] b Blue channel value of the shadow color [0 - 255].
@@ -128,7 +128,7 @@ and quality parameters.
 	@param[in] angle Shadow direction in degrees [0 - 360].
 	@param[in] distance Distance of the shadow from the original object.
 	@param[in] sigma Gaussian blur sigma value for the shadow. Must be > 0.
-	@param[in] quality Blur quality level [0 - 100].
+	@param[in] quality Visual quality level [0 - 100].
 
 	@since 1.0
 */

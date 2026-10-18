@@ -55,14 +55,16 @@ when @p copy is set to @c false. This allows ThorVG to avoid redundant operation
 by reusing the previously loaded picture data for the same sharable @p data,
 rather than duplicating the load process.
 
-	@param[in] picture A Tvg_Paint pointer to the picture object.
-	@param[in] data A pointer to the memory block where the raw image data is stored.
+	@param[in] picture The picture object.
+	@param[in] data The memory block where the raw image data is stored.
 	@param[in] w The width of the image in pixels.
 	@param[in] h The height of the image in pixels.
 	@param[in] cs Specifies how the 32-bit color values should be interpreted (read/write).
 	@param[in] copy If @c true, the data is copied into the engine's local buffer. If @c false, the data is not copied.
 
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer or no data are provided or the @p w or @p h value is zero or less.
+	@retval TVG_RESULT_INVALID_ARGUMENT No data are provided or the @p w or @p h value is zero or less.
+
+	@note @c TVG_COLORSPACE_XBGR8888 and @c TVG_COLORSPACE_XRGB8888 overwrite fully covered pixels without alpha blending.
 
 	@since 0.9
 */
