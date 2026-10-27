@@ -4,16 +4,13 @@ type Shape struct {
 	paintCommon
 }
 
-/*
-ShapeNew creates a new Shape object.
-
-This function allocates and returns a new Shape instance.
-To properly destroy the Shape object, use @ref tvg_paint_rel().
-
-	@return A pointer to the newly created Shape object.
-
-	@see tvg_paint_rel()
-*/
+// Creates a new Shape object.
+//
+// This function allocates and returns a new Shape instance. To properly destroy the Shape object, use [Paint.Rel]
+//
+// Return: The newly created Shape object.
+//
+// see [Paint.Rel]
 func ShapeNew() Shape {
 	return Shape{
 		paintCommon: paintCommon{
@@ -22,180 +19,131 @@ func ShapeNew() Shape {
 	}
 }
 
-/*
-Reset resets the shape path properties.
-
-The color, the fill and the stroke properties are retained.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note The memory, where the path data is stored, is not deallocated at this stage for caching effect.
-*/
+// Resets the shape path properties.
+//
+// The color, the fill and the stroke properties are retained.
+//
+//   - paint : The shape object.
+//
+// Note: The memory, where the path data is stored, is not deallocated at this stage for caching effect.
 func (shape Shape) Reset() error {
 	return tvg_shape_reset(shape.paint_).error()
 }
 
-/*
-MoveTo sets the initial point of the sub-path.
-
-The value of the current point is set to the given point.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] x The horizontal coordinate of the initial point of the sub-path.
-	@param[in] y The vertical coordinate of the initial point of the sub-path.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Sets the initial point of the sub-path.
+//
+// The value of the current point is set to the given point.
+//
+//   - paint : The shape object.
+//   - x : The horizontal coordinate of the initial point of the sub-path.
+//   - y : The vertical coordinate of the initial point of the sub-path.
 func (shape Shape) MoveTo(x float32, y float32) error {
 	return tvg_shape_move_to(shape.paint_, x, y).error()
 }
 
-/*
-LineTo adds a new point to the sub-path, which results in drawing a line from the current point to the given end-point.
-
-The value of the current point is set to the given end-point.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] x The horizontal coordinate of the end-point of the line.
-	@param[in] y The vertical coordinate of the end-point of the line.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note In case this is the first command in the path, it corresponds to the tvg_shape_move_to() call.
-*/
+// Adds a new point to the sub-path, which results in drawing a line from the current point to the given end-point.
+//
+// The value of the current point is set to the given end-point.
+//
+//   - paint : The shape object.
+//   - x : The horizontal coordinate of the end-point of the line.
+//   - y : The vertical coordinate of the end-point of the line.
+//
+// Note: In case this is the first command in the path, it corresponds to the tvg_shape_move_to() call.
 func (shape Shape) LineTo(x float32, y float32) error {
 	return tvg_shape_line_to(shape.paint_, x, y).error()
 }
 
-/*
-CubicTo Adds new points to the sub-path, which results in drawing a cubic Bezier curve.
-
-The Bezier curve starts at the current point and ends at the given end-point (@p x, @p y). Two control points (@p cx1, @p cy1) and (@p cx2, @p cy2) are used to determine the shape of the curve.
-The value of the current point is set to the given end-point.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] cx1 The horizontal coordinate of the 1st control point.
-	@param[in] cy1 The vertical coordinate of the 1st control point.
-	@param[in] cx2 The horizontal coordinate of the 2nd control point.
-	@param[in] cy2 The vertical coordinate of the 2nd control point.
-	@param[in] x The horizontal coordinate of the endpoint of the curve.
-	@param[in] y The vertical coordinate of the endpoint of the curve.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note In case this is the first command in the path, no data from the path are rendered.
-*/
+// Adds new points to the sub-path, which results in drawing a cubic Bezier curve.
+//
+// The Bezier curve starts at the current point and ends at the given end-point (x, y). Two control points (cx1, cy1) and (cx2, cy2) are used to determine the shape of the curve. The value of the current point is set to the given end-point.
+//
+//   - paint : The shape object.
+//   - cx1 : The horizontal coordinate of the 1st control point.
+//   - cy1 : The vertical coordinate of the 1st control point.
+//   - cx2 : The horizontal coordinate of the 2nd control point.
+//   - cy2 : The vertical coordinate of the 2nd control point.
+//   - x : The horizontal coordinate of the endpoint of the curve.
+//   - y : The vertical coordinate of the endpoint of the curve.
+//
+// Note: In case this is the first command in the path, no data from the path are rendered.
 func (shape Shape) CubicTo(cx1 float32, cy1 float32, cx2 float32, cy2 float32, x float32, y float32) error {
 	return tvg_shape_cubic_to(shape.paint_, cx1, cy1, cx2, cy2, x, y).error()
 }
 
-/*
-Close closes the current sub-path by drawing a line from the current point to the initial point of the sub-path.
-
-The value of the current point is set to the initial point of the closed sub-path.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note In case the sub-path does not contain any points, this function has no effect.
-*/
+// Closes the current sub-path by drawing a line from the current point to the initial point of the sub-path.
+//
+// The value of the current point is set to the initial point of the closed sub-path.
+//
+//   - paint : The shape object.
+//
+// Note: In case the sub-path does not contain any points, this function has no effect.
 func (shape Shape) Close() error {
 	return tvg_shape_close(shape.paint_).error()
 }
 
-/*
-AppendRect appends a rectangle to the path.
-
-The rectangle with rounded corners can be achieved by setting non-zero values to @p rx and @p ry arguments.
-The @p rx and @p ry values specify the radii of the ellipse defining the rounding of the corners.
-
-The position of the rectangle is specified by the coordinates of its upper-left corner -  @p x and @p y arguments.
-
-The rectangle is treated as a new sub-path - it is not connected with the previous sub-path.
-
-The value of the current point is set to (@p x + @p rx, @p y) - in case @p rx is greater
-than @p w/2 the current point is set to (@p x + @p w/2, @p y)
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] x The horizontal coordinate of the upper-left corner of the rectangle.
-	@param[in] y The vertical coordinate of the upper-left corner of the rectangle.
-	@param[in] w The width of the rectangle.
-	@param[in] h The height of the rectangle.
-	@param[in] rx The x-axis radius of the ellipse defining the rounded corners of the rectangle.
-	@param[in] ry The y-axis radius of the ellipse defining the rounded corners of the rectangle.
-	@param[in] cw Specifies the path direction: @c true for clockwise, @c false for counterclockwise.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note For @p rx and @p ry greater than or equal to the half of @p w and the half of @p h, respectively, the shape become an ellipse.
-*/
+// Appends a rectangle to the path.
+//
+// The rectangle with rounded corners can be achieved by setting non-zero values to rx and ry arguments. The rx and ry values specify the radii of the ellipse defining the rounding of the corners.
+// The position of the rectangle is specified by the coordinates of its upper-left corner -  x and y arguments.
+// The rectangle is treated as a new sub-path - it is not connected with the previous sub-path.
+// The value of the current point is set to (x + w, y + ry) - in case ry is greater than h/2 the current point is set to (x + w, y + h/2).
+//
+//   - paint : The shape object.
+//   - x : The horizontal coordinate of the upper-left corner of the rectangle.
+//   - y : The vertical coordinate of the upper-left corner of the rectangle.
+//   - w : The width of the rectangle.
+//   - h : The height of the rectangle.
+//   - rx : The x-axis radius of the ellipse defining the rounded corners of the rectangle.
+//   - ry : The y-axis radius of the ellipse defining the rounded corners of the rectangle.
+//   - cw : Specifies the path direction: true for clockwise, false for counterclockwise.
+//
+// Note: For rx and ry greater than or equal to the half of w and the half of h, respectively, the shape become an ellipse.
 func (shape Shape) AppendRect(x float32, y float32, w float32, h float32, rx float32, ry float32, cw bool) error {
 	return tvg_shape_append_rect(shape.paint_, x, y, w, h, rx, ry, cw).error()
 }
 
-/*
-AppendCircle Appends an ellipse to the path.
-
-The position of the ellipse is specified by the coordinates of its center - @p cx and @p cy arguments.
-
-The ellipse is treated as a new sub-path - it is not connected with the previous sub-path.
-
-The value of the current point is set to (@p cx, @p cy - @p ry).
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] cx The horizontal coordinate of the center of the ellipse.
-	@param[in] cy The vertical coordinate of the center of the ellipse.
-	@param[in] rx The x-axis radius of the ellipse.
-	@param[in] ry The y-axis radius of the ellipse.
-	@param[in] cw Specifies the path direction: @c true for clockwise, @c false for counterclockwise.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Appends an ellipse to the path.
+//
+// The position of the ellipse is specified by the coordinates of its center - cx and cy arguments.
+// The ellipse is treated as a new sub-path - it is not connected with the previous sub-path.
+// The value of the current point is set to (cx, cy - ry).
+//
+//   - paint : The shape object.
+//   - cx : The horizontal coordinate of the center of the ellipse.
+//   - cy : The vertical coordinate of the center of the ellipse.
+//   - rx : The x-axis radius of the ellipse.
+//   - ry : The y-axis radius of the ellipse.
+//   - cw : Specifies the path direction: true for clockwise, false for counterclockwise.
 func (shape Shape) AppendCircle(cx float32, cy float32, rx float32, ry float32, cw bool) error {
 	return tvg_shape_append_circle(shape.paint_, cx, cy, rx, ry, cw).error()
 }
 
-/*
-AppendPath appends a given sub-path to the path.
-
-The current point value is set to the last point from the sub-path.
-For each command from the @p cmds array, an appropriate number of points in @p pts array should be specified.
-If the number of points in the @p pts array is different than the number required by the @p cmds array, the shape with this sub-path will not be displayed on the screen.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] cmds The array of the commands in the sub-path.
-	@param[in] cmdCnt The length of the @p cmds array.
-	@param[in] pts The array of the two-dimensional points.
-	@param[in] ptsCnt The length of the @p pts array.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT A @c nullptr passed as the argument or @p cmdCnt or @p ptsCnt equal to zero.
-*/
+// Appends a given sub-path to the path.
+//
+// The current point value is set to the last point from the sub-path. For each command from the cmds array, an appropriate number of points in pts array should be specified. If the number of points in the pts array is different than the number required by the cmds array, the shape with this sub-path will not be displayed on the screen.
+//
+//   - paint : The shape object.
+//   - cmds : The array of the commands in the sub-path.
+//   - cmdCnt : The length of the cmds array.
+//   - pts : The array of the two-dimensional points.
+//   - ptsCnt : The length of the pts array.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : A nullptr passed as the argument or cmdCnt or ptsCnt equal to zero.
 func (shape Shape) AppendPath(cmds []PathCommand, pts []Point) error {
 	return tvg_shape_append_path(shape.paint_, &cmds[0], uint32(len(cmds)), &pts[0], uint32(len(pts))).error()
 }
 
-/*
-GetPath retrieves the current path data of the shape.
-
-This function provides access to the shape's path data, including the commands
-and points that define the path.
-
-	@param[out] cmds Pointer to the array of commands representing the path.
-								Can be @c nullptr if this information is not needed.
-	@param[out] cmdsCnt Pointer to the variable that receives the number of commands in the @p cmds array.
-										Can be @c nullptr if this information is not needed.
-	@param[out] pts Pointer to the array of two-dimensional points that define the path.
-								Can be @c nullptr if this information is not needed.
-	@param[out] ptsCnt Pointer to the variable that receives the number of points in the @p pts array.
-									Can be @c nullptr if this information is not needed.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note If any of the arguments are @c nullptr, that value will be ignored.
-*/
+// Retrieves the current path data of the shape.
+//
+// This function provides access to the shape's path data, including the commands and points that define the path.
+//
+//   - cmds : Pointer to the array of commands representing the path.                  Can be nullptr if this information is not needed.
+//   - cmdsCnt : Pointer to the variable that receives the number of commands in the cmds array.                     Can be nullptr if this information is not needed.
+//   - pts : Pointer to the array of two-dimensional points that define the path.                 Can be nullptr if this information is not needed.
+//   - ptsCnt : Pointer to the variable that receives the number of points in the pts array.                    Can be nullptr if this information is not needed.
+//
+// Note: If any of the arguments are nullptr, that value will be ignored.
 func (shape Shape) GetPath() ([]PathCommand, []Point, error) {
 	var cmds *PathCommand
 	var cmdsCnt uint32
@@ -205,73 +153,58 @@ func (shape Shape) GetPath() ([]PathCommand, []Point, error) {
 	return slice(cmds, cmdsCnt), slice(pts, ptsCnt), result.error()
 }
 
-/*
-SetStrokeWidth sets the stroke width for the path.
-
-This function defines the thickness of the stroke applied to all figures
-in the path object. A stroke is the outline drawn along the edges of the
-path's geometry.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] width The width of the stroke in pixels. Must be positive value. (The default is 0)
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note A value of @p width 0 disables the stroke.
-
-	@see tvg_shape_set_stroke_color()
-*/
+// Sets the stroke width for the path.
+//
+// This function defines the thickness of the stroke applied to all figures in the path object. A stroke is the outline drawn along the edges of the path's geometry.
+//
+//   - paint : The shape object.
+//   - width : The width of the stroke in pixels. Must be positive value. (The initial value is 0)
+//
+// Note: A value of width 0 disables the stroke.
+//
+// see [Shape.SetStrokeColor]
 func (shape Shape) SetStrokeWidth(width float32) error {
 	return tvg_shape_set_stroke_width(shape.paint_, width).error()
 }
 
-/*
-GetStrokeWidth gets the shape's stroke width.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] width The stroke width.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// Gets the shape's stroke width.
+//
+//   - paint : The shape object.
+//   - width : The stroke width.
 func (shape Shape) GetStrokeWidth() (float32, error) {
 	var width float32
 	result := tvg_shape_get_stroke_width(shape.paint_, &width)
 	return width, result.error()
 }
 
-/*
-SetStrokeColor sets the shape's stroke color.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] r The red color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] g The green color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] a The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note If the stroke width is 0 (default), the stroke will not be visible regardless of the color.
-	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-
-	@see tvg_shape_set_stroke_width()
-	@see tvg_shape_set_stroke_gradient()
-*/
+// Sets the shape's stroke color.
+//
+//   - paint : The shape object.
+//   - r : The red color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - g : The green color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - b : The blue color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - a : The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque. The initial value is 0.
+//
+// Note: If the stroke width is 0 (initial value), the stroke will not be visible regardless of the color.
+//
+// Note: Either a solid color or a gradient fill is applied, depending on what was set as last.
+//
+// see [Shape.SetStrokeWidth]
+//
+// see [Shape.SetStrokeGradient]
 func (shape Shape) SetStrokeColor(r uint, g uint, b uint, a uint) error {
 	return tvg_shape_set_stroke_color(shape.paint_, uint8(r), uint8(g), uint8(b), uint8(a)).error()
 }
 
-/*
-GetStrokeColor gets the shape's stroke color.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] r The red color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] g The green color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] a The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION No stroke was set.
-*/
+// Gets the shape's stroke color.
+//
+//   - paint : The shape object.
+//   - r : The red color channel value in the range [0 ~ 255].
+//   - g : The green color channel value in the range [0 ~ 255].
+//   - b : The blue color channel value in the range [0 ~ 255].
+//   - a : The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : No stroke was set.
 func (shape Shape) GetStrokeColor() (int, int, int, int, error) {
 	var r uint8
 	var g uint8
@@ -281,33 +214,26 @@ func (shape Shape) GetStrokeColor() (int, int, int, int, error) {
 	return int(r), int(g), int(b), int(a), result.error()
 }
 
-/*
-SetStrokeGradient sets the gradient fill of the stroke for all of the figures from the path.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] grad The gradient fill.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-	@retval TVG_RESULT_MEMORY_CORRUPTION An invalid Tvg_Gradient pointer or an error with accessing it.
-
-	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-
-	@see tvg_shape_set_stroke_color()
-*/
+// Sets the gradient fill of the stroke for all of the figures from the path.
+//
+//   - paint : The shape object.
+//   - grad : The gradient fill.
+//
+// Returns [RESULT_MEMORY_CORRUPTION] : An invalid gradient object or an error with accessing it.
+//
+// Note: Either a solid color or a gradient fill is applied, depending on what was set as last.
+//
+// see [Shape.SetStrokeColor]
 func (shape Shape) SetStrokeGradient(grad Gradient) error {
 	return tvg_shape_set_stroke_gradient(shape.paint_, grad.gradient()).error()
 }
 
-/*
-GetStrokeGradient gets the gradient fill of the shape's stroke.
-
-The function does not allocate any memory.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] grad The gradient fill.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// Gets the gradient fill of the shape's stroke.
+//
+// The function does not allocate any memory.
+//
+//   - paint : The shape object.
+//   - grad : The gradient fill.
 func (shape Shape) GetStrokeGradient() (Gradient, error) {
 	var grad uintptr
 	result := tvg_shape_get_stroke_gradient(shape.paint_, &grad)
@@ -315,42 +241,37 @@ func (shape Shape) GetStrokeGradient() (Gradient, error) {
 	return strokeGradient, result.error()
 }
 
-/*
-SetStrokeDash sets the shape's stroke dash pattern.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] dashPattern An array of alternating dash and gap lengths.
-	@param[in] cnt The size of the @p dashPattern array.
-	@param[in] offset The shift of the starting point within the repeating dash pattern, from which the pattern begins to be applied.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT In case @p dashPattern is @c nullptr and @p cnt > 0 or @p dashPattern is not @c nullptr and @p cnt is zero.
-
-	@note To reset the stroke dash pattern, pass @c nullptr to @p dashPattern and zero to @p cnt.
-	@note Values of @p dashPattern less than zero are treated as zero.
-	@note If all values in the @p dashPattern are equal to or less than 0, the dash is ignored.
-	@note If the @p dashPattern contains an odd number of elements, the sequence is repeated in the same
-
-order to form an even-length pattern, preserving the alternation of dashes and gaps.
-
-	@since 1.0
-*/
+// Sets the shape's stroke dash pattern.
+//
+//   - paint : The shape object.
+//   - dashPattern : An array of alternating dash and gap lengths.
+//   - cnt : The size of the dashPattern array.
+//   - offset : The shift of the starting point within the repeating dash pattern, from which the pattern begins to be applied.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : In case dashPattern is nullptr and cnt > 0 or dashPattern is not nullptr and cnt is zero.
+//
+// Note: To reset the stroke dash pattern, pass nullptr to dashPattern and zero to cnt.
+//
+// Note: Values of dashPattern less than zero are treated as zero.
+//
+// Note: If all values in the dashPattern are equal to or less than 0, the dash is ignored.
+//
+// Note: If the dashPattern contains an odd number of elements, the sequence is repeated in the same order to form an even-length pattern, preserving the alternation of dashes and gaps.
+// Since: 1.0
 func (shape Shape) SetStrokeDash(pattern []float32, offset float32) error {
 	return tvg_shape_set_stroke_dash(shape.paint_, &pattern[0], uint32(len(pattern)), offset).error()
 }
 
-/*
-GetStrokeDash gets the dash pattern of the stroke.
-
-The function does not allocate any memory.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] dashPattern The array of consecutive pair values of the dash length and the gap length.
-	@param[out] cnt The size of the @p dashPattern array.
-	@param[out] offset The shift of the starting point within the repeating dash pattern.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-	@since 1.0
-*/
+// Gets the dash pattern of the stroke.
+//
+// The function does not allocate any memory.
+//
+//   - paint : The shape object.
+//   - dashPattern : The array of consecutive pair values of the dash length and the gap length.
+//   - cnt : The size of the dashPattern array.
+//   - offset : The shift of the starting point within the repeating dash pattern.
+//
+// Since: 1.0
 func (shape Shape) GetStrokeDash() ([]float32, float32, error) {
 	var dashPattern *float32
 	var cnt uint32
@@ -359,140 +280,106 @@ func (shape Shape) GetStrokeDash() ([]float32, float32, error) {
 	return slice(dashPattern, cnt), offset, result.error()
 }
 
-/*
-SetStrokeCap sets the cap style used for stroking the path.
-
-The cap style specifies the shape to be used at the end of the open stroked sub-paths.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] cap The cap style value. The default value is @c TVG_STROKE_CAP_SQUARE.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Sets the cap style used for stroking the path.
+//
+// The cap style specifies the shape to be used at the end of the open stroked sub-paths.
+//
+//   - paint : The shape object.
+//   - cap : The cap style value. The initial value is TVG_STROKE_CAP_SQUARE.
 func (shape Shape) SetStrokeCap(strokeCap StrokeCap) error {
 	return tvg_shape_set_stroke_cap(shape.paint_, strokeCap).error()
 }
 
-/*
-GetStrokeCap gets the stroke cap style used for stroking the path.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] cap The cap style value.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// Gets the stroke cap style used for stroking the path.
+//
+//   - paint : The shape object.
+//   - cap : The cap style value.
 func (shape Shape) GetStrokeCap() (StrokeCap, error) {
 	var strokeCap StrokeCap
 	result := tvg_shape_get_stroke_cap(shape.paint_, &strokeCap)
 	return strokeCap, result.error()
 }
 
-/*
-SetStrokeJoin sets the join style for stroked path segments.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] join The join style value. The default value is @c TVG_STROKE_JOIN_BEVEL.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Sets the join style for stroked path segments.
+//
+//   - paint : The shape object.
+//   - join : The join style value. The initial value is TVG_STROKE_JOIN_BEVEL.
 func (shape Shape) SetStrokeJoin(join StrokeJoin) error {
 	return tvg_shape_set_stroke_join(shape.paint_, join).error()
 }
 
-/*
-GetStrokeJoin gets the stroke join method
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] join The join style value.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// The function gets the stroke join method
+//
+//   - paint : The shape object.
+//   - join : The join style value.
 func (shape Shape) GetStrokeJoin() (StrokeJoin, error) {
 	var join StrokeJoin
 	result := tvg_shape_get_stroke_join(shape.paint_, &join)
 	return join, result.error()
 }
 
-/*
-SetStrokeMiterlimit sets the stroke miterlimit.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] miterlimit The miterlimit imposes a limit on the extent of the stroke join when the @c TVG_STROKE_JOIN_MITER join style is set. The default value is 4.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer or Unsupported @p miterlimit values (less than zero).
-
-	@since 0.11
-*/
+// Sets the stroke miterlimit.
+//
+//   - paint : The shape object.
+//   - miterlimit : The miterlimit imposes a limit on the extent of the stroke join when the TVG_STROKE_JOIN_MITER join style is set. The initial value is 4.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : Unsupported miterlimit values (less than zero).
+//
+// Since: 0.11
 func (shape Shape) SetStrokeMiterlimit(miterlimit float32) error {
 	return tvg_shape_set_stroke_miterlimit(shape.paint_, miterlimit).error()
 }
 
-/*
-GetStrokeMiterlimit gets the stroke miterlimit.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] miterlimit The stroke miterlimit.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-
-	@since 0.11
-*/
+// The function gets the stroke miterlimit.
+//
+//   - paint : The shape object.
+//   - miterlimit : The stroke miterlimit.
+//
+// Since: 0.11
 func (shape Shape) GetStrokeMiterlimit() (float32, error) {
 	var miterlimit float32
 	result := tvg_shape_get_stroke_miterlimit(shape.paint_, &miterlimit)
 	return miterlimit, result.error()
 }
 
-/*
-SetTrimpath sets the trim of the shape along the defined path segment, allowing control over which part of the shape is visible.
-
-If the values of the arguments @p begin and @p end exceed the 0-1 range, they are wrapped around in a manner similar to angle wrapping, effectively treating the range as circular.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] begin Specifies the start of the segment to display along the path.
-	@param[in] end Specifies the end of the segment to display along the path.
-	@param[in] simultaneous Determines how to trim multiple paths within a single shape. If set to @c true (default), trimming is applied simultaneously to all paths;
-												Otherwise, all paths are treated as a single entity with a combined length equal to the sum of their individual lengths and are trimmed as such.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@since 1.0
-*/
+// Sets the trim of the shape along the defined path segment, allowing control over which part of the shape is visible.
+//
+// If the values of the arguments begin and end exceed the 0-1 range, they are wrapped around in a manner similar to angle wrapping, effectively treating the range as circular.
+//
+//   - paint : The shape object.
+//   - begin : Specifies the start of the segment to display along the path.
+//   - end : Specifies the end of the segment to display along the path.
+//   - simultaneous : Determines how to trim multiple paths within a single shape. If set to true (default), trimming is applied simultaneously to all paths;                         Otherwise, all paths are treated as a single entity with a combined length equal to the sum of their individual lengths and are trimmed as such.
+//
+// Since: 1.0
 func (shape Shape) SetTrimpath(begin float32, end float32, simultaneous bool) error {
 	return tvg_shape_set_trimpath(shape.paint_, begin, end, simultaneous).error()
 }
 
-/*
-SetFillColor sets the shape's solid color.
-
-The parts of the shape defined as inner are colored.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] r The red color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] g The green color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[in] a The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque. The default value is 0.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-	@see tvg_shape_set_fill_rule()
-*/
+// Sets the shape's solid color.
+//
+// The parts of the shape defined as inner are colored.
+//
+//   - paint : The shape object.
+//   - r : The red color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - g : The green color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - b : The blue color channel value in the range [0 ~ 255]. The initial value is 0.
+//   - a : The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque. The initial value is 0.
+//
+// Note: Either a solid color or a gradient fill is applied, depending on what was set as last.
+//
+// see [Shape.SetFillRule]
 func (shape Shape) SetFillColor(r uint8, g uint8, b uint8, a uint8) error {
 	return tvg_shape_set_fill_color(shape.paint_, r, g, b, a).error()
 }
 
-/*
-GetFillColor gets the shape's solid color.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] r The red color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] g The green color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] b The blue color channel value in the range [0 ~ 255]. The default value is 0.
-	@param[out] a The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque. The default value is 0.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Gets the shape's solid color.
+//
+//   - paint : The shape object.
+//   - r : The red color channel value in the range [0 ~ 255].
+//   - g : The green color channel value in the range [0 ~ 255].
+//   - b : The blue color channel value in the range [0 ~ 255].
+//   - a : The alpha channel value in the range [0 ~ 255], where 0 is completely transparent and 255 is opaque.
 func (shape Shape) GetFillColor() (uint8, uint8, uint8, uint8, error) {
 	var r uint8
 	var g uint8
@@ -502,80 +389,58 @@ func (shape Shape) GetFillColor() (uint8, uint8, uint8, uint8, error) {
 	return r, g, b, a, result.error()
 }
 
-/*
-SetFillRule sets the fill rule for the shape.
-
-Specifies how the interior of the shape is determined when its path intersects itself.
-The default fill rule is @c TVG_FILL_RULE_NON_ZERO.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] rule The fill rule to apply to the shape.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-*/
+// Sets the fill rule for the shape.
+//
+// Specifies how the interior of the shape is determined when its path intersects itself. The initial fill rule is TVG_FILL_RULE_NON_ZERO.
+//
+//   - paint : The shape object.
+//   - rule : The fill rule to apply to the shape.
 func (shape Shape) SetFillRule(rule FillRule) error {
 	return tvg_shape_set_fill_rule(shape.paint_, rule).error()
 }
 
-/*
-GetFillRule retrieves the current fill rule used by the shape.
-
-This function returns the fill rule, which determines how the interior
-regions of the shape are calculated when it overlaps itself.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] rule The current Tvg_Fill_Rule value of the shape.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// Retrieves the current fill rule used by the shape.
+//
+// This function returns the fill rule, which determines how the interior  regions of the shape are calculated when it overlaps itself.
+//
+//   - paint : The shape object.
+//   - rule : The current Tvg_Fill_Rule value of the shape.
 func (shape Shape) GetFillRule() (FillRule, error) {
 	var rule FillRule
 	result := tvg_shape_get_fill_rule(shape.paint_, &rule)
 	return rule, result.error()
 }
 
-/*
-SetPaintOrder sets the rendering order of the stroke and the fill.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] strokeFirst If @c true the stroke is rendered before the fill, otherwise the stroke is rendered as the second one (the default option).
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-
-	@since 0.10
-*/
+// Sets the rendering order of the stroke and the fill.
+//
+//   - paint : The shape object.
+//   - strokeFirst : If true the stroke is rendered before the fill, otherwise the stroke is rendered as the second one (the initial option).
+//
+// Since: 0.10
 func (shape Shape) SetPaintOrder(strokeFirst bool) error {
 	return tvg_shape_set_paint_order(shape.paint_, strokeFirst).error()
 }
 
-/*
-SetGradient sets the gradient fill for all of the figures from the path.
-
-The parts of the shape defined as inner are filled.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[in] grad The gradient fill.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid Tvg_Paint pointer.
-	@retval TVG_RESULT_MEMORY_CORRUPTION An invalid Tvg_Gradient pointer.
-
-	@note Either a solid color or a gradient fill is applied, depending on what was set as last.
-	@see tvg_shape_set_fill_rule()
-*/
+// Sets the gradient fill for all of the figures from the path.
+//
+// The parts of the shape defined as inner are filled.
+//
+//   - paint : The shape object.
+//   - grad : The gradient fill.
+//
+// Note: Either a solid color or a gradient fill is applied, depending on what was set as last.
+//
+// see [Shape.SetFillRule]
 func (shape Shape) SetGradient(gradient Gradient) error {
 	return tvg_shape_set_gradient(shape.paint_, gradient.gradient()).error()
 }
 
-/*
-GetGradient gets the gradient fill of the shape.
-
-The function does not allocate any data.
-
-	@param[in] paint A Tvg_Paint pointer to the shape object.
-	@param[out] grad The gradient fill.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT An invalid pointer passed as an argument.
-*/
+// Gets the gradient fill of the shape.
+//
+// The function does not allocate any data.
+//
+//   - paint : The shape object.
+//   - grad : The gradient fill.
 func (shape Shape) GetGradient() (Gradient, bool, error) {
 	var gradient uintptr
 	result := tvg_shape_get_gradient(shape.paint_, &gradient)

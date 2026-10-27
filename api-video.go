@@ -1,3 +1,5 @@
+//go:build linux && amd64
+
 package thorvg
 
 /*
@@ -7,44 +9,35 @@ Experimental API
 */
 type Video uintptr
 
-/*
-VideoNew creates a new video playback.
-
-	@return Tvg_Video A new video object.
-
-	@note Experimental API
-*/
+// Creates a new video playback.
+//
+// Return: Tvg_Video A new video object.
+//
+// Note: Experimental API
 func VideoNew() Video {
 	return Video(tvg_video_new())
 }
 
-/*
-Del releases the given video object and its resources.
-
-	@param[in] video The video object to release.
-
-	@note Experimental API
-*/
-// TVG_API Tvg_Result tvg_video_del(Tvg_Video video);
+// Releases the given video object and its resources.
+//
+//   - video : The video object to release.
+//
+// Note: Experimental API
 func (video Video) Del() error {
 	return tvg_video_del(video).error()
 }
 
-/*
-Picture retrieves the picture instance associated with this video object.
-
-This function provides access to the internal picture used by the video object
-for rendering video frames. After obtaining the picture, it can be added to a canvas
-enabling control over video frames with this Video object.
-
-	@param[in] video The video object.
-
-	@return A picture instance representing the visual content of the video.
-
-	@warning The picture instance is owned by the video object and should not be deleted manually.
-
-	@note Experimental API
-*/
+// Retrieves the picture instance associated with this video object.
+//
+// This function provides access to the internal picture used by the video object for rendering video frames. After obtaining the picture, it can be added to a canvas enabling control over video frames with this Video object.
+//
+//   - video : The video object.
+//
+// Return: A picture instance representing the visual content of the video.
+//
+// Warning: The picture instance is owned by the video object and should not be deleted manually.
+//
+// Note: Experimental API
 func (video Video) Picture() Picture {
 	return Picture{
 		paintCommon: paintCommon{
@@ -53,180 +46,156 @@ func (video Video) Picture() Picture {
 	}
 }
 
-/*
-Play starts or resumes playback.
-
-	@param[in] video The video object.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-
-	@note Experimental API
-*/
+// Starts or resumes playback.
+//
+//   - video : The video object.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// Note: Experimental API
 func (video Video) Play() error {
 	return tvg_video_play(video).error()
 }
 
-/*
-Pause pauses playback while keeping the current position.
-
-	@param[in] video The video object.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not started playing.
-
-	@note Experimental API
-*/
+// Pauses playback while keeping the current position.
+//
+//   - video : The video object.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not started playing.
+//
+// Note: Experimental API
 func (video Video) Pause() error {
 	return tvg_video_pause(video).error()
 }
 
-/*
-Stop stops playback and rewinds to the start.
-
-	@param[in] video The video object.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-
-	@note Experimental API
-*/
+// Stops playback and rewinds to the start.
+//
+//   - video : The video object.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// Note: Experimental API
 func (video Video) Stop() error {
 	return tvg_video_stop(video).error()
 }
 
-/*
-Seek sets the playback position.
-
-	@param[in] video The video object.
-	@param[in] seconds The target playback position in seconds.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-	@retval TVG_RESULT_INVALID_ARGUMENT If @p seconds is out of range.
-
-	@note Experimental API
-*/
+// Sets the playback position.
+//
+//   - video : The video object.
+//   - seconds : The target playback position in seconds.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : If seconds is out of range.
+//
+// Note: Experimental API
 func (video Video) Seek(seconds float32) error {
 	return tvg_video_seek(video, seconds).error()
 }
 
-/*
-SetLoop enables or disables repeated playback.
-
-	@param[in] video The video object.
-	@param[in] on @c true to repeat playback, @c false to play once.
-								The initial value is @c false.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-
-	@see tvg_video_get_loop()
-
-	@note Experimental API
-*/
+// Enables or disables repeated playback.
+//
+//   - video : The video object.
+//   - on : true to repeat playback, false to play once.               The initial value is false.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// see [Video.GetLoop]
+//
+// Note: Experimental API
 func (video Video) SetLoop(on bool) error {
 	return tvg_video_set_loop(video, on).error()
 }
 
-/*
-GetLoop retrieves whether repeated playback is enabled.
-
-	@return @c true if repeated playback is enabled, @c false otherwise.
-
-	@see tvg_video_set_loop()
-
-	@note Experimental API
-*/
+// Retrieves whether repeated playback is enabled.
+//
+// Return: true if repeated playback is enabled, false otherwise.
+//
+// see [Video.SetLoop]
+//
+// Note: Experimental API
 func (video Video) GetLoop() bool {
 	return tvg_video_get_loop(video)
 }
 
-/*
-SetVolume sets the audio volume level.
-
-	@param[in] video The video object.
-	@param[in] volume The audio volume level in the range [0.0, 1.0].
-										The initial value is @c 1.0.
-
-	@retval TVG_RESULT_INVALID_ARGUMENT If @p volume is out of range.
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-
-	@see tvg_video_get_volume()
-
-	@note Experimental API
-*/
+// Sets the audio volume level.
+//
+//   - video : The video object.
+//   - volume : The audio volume level in the range [0.0, 1.0].                   The initial value is 1.0.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : If volume is out of range.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// see [Video.GetVolume]
+//
+// Note: Experimental API
 func (video Video) SetVolume(volume float32) error {
 	return tvg_video_set_volume(video, volume).error()
 }
 
-/*
-GetVolume retrieves the current audio volume level.
-
-	@param[in] video The video object.
-
-	@return The current audio volume level in the range [0.0, 1.0].
-
-	@see tvg_video_set_volume()
-
-	@note Experimental API
-*/
+// Retrieves the current audio volume level.
+//
+//   - video : The video object.
+//
+// Return: The current audio volume level in the range [0.0, 1.0].
+//
+// see [Video.SetVolume]
+//
+// Note: Experimental API
 func (video Video) GetVolume() float32 {
 	return tvg_video_get_volume(video)
 }
 
-/*
-SetMute mutes or unmutes the audio without changing the volume level.
-
-	@param[in] video The video object.
-	@param[in] on @c true to mute the audio, @c false to unmute.
-								The initial value is @c false.
-
-	@retval TVG_RESULT_INSUFFICIENT_CONDITION If the video is not loaded.
-
-	@see tvg_video_get_muted()
-
-	@note Experimental API
-*/
+// Mutes or unmutes the audio without changing the volume level.
+//
+//   - video : The video object.
+//   - on : true to mute the audio, false to unmute.               The initial value is false.
+//
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the video is not loaded.
+//
+// see [Video.GetMuted]
+//
+// Note: Experimental API
 func (video Video) SetMute(on bool) error {
 	return tvg_video_set_mute(video, on).error()
 }
 
-/*
-GetMuted retrieves whether the audio is currently muted.
-
-	@param[in] video The video object.
-
-	@return @c true if the audio is muted, @c false otherwise.
-
-	@see tvg_video_set_mute()
-
-	@note Experimental API
-*/
+// Retrieves whether the audio is currently muted.
+//
+//   - video : The video object.
+//
+// Return: true if the audio is muted, false otherwise.
+//
+// see [Video.SetMute]
+//
+// Note: Experimental API
 func (video Video) GetMuted() bool {
 	return tvg_video_get_muted(video)
 }
 
-/*
-GetTime retrieves the current playback position.
-
-	@param[in] video The video object.
-
-	@return The current playback position in seconds.
-
-	@see tvg_video_seek()
-	@see tvg_video_get_duration()
-
-	@note Experimental API
-*/
+// Retrieves the current playback position.
+//
+//   - video : The video object.
+//
+// Return: The current playback position in seconds.
+//
+// see [Video.Seek]
+//
+// see [Video.GetDuration]
+//
+// Note: Experimental API
 func (video Video) GetTime() float32 {
 	return tvg_video_get_time(video)
 }
 
-/*
-GetDuration retrieves the total duration of the video.
-
-	@param[in] video The video object.
-
-	@return The total duration in seconds.
-
-	@note Experimental API
-*/
+// Retrieves the total duration of the video.
+//
+//   - video : The video object.
+//
+// Return: The total duration in seconds.
+//
+// Note: Experimental API
 func (video Video) GetDuration() float32 {
 	return tvg_video_get_duration(video)
 }
