@@ -252,7 +252,7 @@ func (text Text) GetTextMetrics() (TextMetrics, error) {
 //
 // Return: TVG_RESULT_INSUFFICIENT_CONDITION if no font or size has been set yet.
 //
-// Return: TVG_RESULT_INVALID_ARGUMENT if the given character is invalid or not supported.
+// Return: TVG_RESULT_INVALID_ARGUMENT if the character or its glyph data is invalid.
 //
 // see Tvg_Glyph_Metrics
 //

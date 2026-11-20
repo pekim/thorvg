@@ -148,7 +148,7 @@ var tvg_picture_new func() uintptr
 var tvg_picture_load func(picture uintptr, path string) Result
 var tvg_picture_load_raw func(picture uintptr, data *uint32, w uint32, h uint32, cs ColorSpace, copy_ bool) Result
 var tvg_picture_load_data func(picture uintptr, data *byte, size uint32, mimetype string, rpath string, copy_ bool) Result
-var tvg_picture_set_asset_resolver func(picture uintptr, resolver uintptr, data uintptr) Result
+var tvg_picture_set_asset_resolver func(picture uintptr, resolver uintptr, data uintptr, fallback bool) Result
 var tvg_picture_set_size func(picture uintptr, w float32, h float32) Result
 var tvg_picture_get_size func(picture uintptr, w *float32, h *float32) Result
 var tvg_picture_set_origin func(picture uintptr, x float32, y float32) Result

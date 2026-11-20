@@ -103,27 +103,34 @@ func (picture Picture) LoadData(data []byte, mimetype string, rpath string) erro
 	return tvg_picture_load_data(picture.paint_, &data[0], uint32(len(data)), mimetype, rpath, true).error()
 }
 
-// Sets the asset resolver callback for handling external resources (e.g., images and fonts).
+// Sets the asset resolver callback for external images and fonts.
 //
-// This callback is invoked when an external asset reference (such as an image source or file path) is encountered in a Picture object. It allows the user to provide a custom mechanism for loading or substituting assets, such as loading from an external source or a virtual filesystem.
+// The callback allows the user to load assets from an external source or a virtual filesystem, or provide a substitute. Set fallback to true to invoke it only when internal resolution fails, or false to invoke it before internal resolution.
+//
+//   - picture : The picture object.
 //
 //   - resolver : A user-defined function that handles the resolution of asset paths.                     The function should return true if the asset was successfully resolved by the user, or false if it was not.
+//
 //   - data : A pointer to user-defined data that will be passed to the callback each time it is invoked.                 This can be used to maintain context or access external resources.
 //
-// Returns [RESULT_INVALID_ARGUMENT] : A nullptr passed as the picture argument.
+//   - fallback : If true, invoke the callback only after internal resolution fails.                     If false, invoke it first and attempt internal resolution only if it returns false.
 //
-// Returns [RESULT_INSUFFICIENT_CONDITION] : If the picture is already loaded.
+// Returns [RESULT_INSUFFICIENT_CONDITION] : If the picture is already loaded. The resolver is not changed.
 //
-// Note: This function must be called before [Picture.Load]       Setting the resolver after loading will have no effect on asset resolution for that asset.
+// Note: This function must be called before loading the picture.
 //
-// Note: If false is returned by resolver, ThorVG will attempt to resolve the resource using its internal resolution mechanism as a fallback.
+// Note: Available embedded image and font data is loaded internally without invoking the callback.
 //
-// Note: To unset the resolver, pass nullptr as the resolver parameter.
+// Note: src identifies the asset to resolve, such as an image path, a font path, or a font name.       Font names are prefixed with "name:" (e.g., "name:FreeSans-Medium") to distinguish them from paths.
+//
+// Note: For fonts, if neither the callback nor internal resolution succeeds, ThorVG attempts to use an available font.
+//
+// Note: To unset the resolver before loading, pass nullptr as the resolver parameter.
 //
 // Note: Experimental API
 //
 // see Tvg_Picture_Asset_Resolver
-func (picture Picture) SetAssetResolver(resolver PictureAssetResolver) error {
+func (picture Picture) SetAssetResolver(resolver PictureAssetResolver, fallback bool) error {
 	puregoResolver := purego.NewCallback(func(cPaint uintptr, src *byte, _data uintptr) bool {
 		paint, ok := newPaint(cPaint)
 		if !ok {
@@ -134,7 +141,7 @@ func (picture Picture) SetAssetResolver(resolver PictureAssetResolver) error {
 		return resolver(paint, goString(src))
 	})
 
-	return tvg_picture_set_asset_resolver(picture.paint_, puregoResolver, 0).error()
+	return tvg_picture_set_asset_resolver(picture.paint_, puregoResolver, 0, fallback).error()
 }
 
 // Resizes the picture content to the given width and height.
