@@ -62,6 +62,28 @@ func (picture Picture) LoadRaw(data []byte, width uint, height uint, colorSpace 
 		uint32(width), uint32(height), colorSpace, true).error()
 }
 
+// Loads raw image data from memory.
+//
+//   - picture : The picture object.
+//   - data : A pointer to the raw image data.
+//   - stride : The number of pixels between the starts of consecutive rows, including padding. Must be at least w.
+//   - w : The width of the image in pixels.
+//   - h : The height of the image in pixels.
+//   - cs : Specifies how the 32-bit color values should be interpreted.
+//   - user_owned : If false, ownership of data is transferred to ThorVG, which releases the memory when it is no longer needed.                       If true, the caller retains ownership and must keep the memory valid while ThorVG uses it.
+//
+// Returns [RESULT_INVALID_ARGUMENT] : data pointer is null, width or height is zero, stride is less than width, or colorspace is unknown.
+//
+// Warning: Transferred memory must be allocated with malloc() or a compatible allocator.
+// Since: 1.2
+func (picture Picture) LoadPixels(data []byte, stride uint, w uint, h uint, colorspace ColorSpace, user_owned bool) error {
+	return tvg_picture_load_pixels(
+		picture.paint_, &data[0],
+		uint32(stride), uint32(w), uint32(h),
+		colorspace, user_owned,
+	).error()
+}
+
 // Loads a picture data from a memory block of a given size.
 //
 // ThorVG efficiently caches the loaded data using the specified data address as a key when the copy has false. This means that loading the same data again will not result in duplicate operations for the sharable data. Instead, ThorVG will reuse the previously loaded picture data.

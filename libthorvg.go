@@ -147,6 +147,7 @@ var tvg_gradient_del func(grad uintptr) Result
 var tvg_picture_new func() uintptr
 var tvg_picture_load func(picture uintptr, path string) Result
 var tvg_picture_load_raw func(picture uintptr, data *uint32, w uint32, h uint32, cs ColorSpace, copy_ bool) Result
+var tvg_picture_load_pixels func(picture uintptr, data *byte, stride uint32, w uint32, h uint32, cs ColorSpace, user_owned bool) Result
 var tvg_picture_load_data func(picture uintptr, data *byte, size uint32, mimetype string, rpath string, copy_ bool) Result
 var tvg_picture_set_asset_resolver func(picture uintptr, resolver uintptr, data uintptr, fallback bool) Result
 var tvg_picture_set_size func(picture uintptr, w float32, h float32) Result
@@ -380,6 +381,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_picture_new, lib, "tvg_picture_new")
 	purego.RegisterLibFunc(&tvg_picture_load, lib, "tvg_picture_load")
 	purego.RegisterLibFunc(&tvg_picture_load_raw, lib, "tvg_picture_load_raw")
+	purego.RegisterLibFunc(&tvg_picture_load_pixels, lib, "tvg_picture_load_pixels")
 	purego.RegisterLibFunc(&tvg_picture_load_data, lib, "tvg_picture_load_data")
 	purego.RegisterLibFunc(&tvg_picture_set_asset_resolver, lib, "tvg_picture_set_asset_resolver")
 	purego.RegisterLibFunc(&tvg_picture_set_size, lib, "tvg_picture_set_size")
