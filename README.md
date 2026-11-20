@@ -55,6 +55,14 @@ register its api functions.
 See https://github.com/pekim/thorvg-binaries for details of how to
 upgrade the thorvg library.
 
+### generate document comments
+
+The doc comments for methods are generated from the Doxygen comments in `thorvg_capi.h`.
+
+```sh
+go generate
+```
+
 ### pre-commit hook
 
 - install `goimports` if not already installed
