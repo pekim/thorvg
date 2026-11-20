@@ -54,6 +54,17 @@ func TestTextMetrics(t *testing.T) {
 	}, metrics)
 }
 
+func TestTextGetLength(t *testing.T) {
+	defer testInitTerm(t)()
+
+	text := TextNew()
+	assert.NoError(t, FontLoadData("DejaVuSans", data.DejaVuSans, ""))
+	assert.NoError(t, text.SetFont("DejaVuSans"))
+	assert.NoError(t, text.SetSize(12))
+	assert.NoError(t, text.SetText("a😀b"))
+	assert.Equal(t, 3, text.GetLength())
+}
+
 func TestGlyphMetrics(t *testing.T) {
 	defer testInitTerm(t)()
 

@@ -265,6 +265,22 @@ func (text Text) GetGlyphMetrics(ch rune) (GlyphMetrics, error) {
 	return metrics, result.error()
 }
 
+// Retrieves the number of glyphs in the laid-out text.
+//
+//   - text : The text object.
+//
+// Return: The number of output glyphs, or zero if text is NULL or text layout is unavailable.
+//
+// Note: Each displayed Unicode codepoint counts as one glyph, including spaces and missing glyphs.       Line breaks and characters omitted by ellipsis are excluded.       Dots added for ellipsis are included.
+//
+// see [Text.GetText]
+//
+// Note: Experimental API
+func (text Text) GetLength() int {
+	length := tvg_text_get_length(text.paint_)
+	return int(length)
+}
+
 // Loads a scalable font data from a file.
 //
 // ThorVG efficiently caches the loaded data using the specified path as a key. This means that loading the same file again will not result in duplicate operations; instead, ThorVG will reuse the previously loaded font data.

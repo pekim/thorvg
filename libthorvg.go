@@ -185,6 +185,7 @@ var tvg_text_set_color func(text uintptr, r uint8, g uint8, b uint8) Result
 var tvg_text_set_gradient func(text uintptr, gradient uintptr) Result
 var tvg_text_get_text_metrics func(text uintptr, metrics *TextMetrics) Result
 var tvg_text_get_glyph_metrics func(text uintptr, ch *byte, metrics *GlyphMetrics, next **byte) Result
+var tvg_text_get_length func(text uintptr) int32
 var tvg_font_load func(path string) Result
 var tvg_font_load_data func(name string, data *byte, size uint32, mimetype string, copy_ bool) Result
 var tvg_font_unload func(path string) Result
@@ -419,6 +420,7 @@ func initLibThorvg() error {
 	purego.RegisterLibFunc(&tvg_text_set_gradient, lib, "tvg_text_set_gradient")
 	purego.RegisterLibFunc(&tvg_text_get_text_metrics, lib, "tvg_text_get_text_metrics")
 	purego.RegisterLibFunc(&tvg_text_get_glyph_metrics, lib, "tvg_text_get_glyph_metrics")
+	purego.RegisterLibFunc(&tvg_text_get_length, lib, "tvg_text_get_length")
 	purego.RegisterLibFunc(&tvg_font_load, lib, "tvg_font_load")
 	purego.RegisterLibFunc(&tvg_font_load_data, lib, "tvg_font_load_data")
 	purego.RegisterLibFunc(&tvg_font_unload, lib, "tvg_font_unload")
